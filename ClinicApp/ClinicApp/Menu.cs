@@ -9,35 +9,12 @@ using System.Text;
 
 namespace ClinicApp
 {
-    public enum Role
+    public enum Roles
     {
-        Admin, Secretary, Doctor, Patient,
+        Nobody, Admin, Secretary, Doctor, Patient
     }
     public class Menu
     {
-        // Shows the user options for signing up or signing in
-        public static void InitialDialog()
-        {
-            Console.Write("To sing up write \"R\", to sign in write \"L\", to exit write \"X\": \n (R/L/X) >> ");
-            string choice = Console.ReadLine();
-            if (choice.ToUpper() == "R")
-            {
-                RegistrationDialog();
-            }
-            else if (choice.ToUpper() == "L")
-            {
-                LoginDialog();
-            }
-            else if (choice.ToUpper() == "X") {
-                return;
-
-            } else {
-                Console.WriteLine("Invalid option, try again");
-                InitialDialog();
-            }
-        }
-
-        //==================================================================================================================
         // Registration functions
         static void RegistrationDialog()
         {
