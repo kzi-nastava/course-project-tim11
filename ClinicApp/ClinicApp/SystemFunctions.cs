@@ -43,7 +43,7 @@ namespace ClinicApp
         {
             string[] data = line.Split('|');
             if(data[6] == Roles.Admin.ToString())
-                return new Admin(line);
+                return new Users.Admin(line);
             if(data[6] == Roles.Secretary.ToString())
                 return new Secretary(line);
             if(data[6] == Roles.Doctor.ToString())

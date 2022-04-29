@@ -205,7 +205,7 @@ namespace ClinicApp
 
         private static User RegisterAdmin(string text)
         {
-            return new Admin(text);
+            return new Users.Admin(text);
         }
 
         private static User RegisterSecretary(string text)

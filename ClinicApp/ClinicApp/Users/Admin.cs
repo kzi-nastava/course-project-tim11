@@ -1,11 +1,11 @@
-﻿ ﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.Admin;
 
 namespace ClinicApp.Users
 {
-    public class Admin
+    public class Admin : User
     {
         public Admin(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
         {
@@ -54,10 +54,11 @@ namespace ClinicApp.Users
                     break;
             }
         }
-        
-        public static void AdminMenu() 
+
+        public static void AdminMenu()
         {
-            while (true) { 
+            while (true)
+            {
                 Console.WriteLine("Admin menu, choose an option");
                 Console.WriteLine("1. Manage Clinic Rooms");
                 Console.WriteLine("2. Manage Clinic Equipment");
@@ -79,9 +80,10 @@ namespace ClinicApp.Users
                 }
             }
         }
-        public static void RoomManagmentMenu() 
+        public static void RoomManagmentMenu()
         {
-            while (true) { 
+            while (true)
+            {
                 Console.WriteLine("Manage Rooms");
                 Console.WriteLine("1. List all rooms");
                 Console.WriteLine("2. Add new room");
@@ -112,7 +114,7 @@ namespace ClinicApp.Users
             }
         }
         //-------------------------------------MANAGE ROOMS----------------------------------------
-        public static void ListAllRooms() 
+        public static void ListAllRooms()
         {
             Console.WriteLine("ID | NAME | TYPE");
             foreach (ClinicRoom room in ClinicRoomService.ClinicRooms)
@@ -120,7 +122,7 @@ namespace ClinicApp.Users
                 Console.WriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
         }
-        public static void AddNewRoom() 
+        public static void AddNewRoom()
         {
             string name;
             string type;
@@ -129,14 +131,14 @@ namespace ClinicApp.Users
             {
                 Console.Write("Name: ");
                 name = Console.ReadLine();
-                if (name.Contains("|")) 
+                if (name.Contains("|"))
                 {
                     Console.WriteLine("Invalid option, name cannot contain |, try again");
                 }
                 else { break; }
             }
-            while (true) 
-            { 
+            while (true)
+            {
                 Console.Write("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
                 type = Console.ReadLine();
                 if (type == "1")
@@ -158,7 +160,7 @@ namespace ClinicApp.Users
                     Console.WriteLine("Invalid option, try again");
                     type = Console.ReadLine();
                 }
-                        
+
             }
             ClinicRoom room = new ClinicRoom { Name = name, Type = roomType };
             ClinicRoomService.Add(room);
@@ -169,16 +171,16 @@ namespace ClinicApp.Users
             string name;
             string type;
             RoomType roomType;
-            while (true) 
+            while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Edit");
                 int id = Convert.ToInt32(Console.ReadLine());
                 room = ClinicRoomService.Get(id);
-            if (room is null)
-            {
-                Console.WriteLine("Invalid option, try again");
-            }
-            else break;
+                if (room is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else break;
             }
             if (room.Id == 0)
             {
@@ -195,7 +197,7 @@ namespace ClinicApp.Users
                 }
                 else { break; }
             }
-            if (name == "") 
+            if (name == "")
             {
                 name = room.Name;
             }
@@ -245,7 +247,7 @@ namespace ClinicApp.Users
                 }
                 else break;
             }
-            if(id == 0)
+            if (id == 0)
             {
                 Console.WriteLine("You cannot delete Storage!");
             }
@@ -253,9 +255,9 @@ namespace ClinicApp.Users
 
         }
         //------------------------------------------------------MANAGE EQUIPMENT------------------------------------------
-        public static void EquipmentManagmentMenu() 
+        public static void EquipmentManagmentMenu()
         {
-            while(true)
+            while (true)
             {
                 Console.WriteLine("Manage Equipment");
                 Console.WriteLine("1. List all");
@@ -307,7 +309,7 @@ namespace ClinicApp.Users
                     break;
                 }
             }
-            
+
             Results = ClinicEquipmentService.Search(STerms.SearchTerm);
 
             while (true)
@@ -347,7 +349,7 @@ namespace ClinicApp.Users
                         }
 
                     }
-                 
+
                     break;
                 }
                 else if (eq.ToLower() == "n")
@@ -408,7 +410,7 @@ namespace ClinicApp.Users
                 {
                     Console.WriteLine("Invalid option, try again");
                 }
-                
+
             }
             while (true)
             {
@@ -440,11 +442,11 @@ namespace ClinicApp.Users
                         {
                             Console.WriteLine("Invalid option, try again");
                         }
-                        
+
                     }
                     break;
                 }
-                else if( answer.ToLower() == "n")
+                else if (answer.ToLower() == "n")
                 {
                     STerms.FilterByAmountBool = false;
                     break;
@@ -487,15 +489,16 @@ namespace ClinicApp.Users
         public static void MoveEquipment()
         {
             Console.WriteLine("Moving");
-    }
-    public class SearchTerms
-    {
-        public string SearchTerm { get; set; }
-        public bool FilterByEqTypeBool { get; set; }
-        public EquipmentType FilterByEq { get; set; }
-        public bool FilterByAmountBool { get; set; }
-        public int STAmount { get; set; }
-        public bool FilterByRoomTypeBool { get; set; }
-        public RoomType FilterByRoom { get; set; }
+        }
+        public class SearchTerms
+        {
+            public string SearchTerm { get; set; }
+            public bool FilterByEqTypeBool { get; set; }
+            public EquipmentType FilterByEq { get; set; }
+            public bool FilterByAmountBool { get; set; }
+            public int STAmount { get; set; }
+            public bool FilterByRoomTypeBool { get; set; }
+            public RoomType FilterByRoom { get; set; }
+        }
     }
 }
