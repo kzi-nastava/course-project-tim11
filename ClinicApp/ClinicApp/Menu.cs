@@ -1,4 +1,4 @@
-﻿using ClinicApp.Users;
+﻿/*using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -179,41 +179,6 @@ namespace ClinicApp
         }
 
 
-
-
-        //==================================================================================================================
-        // Login functions
-
-
-        static void LoginDialog()
-        {
-            Console.Write("Username: ");
-            string userName = Console.ReadLine();
-            Console.Write("Password: ");
-            string password = MaskPassword();
-            User user = null;
-            if (SystemFunctions.Users.TryGetValue(userName, out user))
-            {
-                if (user.Password == password)
-                {
-                    Console.WriteLine($"\nWelcome {userName}");
-                    FindUser(user);
-                }
-                else
-                {
-                    Console.WriteLine("\nIncorrect password, try again");
-                    InitialDialog();
-                }
-            }
-            else
-            {
-                Console.WriteLine("\nUser does not exist, try again");
-               InitialDialog();
-            }
-
-        }
-
-
         //==================================================================================================================
         // Other functions
 
@@ -257,66 +222,6 @@ namespace ClinicApp
             }
             return (name, lastName, dateOfBirth, gender);
         }
-
-
-        private static string MaskPassword()
-        {
-            string password = "";
-            ConsoleKeyInfo key;
-            while (true)
-            {
-                key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Backspace)
-                {
-                    if (password.Length > 0)
-                    {
-                        password = password.Substring(0, (password.Length - 1));
-                        Console.Write("\b \b");
-                    }
-                }
-                else if (key.Key == ConsoleKey.Enter && password.Length > 0)
-                {
-                    return password;
-                }
-                else
-                {
-                    password += key.KeyChar;
-                    Console.Write("*");
-                }
-            }
-        }
-
-        private static void FindUser(User user)
-        {
-            switch (user.Role)
-            {
-                case Roles.Admin:
-                    Admin admin;
-                    SystemFunctions.Admins.TryGetValue(user.UserName, out admin);
-                    admin.AdminMenu();
-                    break;
-                case Roles.Secretary:
-                    Secretary secretary;
-                    SystemFunctions.Secretaries.TryGetValue(user.UserName, out secretary);
-                    secretary.SecretaryMenu();
-                    break;
-                case Roles.Doctor:
-                    Doctor doctor;
-                    SystemFunctions.Doctors.TryGetValue(user.UserName, out doctor);
-                    doctor.DoctorMenu();
-                    break;
-
-                case Roles.Patient:
-                    Patient patient;
-                    SystemFunctions.Patients.TryGetValue(user.UserName, out patient);
-                    patient.PatientMenu();
-                    break;
-                default:
-                    return;
-            }
-
-        }
     }
-
-}
+}*/
 

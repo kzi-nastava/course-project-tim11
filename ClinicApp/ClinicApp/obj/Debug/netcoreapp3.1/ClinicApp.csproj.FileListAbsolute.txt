@@ -19,3 +19,10 @@ D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\De
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.CoreCompileInputs.cache
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.dll
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.pdb
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.exe
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.deps.json
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.runtimeconfig.json
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.runtimeconfig.dev.json
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.dll
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.pdb
+D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.genruntimeconfig.cache

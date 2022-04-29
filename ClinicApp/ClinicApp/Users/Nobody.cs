@@ -34,17 +34,8 @@ namespace ClinicApp.Users
 
         public override void MenuDo(int option)
         {
-            switch(option)
-            {
-                case 2:
-                    Register();
-                    break;
-            }
-        }
-
-        public void Register()
-        {
-
+            //Nobody isn't supposed to do anything.
+            return;
         }
     }
 }
