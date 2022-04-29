@@ -14,7 +14,7 @@ namespace ClinicApp.Users
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Gender = gender;
-            Role = Roles.Secretary;
+            Role = Roles.Patient;
         }
 
         public Patient(string text)
@@ -27,12 +27,12 @@ namespace ClinicApp.Users
             LastName = data[3];
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
-            Role = Roles.Secretary;
+            Role = Roles.Patient;
         }
 
         public override string Compress()
         {
-            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth + "|" + Gender + "|" + Role;
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
         }
 
         public override int MenuWrite()

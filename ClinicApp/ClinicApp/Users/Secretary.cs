@@ -32,7 +32,7 @@ namespace ClinicApp.Users
 
         public override string Compress()
         {
-            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth + "|" + Gender + "|" + Role;
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
         }
 
         public override int MenuWrite()

@@ -27,7 +27,6 @@ namespace ClinicApp
         // Loads the information from the database into objects and adds them to coresponding dictionaries
         public static void LoadData()
         {
-
             using (StreamReader reader = new StreamReader(UsersFilePath))
             {
                 string line;
@@ -52,6 +51,20 @@ namespace ClinicApp
             if(data[6] == Roles.Patient.ToString())
                 return new Patient(line);
             return new Nobody();
+        }
+
+        // Uploads the information from the objects into the database
+        public static void UploadData()
+        {
+            string newLine = "";
+            using (StreamWriter sw = File.CreateText(UsersFilePath))
+            {
+                foreach(KeyValuePair<string, User> pair in Users)
+                {
+                    newLine = pair.Value.Compress();
+                    sw.WriteLine(newLine);
+                }
+            }
         }
     }
 }
