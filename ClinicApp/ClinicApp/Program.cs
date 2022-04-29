@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicApp.Users;
+using System;
 
 namespace ClinicApp
 {
@@ -12,7 +13,7 @@ namespace ClinicApp
 
             // Next we communicate with our user
             int option = 1, numberOfOptions;
-            Users currentUser;
+            User currentUser = new Nobody();
             while(option != 0)
             {
                 numberOfOptions = currentUser.MenuWrite();
@@ -23,7 +24,7 @@ namespace ClinicApp
                     option = EnterNumber();
                 }
                 if (option == numberOfOptions)
-                    currentUser = Nobody();
+                    currentUser = new Nobody();
                 else if(option > 0)
                     currentUser.MenuDo(option);
             }
@@ -32,16 +33,16 @@ namespace ClinicApp
             // ...
         }
 
-        public int EnterNumber()
+        public static int EnterNumber()
         {
-            int x;
+            int x = -1;
             string s;
             while(true)
             {
-                s = Console.Readline();
+                s = Console.ReadLine();
                 try
                 {
-                    x = s.ParseInt32();
+                    x = Int32.Parse(s);
                 }
                 catch(Exception e)
                 {

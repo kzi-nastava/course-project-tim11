@@ -17,12 +17,19 @@ namespace ClinicApp.Users
             Role = Roles.Nobody;
         }
 
+        public override string Compress()
+        {
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth + "|" + Gender + "|" + Role;
+        }
+
         public override int MenuWrite()
         {
-            Console.Writeline("What would you like to do?");
-            Console.Writeline("1: Log in");
-            Console.Writeline("2: Register");
-            Console.Writeline("0: Exit");
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("1: Log in");
+            Console.WriteLine("2: Register");
+            Console.WriteLine("0: Exit");
+
+            return 2;
         }
 
         public override void MenuDo(int option)
@@ -34,10 +41,10 @@ namespace ClinicApp.Users
                     break;
             }
         }
-    }
 
-    public void Register()
-    {
+        public void Register()
+        {
 
+        }
     }
 }

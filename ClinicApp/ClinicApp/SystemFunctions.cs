@@ -7,6 +7,11 @@ using System.Text;
 
 namespace ClinicApp
 {
+    public enum Roles
+    {
+        Nobody, Admin, Secretary, Doctor, Patient
+    };
+
     public class SystemFunctions
     {
 
@@ -37,9 +42,16 @@ namespace ClinicApp
         // Parsing functions
         private static User ParseUser(string line)
         {
-            string[] parameters = line.Split('|');
-            User user = new User(Convert.ToInt32(parameters[0]), parameters[1], parameters[2], Convert.ToInt32(parameters[3]));
-            return user;
+            string[] data = line.Split('|');
+            if(data[6] == Roles.Admin.ToString())
+                return new Admin(line);
+            if(data[6] == Roles.Secretary.ToString())
+                return new Secretary(line);
+            if(data[6] == Roles.Doctor.ToString())
+                return new Doctor(line);
+            if(data[6] == Roles.Patient.ToString())
+                return new Patient(line);
+            return new Nobody();
         }
     }
 }

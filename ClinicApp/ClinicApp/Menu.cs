@@ -9,10 +9,6 @@ using System.Text;
 
 namespace ClinicApp
 {
-    public enum Roles
-    {
-        Nobody, Admin, Secretary, Doctor, Patient
-    }
     public class Menu
     {
         // Registration functions
@@ -63,10 +59,9 @@ namespace ClinicApp
                 }
 
 
-                string hashedPassword = HashPassword(password);
 
                 // Creates user and adds them to the dictionary Users in SystemFunctions
-                User newUser = new User(id, userName, hashedPassword, role);
+                User newUser = new User(id, userName, password, role);
                 SystemFunctions.Users.Add(userName, newUser);
 
                 // Writes the information about the user to the database
@@ -87,19 +82,19 @@ namespace ClinicApp
                 // We create an object of the User with information specific for their role
                 switch (newUser.Role)
                 {
-                    case Role.Admin:
+                    case Roles.Admin:
                         Admin admin = RegisterAdmin(newUser, name, lastName, dateOfBirth, gender);
                         admin.AdminMenu();
                         return;
-                    case Role.Secretary:
+                    case Roles.Secretary:
                         Secretary secretary = RegisterSecretary(newUser, name, lastName, dateOfBirth, gender);
                         secretary.SecretaryMenu();
                         return;
-                    case Role.Doctor:
+                    case Roles.Doctor:
                         Doctor doctor = RegisterDoctor(newUser, name, lastName, dateOfBirth, gender);
                         doctor.DoctorMenu();
                         return;
-                    case Role.Patient:
+                    case Roles.Patient:
                         Patient patient = RegisterPatient(newUser, name, lastName, dateOfBirth, gender);
                         patient.PatientMenu();
                         return;
@@ -199,11 +194,10 @@ namespace ClinicApp
             User user = null;
             if (SystemFunctions.Users.TryGetValue(userName, out user))
             {
-                if (user.Password == HashPassword(password))
+                if (user.Password == password)
                 {
                     Console.WriteLine($"\nWelcome {userName}");
                     FindUser(user);
-                    ;
                 }
                 else
                 {
@@ -292,45 +286,27 @@ namespace ClinicApp
             }
         }
 
-        protected static string HashPassword(string password)
-        {
-            // Create a SHA256   
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                // ComputeHash - returns byte array  
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                // Convert byte array to a string   
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
-            }
-        }
-
         private static void FindUser(User user)
         {
             switch (user.Role)
             {
-                case Role.Admin:
+                case Roles.Admin:
                     Admin admin;
                     SystemFunctions.Admins.TryGetValue(user.UserName, out admin);
                     admin.AdminMenu();
                     break;
-                case Role.Secretary:
+                case Roles.Secretary:
                     Secretary secretary;
                     SystemFunctions.Secretaries.TryGetValue(user.UserName, out secretary);
                     secretary.SecretaryMenu();
                     break;
-                case Role.Doctor:
+                case Roles.Doctor:
                     Doctor doctor;
                     SystemFunctions.Doctors.TryGetValue(user.UserName, out doctor);
                     doctor.DoctorMenu();
                     break;
 
-                case Role.Patient:
+                case Roles.Patient:
                     Patient patient;
                     SystemFunctions.Patients.TryGetValue(user.UserName, out patient);
                     patient.PatientMenu();
