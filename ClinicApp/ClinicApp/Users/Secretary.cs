@@ -37,7 +37,7 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Manage patient accounts");
             Console.WriteLine("0: Exit");
@@ -57,10 +57,11 @@ namespace ClinicApp.Users
 
         private void PatientsCRUD()
         {
-            int option = 1, numberOfOptions = 4;
+            int option = 1, option2, numberOfOptions = 4;
+            User tempUser;
             while (option != 0)
             {
-                Console.WriteLine("What would you like to do?");
+                Console.WriteLine("\nWhat would you like to do?");
                 Console.WriteLine("1: Create a patient account");
                 Console.WriteLine("2: View all patient accounts");
                 Console.WriteLine("3: Update a patient account");
@@ -80,13 +81,79 @@ namespace ClinicApp.Users
                         OtherFunctions.PrintUsers(role : Roles.Patient);
                         break;
                     case 3:
-
+                        option2 = 1;
+                        while (option2 != 0)
+                        {
+                            Console.WriteLine("\nWrite the username of the patient who's account you want deleted:");
+                            string userName = OtherFunctions.EnterString();
+                            if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                            {
+                                if (tempUser.Role == Roles.Patient)
+                                {
+                                    UpdatePatient((Patient)tempUser);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nThis account doesn't belong to a patient. Want to try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
+                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nThere is no account with this username. Want to try again?");
+                                Console.WriteLine("1: Yes");
+                                Console.WriteLine("0: No");
+                                option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                            }
+                        }
                         break;
                     case 4:
-
+                        option2 = 1;
+                        while(option2 != 0)
+                        {
+                            Console.WriteLine("\nWrite the username of the patient who's account you want deleted:");
+                            string userName = OtherFunctions.EnterString();
+                            if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                            {
+                                if (tempUser.Role == Roles.Patient)
+                                {
+                                    SystemFunctions.Users.Remove(userName);
+                                    SystemFunctions.Patients.Remove(userName);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nThis account doesn't belong to a patient. Want to try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
+                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nThere is no account with this username. Want to try again?");
+                                Console.WriteLine("1: Yes");
+                                Console.WriteLine("0: No");
+                                option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                            }
+                        }
                         break;
                 }
             }
+        }
+
+        private static void UpdatePatient(Patient patient)
+        {
+            patient.Print();
+            Console.WriteLine("\nWhat would you like to change?");
+            Console.WriteLine("1: Username");
+            Console.WriteLine("2: Password");
+            Console.WriteLine("3: Name");
+            Console.WriteLine("4: Last name");
+            Console.WriteLine("5: Gender");
+            Console.WriteLine("6: Date of birth");
+            Console.WriteLine("0: Back to menu");
         }
     }
 }
