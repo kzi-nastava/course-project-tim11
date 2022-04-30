@@ -293,7 +293,6 @@ namespace ClinicApp.Users
                     {
                         sw.WriteLine(line);
                     }
-                    */
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
