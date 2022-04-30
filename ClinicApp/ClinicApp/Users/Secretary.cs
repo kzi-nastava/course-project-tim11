@@ -40,9 +40,10 @@ namespace ClinicApp.Users
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Manage patient accounts");
+            Console.WriteLine("3: Blocked or unbolcked patient accounts");
             Console.WriteLine("0: Exit");
 
-            return 2;
+            return 3;
         }
 
         public override void MenuDo(int option)
@@ -51,6 +52,9 @@ namespace ClinicApp.Users
             {
                 case 2:
                     PatientsCRUD();
+                    break;
+                case 3:
+                    ManageBlockedPatients();
                     break;
             }
         }
@@ -211,6 +215,60 @@ namespace ClinicApp.Users
                     case 6:
                         Console.Write("Date of birth (e.g. 02/05/1984): ");
                         patient.DateOfBirth = OtherFunctions.AskForDate();
+                        break;
+                }
+            }
+        }
+
+        private static void ManageBlockedPatients()
+        {
+            int option = 1, numberOfOptions = 4;
+            string username;
+            Patient patient;
+            while (option != 0)
+            {
+                Console.WriteLine("\nWhat would you like to do?");
+                Console.WriteLine("1: List patient accounts");
+                Console.WriteLine("2: Block a patient accounts");
+                Console.WriteLine("3: Unblock a patient account");
+                Console.WriteLine("0: Back to menue");
+                Console.Write(">> ");
+                option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                Console.WriteLine();
+                switch (option)
+                {
+                    case 1:
+                        Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
+                        Console.WriteLine(OtherFunctions.TableHeader() + " Blocked by      |");
+                        Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
+                        foreach (KeyValuePair<string, Patient> pair in SystemFunctions.Patients)
+                        {
+                            Console.WriteLine(pair.Value.TextInTable() + " " + pair.Value.Blocked.ToString() + OtherFunctions.Space(15, pair.Value.Blocked.ToString()) + " |");
+                            Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
+                        }
+                        Console.WriteLine();
+                        break;
+                    case 2:
+                        Console.WriteLine("\nEnter the username of the account you want to block:");
+                        username = OtherFunctions.EnterString();
+                        if(SystemFunctions.Patients.TryGetValue(username, out patient))
+                            if(patient.Blocked == Blocked.Unblocked)
+                                patient.Blocked = Blocked.Secretary;
+                            else
+                                Console.WriteLine("This patient's account is already blocked.");
+                        else
+                            Console.WriteLine("There is no patient's account with such username.");
+                        break;
+                    case 3:
+                        Console.WriteLine("\nEnter the username of the account you want to unblock:");
+                        username = OtherFunctions.EnterString();
+                        if(SystemFunctions.Patients.TryGetValue(username, out patient))
+                            if(patient.Blocked != Blocked.Unblocked)
+                                patient.Blocked = Blocked.Unblocked;
+                            else
+                                Console.WriteLine("This patient's account is already unblocked.");
+                        else
+                            Console.WriteLine("There is no patient's account with such username.");
                         break;
                 }
             }

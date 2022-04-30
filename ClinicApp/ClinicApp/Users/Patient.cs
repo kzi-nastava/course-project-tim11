@@ -20,7 +20,7 @@ namespace ClinicApp.Users
         //public Dictionary<DateTime, string>;
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
-        public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
+        public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Blocked blocked)
         {
             UserName = userName;
             Password = password;
@@ -29,10 +29,10 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Patient;
+            Blocked = blocked;
             Examinations = new List<Examination>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
-            Blocked = Blocked.Unblocked;
         }
 
         public Patient(string text)
@@ -46,15 +46,19 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Patient;
+            Blocked temp;
+            if (Blocked.TryParse(data[7], out temp))
+                Blocked = temp;
+            else
+                Blocked = Blocked.Unblocked;
             Examinations = new List<Examination>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
-            Blocked = Blocked.Unblocked;
         }
 
         public override string Compress()
         {
-            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role + "|" + Blocked.ToString();
         }
 
         public override int MenuWrite()
