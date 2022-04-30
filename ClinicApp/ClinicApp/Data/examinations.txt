@@ -1,2 +1,2 @@
-1|01-May-22 12:30:00|luka_svetic|danilo_babic|True
-2|01-May-22 12:30:00|jelena_mikovic|danilo_jevtic|False
+1|04-May-22 13:30:00|luka_svetic|danilo_jevtic|False|False|False
+2|03-May-22 22:30:00|luka_svetic|danilo_jevtic|True|False|False

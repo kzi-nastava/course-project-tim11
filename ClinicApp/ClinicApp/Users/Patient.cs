@@ -95,7 +95,7 @@ namespace ClinicApp.Users
         public void LoadActivityHistory()
         {
             string fileName = this.UserName + "activity.txt";
-            using (StreamReader reader = new StreamReader("../../../Data/"+fileName))
+            /*using (StreamReader reader = new StreamReader("../../../Data/"+fileName))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -104,7 +104,7 @@ namespace ClinicApp.Users
                     DateTime datetime = Convert.ToDateTime(tmp[0]);
                     ActivityHistory.Add(datetime, tmp[1]);
                 }
-            }
+            }*/
         }
 
         public static void ViewAllDoctors()
@@ -293,7 +293,7 @@ namespace ClinicApp.Users
                     {
                         sw.WriteLine(line);
                     }
-                    */
+                    
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }

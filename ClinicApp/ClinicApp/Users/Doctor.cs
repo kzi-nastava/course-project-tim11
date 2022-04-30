@@ -136,17 +136,14 @@ namespace ClinicApp.Users
                 Console.WriteLine("Patient with that username does not exist.");
                 return;
             }
-            int id;
-            try
-            {
-                string lastLine = File.ReadLines(SystemFunctions.ExaminationsFilePath).Last();
-                string[] tmp = lastLine.Split('|');
-                id = Convert.ToInt32(tmp[0]) + 1;
+            int id = 0;
+            foreach (int examinationID in SystemFunctions.AllExamtinations.Keys) {
+                if (examinationID > id) {
+                    id = examinationID;
+                }
             }
-            catch (System.InvalidOperationException)
-            {
-                id = 1;
-            }
+            id++;
+
             Examination examination = new Examination(id, dateTime, this, patient, false, false, false);
             InsertExamination(examination);
             patient.InsertExamination(examination);
