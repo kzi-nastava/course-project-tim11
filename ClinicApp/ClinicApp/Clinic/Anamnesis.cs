@@ -18,5 +18,20 @@ namespace ClinicApp.Clinic
             this.Date = DateTime.Now;
         }
 
+        public Anamnesis(string text) {
+            string[] data = text.Split(';');
+            Report = data[1];
+            Doctor = SystemFunctions.Doctors[data[0]];
+            Date = DateTime.Parse(data[2]);
+        }
+
+        public string Compress() {
+            return Doctor.UserName + ";" + Report + ";" + Date;
+        }
+
+        public void ShowAnamnesis() {
+            Console.WriteLine($"\nDate: {Date}\nDoctor: {Doctor.Name} {Doctor.LastName}, username: {Doctor.UserName}\n\nReport: \n{Report}");
+        }
     }
+
 }

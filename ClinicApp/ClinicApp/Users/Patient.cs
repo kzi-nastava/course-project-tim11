@@ -60,13 +60,18 @@ namespace ClinicApp.Users
             }
         }
 
+        public void ViewPatient() {
+           
+            Console.WriteLine($"User name: {UserName}; \nName: {Name}; \nLast name: {LastName}; \nDate of birth: {DateOfBirth};\nGender: {Gender}\n\n");
+        }
         public static void ViewAllPatients()
         {
             int i = 1;
             foreach (KeyValuePair<string, Patient> entry in SystemFunctions.Patients)
             {
                 Patient patient = entry.Value;
-                Console.WriteLine($"{i}. User name: {patient.UserName}; Name: {patient.Name}; Last name: {patient.LastName}; Date of birth: {patient.DateOfBirth}");
+                Console.WriteLine(i + ". Patient");
+                patient.ViewPatient();
                 i++;
             }
         }

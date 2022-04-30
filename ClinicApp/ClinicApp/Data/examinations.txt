@@ -1,5 +1,3 @@
-﻿1|30-Apr-22 08:40:00|marko_markovic|danilo_babic|False
-2|20-Apr-22 09:15:00|marko_markovic|danilo_babic|False
+1|30-Apr-22 08:40:00|marko_markovic|danilo_babic|False
 2|20-Apr-22 09:15:00|marko_markovic|danilo_babic|True
-3|20-Apr-22 09:20:00|marko_markovic|danilo_babic|False
 3|20-Apr-22 09:20:00|marko_markovic|danilo_babic|True

@@ -47,7 +47,7 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2. Manage examinations");
             Console.WriteLine("3. View schedule");
@@ -97,28 +97,29 @@ namespace ClinicApp.Users
         // CREATE
         private void CreateExamination()
         {
+            DateTime dateTime = DateTime.Now;
+
             Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
-            DateTime date = OtherFunctions.AskForDate();
-            if (date == null)
-            {
-                CreateExamination();
-            }
+
+            DateTime date = GetGoodDate();
+            
             Console.Write("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
-            DateTime time = OtherFunctions.AskForTime();
-            if (time == null)
+
+            DateTime time;
+            do
             {
-                CreateExamination();
-            }
-
-            DateTime dateTime = date.Date.Add(time.TimeOfDay);
-
-
-            bool availible = CheckAppointment(dateTime);
-            if (!availible)
-            {
-                Console.WriteLine("You are not availible at that time");
-                return;
-            }
+                time = OtherFunctions.AskForTime();
+                time = date.Date + time.TimeOfDay;
+                if (time < DateTime.Now)
+                {
+                    Console.WriteLine("You can't enter that time, its in the past");
+                }
+                else
+                {
+                    if (CheckAppointment(time)) dateTime = time;
+                    else { Console.WriteLine("You are not availible at that time."); return; };
+                }
+            } while (time < DateTime.Now);
 
             Console.WriteLine("Enter the username of the patient. Do you want to view the list of all patients first (y/n)");
             Console.Write(">> ");
@@ -149,7 +150,8 @@ namespace ClinicApp.Users
             Examination examination = new Examination(id, dateTime, this, patient, false);
             InsertExamination(examination);
             patient.InsertExamination(examination);
-            examination.ToFile();
+            SystemFunctions.AllExamtinations.Add(id, examination);
+            SystemFunctions.CurrentExamtinations.Add(id, examination);
             Console.WriteLine("\nNew examination successfully created\n");
 
         }
@@ -166,44 +168,28 @@ namespace ClinicApp.Users
             }
 
             int i = 1;
-            Examination currentExamination = null;
             DateTime now = DateTime.Now;
             foreach (Examination examination in this.Examinations)
             {
-                if (!CheckAppointment(now))
-                {
-                    currentExamination = examination;
-                }
                 Console.WriteLine($"\n\n{i}. Examination\n\nId: {examination.ID}; \nTime and Date: {examination.DateTime};\nPatient last name: {examination.Patient.LastName}; Patient name: {examination.Patient.Name}\n");
 
                 i++;
             }
-            if (currentExamination != null)
-            {
-                Console.WriteLine("\n\nDo you want to start this Examination?");
-                Console.WriteLine($"\nId: {currentExamination.ID}; \nTime and Date: {currentExamination.DateTime};\nPatient last name: {currentExamination.Patient.LastName}; Patient name: {currentExamination.Patient.Name}]n");
-                Console.Write("\ny/n >> ");
-                string start = Console.ReadLine();
-                if (start.ToUpper() == "Y")
-                {
-                    PerformExamination(currentExamination);
-                }
-            }
+            
         }
         //=======================================================================================================================================================================
         // UPDATE
         private void EditExamination()
         {
             bool quit = false;
-            Console.WriteLine("Enter the ID of the examination you wish to edit?");
-            string id = Console.ReadLine();
             Examination examination = null;
-
             while (examination == null)
             {
+                Console.WriteLine("Enter the ID of the examination you wish to edit?");
+                int id = OtherFunctions.EnterNumber();
                 foreach (Examination tmp in this.Examinations)
                 {
-                    if (tmp.ID == Convert.ToDouble(id))
+                    if (tmp.ID == id)
                     {
                         examination = tmp;
                         break;
@@ -224,15 +210,49 @@ namespace ClinicApp.Users
             if (choice.ToUpper() == "D")
             {
                 Console.WriteLine("Enter the new date of your Examination (e.g. 22/10/1987)");
-                DateTime newDate = OtherFunctions.AskForDate();
-                newDate += examination.DateTime.TimeOfDay;
-                examination.DateTime = newDate;
+                DateTime newDate;
+                do{
+                    newDate = OtherFunctions.AskForDate();
+                    if (newDate.Date < DateTime.Now.Date)
+                    {
+                        Console.WriteLine("You can't enter a date that's in the past");
+                    }
+                    else
+                    {
+                        newDate += examination.DateTime.TimeOfDay;
+                        if (CheckAppointment(newDate)) examination.DateTime = newDate;
+                        else
+                        {
+                            Console.WriteLine("You are not availible at that time.");
+                            return;
+                        }
+                    }
+                } while (newDate.Date < DateTime.Now.Date);
+                
             }
             else if (choice.ToUpper() == "T")
             {
                 Console.WriteLine("Enter the new time of your Examination (e.g. 12:00)");
-                DateTime newTime = OtherFunctions.AskForTime();
-                examination.DateTime.Date.Add(newTime.TimeOfDay);
+                DateTime newTime;
+                do
+                {
+                    newTime = OtherFunctions.AskForTime();
+                    newTime = examination.DateTime.Date + newTime.TimeOfDay;
+                    if (newTime < DateTime.Now)
+                    {
+                        Console.WriteLine("You can't enter that time, its in the past");
+                    }
+                    else
+                    {
+                        if (CheckAppointment(newTime)) examination.DateTime = newTime;
+                        else
+                        {
+                            Console.WriteLine("You are not availible at that time.");
+                            return;
+                        }
+                    }
+                } while (newTime < DateTime.Now);
+                               
             }
             else
             {
@@ -270,8 +290,67 @@ namespace ClinicApp.Users
         // VIEW SCHEDULE
         private void ViewSchedule()
         {
+            Console.WriteLine("Enter a date for which you wish to see your schedule: ");
+            DateTime date = GetGoodDate();
+            Console.WriteLine($"Examinations on date: {date.ToShortDateString()} and the next three days: \n");
 
-        }
+            foreach (Examination examination in this.Examinations)
+            {
+                if (date.Date <= examination.DateTime.Date && examination.DateTime.Date <= date.Date.AddDays(3))
+                {
+                    examination.ViewExamination();
+                    Console.WriteLine();
+
+                }
+
+            }
+            string choice = "Y";
+            while (choice.ToUpper() == "Y")
+            {
+                Console.Write("Do you wish to view additional detail for any examination?(y/n)\n>> ");
+                choice = Console.ReadLine();
+                if (choice.ToUpper() == "Y")
+                {
+                    Console.Write("\n\nEnter the ID of the examination you wish to view\n>> ");
+                    int id = OtherFunctions.EnterNumber();
+                    Examination chosenExamination;
+                    if (!SystemFunctions.CurrentExamtinations.TryGetValue(id, out chosenExamination))
+                    {
+                        Console.WriteLine("No examination with that ID found");
+                        return;
+                    }
+                    Console.WriteLine("Searching for medical record");
+                    HealthRecord healthRecord;
+                    if (!SystemFunctions.HealthRecords.TryGetValue(chosenExamination.Patient.UserName, out healthRecord))
+                    {
+                        Console.WriteLine("No health record found, creating a new record");
+                        healthRecord = new HealthRecord(chosenExamination.Patient);
+                        SystemFunctions.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
+                    }
+                    Console.WriteLine($"Information about patient:");
+                    healthRecord.Patient.ViewPatient();
+                    healthRecord.ShowHealthRecord();
+                }
+            }
+            Console.WriteLine("Do you wish to perform an examination(y/n)?");
+            choice = Console.ReadLine();
+            if (choice.ToUpper() == "Y")
+            {
+                Console.Write("\n\nEnter the ID of the examination you wish to view\n>> ");
+                int id = OtherFunctions.EnterNumber();
+
+                Examination chosenExamination;
+                if (!SystemFunctions.CurrentExamtinations.TryGetValue(id, out chosenExamination))
+                {
+                    Console.WriteLine("No examination with that ID found");
+                    return;
+                }
+                PerformExamination(chosenExamination);
+
+            }
+        
+
+    }
 
         //=======================================================================================================================================================================
         // PERFORM EXAMINATION
@@ -282,10 +361,11 @@ namespace ClinicApp.Users
             if (!SystemFunctions.HealthRecords.TryGetValue(examination.Patient.UserName, out healthRecord))
             {
                 Console.WriteLine("No health record found, creating a new record");
-                healthRecord = new HealthRecord();
+                healthRecord = new HealthRecord(examination.Patient);
+                SystemFunctions.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
             }
             healthRecord.ShowHealthRecord();
-            Console.WriteLine("Write you Anamnesis: ");
+            Console.WriteLine("\nWrite you Anamnesis: ");
             string anamnesisText = Console.ReadLine();
             Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
             healthRecord.Anamneses.Add(anamnesis);
@@ -294,26 +374,42 @@ namespace ClinicApp.Users
             if (choice == "Y")
             {
 
-                Console.WriteLine("Change weight?(y/n)");
+                Console.Write("Change weight?(y/n): ");
+                choice = Console.ReadLine();
                 if (choice.ToUpper() == "Y")
                 {
                     Console.Write("New weight: ");
-                    double weight = Convert.ToDouble(Console.ReadLine());
+                    double weight = OtherFunctions.EnterDouble();
                     healthRecord.Weight = weight;
+                }
+                Console.Write("Change height? (y/n): ");
+                choice = Console.ReadLine();
+                if (choice.ToUpper() == "Y")
+                {
                     Console.Write("New height: ");
-                    double height = Convert.ToDouble(Console.ReadLine());
+                    double height = OtherFunctions.EnterDouble();
                     healthRecord.Height = height;
-                    Console.Write("Add to medical history: ");
+                }
+                Console.Write("Add to medical history(y/n): ");
+                choice = Console.ReadLine();
+                if (choice.ToUpper() == "Y")
+                {
                     string illness = Console.ReadLine();
                     healthRecord.MedicalHistory.Add(illness);
-                    Console.Write("Add to list of allergies: ");
+                }
+                Console.Write("Add to list of allergies(y/n): ");
+                choice = Console.ReadLine();
+                if (choice.ToUpper() == "Y")
+                {
                     string alergy = Console.ReadLine();
                     healthRecord.Alergies.Add(alergy);
-
                 }
             }
 
-            SystemFunctions.HealthRecords.Add(examination.Patient.UserName, healthRecord);
+            if (!SystemFunctions.HealthRecords.TryAdd(examination.Patient.UserName, healthRecord))
+            {
+                SystemFunctions.HealthRecords[examination.Patient.UserName] = healthRecord;
+            }
             this.Examinations.Remove(examination);
             examination.Patient.Examinations.Remove(examination);
             Console.WriteLine("Examination ended");
@@ -328,7 +424,7 @@ namespace ClinicApp.Users
             {
                 if (examination.DateTime.Date == dateTime.Date)
                 {
-                    if (examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime)
+                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime) || (dateTime < examination.DateTime && dateTime.AddMinutes(15) > examination.DateTime))
                     {
                         return false;
                     }
@@ -360,5 +456,18 @@ namespace ClinicApp.Users
             this.Examinations.Add(newExamination);
 
         }
+        public DateTime GetGoodDate() {
+            DateTime date;
+            do
+            {
+                date = OtherFunctions.AskForDate();
+                if (date.Date < DateTime.Now.Date)
+                {
+                    Console.WriteLine("You can't enter a date that's in the past");
+                }
+            } while (date.Date < DateTime.Now.Date);
+            return date;
+        }
     }
+
 }
