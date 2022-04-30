@@ -63,6 +63,9 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
+            Console.WriteLine("2: Make appointment");
+            Console.WriteLine("3: Edit appointment");
+            Console.WriteLine("4: Cancel appointment");
             Console.WriteLine("0: Exit");
 
             return 1;
@@ -73,7 +76,7 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    //TODO
+                    //TODOs
                     break;
             }
         }
@@ -92,7 +95,7 @@ namespace ClinicApp.Users
         public void LoadActivityHistory()
         {
             string fileName = this.UserName + "activity.txt";
-            using (StreamReader reader = new StreamReader("../../../Data/fileName"))
+            using (StreamReader reader = new StreamReader("../../../Data/"+fileName))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -294,6 +297,7 @@ namespace ClinicApp.Users
                     return;
                 }
                 examination.DateTime = newDate;
+                
             }
             else if (choice.ToUpper() == "T")
             {
@@ -309,7 +313,18 @@ namespace ClinicApp.Users
                     examination.DateTime = oldTime;
                     return;
                 }
-
+                if (!(requestValidation < 0))
+                {
+                    Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
+                    /*string line = examination.ID.ToString() + "|" + "UPDATE" + "|"; //dodaj string
+                    using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
+                    {
+                        sw.WriteLine(line);
+                    }
+                    */
+                    ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
+                    return;
+                }
                 //sedcretary request
 
             }
