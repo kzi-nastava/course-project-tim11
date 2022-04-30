@@ -83,7 +83,7 @@ namespace ClinicApp
                     foreach (int ID in CurrentExamtinations.Keys)
                     {
                         Examination currentExamination = CurrentExamtinations[ID];
-                        if (currentExamination.Tombstone)
+                        if (currentExamination.Tombstone || currentExamination.Finished)
                         {
                             CurrentExamtinations.Remove(ID);
                         }

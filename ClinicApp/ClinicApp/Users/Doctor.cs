@@ -147,7 +147,7 @@ namespace ClinicApp.Users
             {
                 id = 1;
             }
-            Examination examination = new Examination(id, dateTime, this, patient, false);
+            Examination examination = new Examination(id, dateTime, this, patient, false, false, false);
             InsertExamination(examination);
             patient.InsertExamination(examination);
             SystemFunctions.AllExamtinations.Add(id, examination);
@@ -220,7 +220,10 @@ namespace ClinicApp.Users
                     else
                     {
                         newDate += examination.DateTime.TimeOfDay;
-                        if (CheckAppointment(newDate)) examination.DateTime = newDate;
+                        if (CheckAppointment(newDate)) { 
+                            examination.DateTime = newDate;
+                            examination.Edited = true;
+                        }
                         else
                         {
                             Console.WriteLine("You are not availible at that time.");
@@ -244,7 +247,10 @@ namespace ClinicApp.Users
                     }
                     else
                     {
-                        if (CheckAppointment(newTime)) examination.DateTime = newTime;
+                        if (CheckAppointment(newTime)) { 
+                            examination.DateTime = newTime;
+                            examination.Edited = true;
+                        }
                         else
                         {
                             Console.WriteLine("You are not availible at that time.");
@@ -264,18 +270,18 @@ namespace ClinicApp.Users
         private void DeleteExamination()
         {
             Console.WriteLine("Enter the ID of the examination you wish to delete?");
-            string id = Console.ReadLine();
+            int id = OtherFunctions.EnterNumber();
             Examination examination = null;
             foreach (Examination tmp in this.Examinations)
             {
-                if (tmp.ID == Convert.ToInt32(id))
+                if (tmp.ID == id)
                 {
                     examination = tmp;
                     Console.WriteLine("Are you sure? (y/n)");
                     string choice = Console.ReadLine();
                     if (choice.ToUpper() == "Y") {
                         this.Examinations.Remove(examination);
-                        Examination deletedExamination = new Examination(examination.ID, examination.DateTime, this, examination.Patient, true);
+                        Examination deletedExamination = new Examination(examination.ID, examination.DateTime, this, examination.Patient, examination.Finished, true, examination.Edited);
                         SystemFunctions.AllExamtinations.Add(deletedExamination.ID, deletedExamination);
                         SystemFunctions.CurrentExamtinations.Remove(examination.ID);
                         deletedExamination.ToFile();
@@ -290,7 +296,7 @@ namespace ClinicApp.Users
         // VIEW SCHEDULE
         private void ViewSchedule()
         {
-            Console.WriteLine("Enter a date for which you wish to see your schedule: ");
+            Console.WriteLine("Enter a date for which you wish to see your schedule (e.g. 22/10/1987): ");
             DateTime date = GetGoodDate();
             Console.WriteLine($"Examinations on date: {date.ToShortDateString()} and the next three days: \n");
 
@@ -336,7 +342,7 @@ namespace ClinicApp.Users
             choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                Console.Write("\n\nEnter the ID of the examination you wish to view\n>> ");
+                Console.Write("\n\nEnter the ID of the examination you wish to perform\n>> ");
                 int id = OtherFunctions.EnterNumber();
 
                 Examination chosenExamination;
@@ -410,6 +416,8 @@ namespace ClinicApp.Users
             {
                 SystemFunctions.HealthRecords[examination.Patient.UserName] = healthRecord;
             }
+            examination.Finished = true;
+            SystemFunctions.CurrentExamtinations.Remove(examination.ID);
             this.Examinations.Remove(examination);
             examination.Patient.Examinations.Remove(examination);
             Console.WriteLine("Examination ended");

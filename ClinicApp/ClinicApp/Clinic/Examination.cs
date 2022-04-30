@@ -13,14 +13,20 @@ namespace ClinicApp.Clinic
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }
 
+        public bool Finished { get; set; }
+
         public bool Tombstone { get; set; }
-        public Examination(int id, DateTime dateTime, Doctor doctor, Patient patient, bool tombstone)
+
+        public bool Edited { get; set; }
+        public Examination(int id, DateTime dateTime, Doctor doctor, Patient patient, bool finished, bool tombstone, bool edited)
         {
             this.ID = id;
             this.DateTime = dateTime;
             this.Doctor = doctor;
             this.Patient = patient;
             this.Tombstone = tombstone;
+            this.Finished = finished;
+            this.Edited = edited;
         }
 
         public Examination(string text)
@@ -31,12 +37,14 @@ namespace ClinicApp.Clinic
             DateTime = DateTime.Parse(data[1]);
             Doctor = SystemFunctions.Doctors[data[2]];
             Patient = SystemFunctions.Patients[data[3]];
-            Tombstone = Convert.ToBoolean(data[4]);
+            Finished = Convert.ToBoolean(data[4]);
+            Tombstone = Convert.ToBoolean(data[5]);
+            Edited = Convert.ToBoolean(data[6]);
         }
 
         public string Compress()
         {
-            return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Tombstone;
+            return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Finished + "|" + Tombstone + "|" + Edited;
         }
 
         public void ToFile() {

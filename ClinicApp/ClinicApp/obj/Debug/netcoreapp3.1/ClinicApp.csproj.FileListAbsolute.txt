@@ -1,4 +1,3 @@
-D:\Programiranje\C#\UVOD U SOFTVERSKO INZENJERSTVO\ConsoleProject\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.AssemblyReference.cache
 D:\Programiranje\C#\UVOD U SOFTVERSKO INZENJERSTVO\ConsoleProject\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.GeneratedMSBuildEditorConfig.editorconfig
 D:\Programiranje\C#\UVOD U SOFTVERSKO INZENJERSTVO\ConsoleProject\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.AssemblyInfoInputs.cache
 D:\Programiranje\C#\UVOD U SOFTVERSKO INZENJERSTVO\ConsoleProject\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.AssemblyInfo.cs
@@ -26,3 +25,4 @@ D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\De
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.dll
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.pdb
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.genruntimeconfig.cache
+D:\Programiranje\C#\UVOD U SOFTVERSKO INZENJERSTVO\ConsoleProject\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.AssemblyReference.cache
