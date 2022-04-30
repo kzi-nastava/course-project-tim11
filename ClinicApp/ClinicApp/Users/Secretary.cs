@@ -145,15 +145,37 @@ namespace ClinicApp.Users
 
         private static void UpdatePatient(Patient patient)
         {
-            patient.Print();
-            Console.WriteLine("\nWhat would you like to change?");
-            Console.WriteLine("1: Username");
-            Console.WriteLine("2: Password");
-            Console.WriteLine("3: Name");
-            Console.WriteLine("4: Last name");
-            Console.WriteLine("5: Gender");
-            Console.WriteLine("6: Date of birth");
-            Console.WriteLine("0: Back to menu");
+            int option = 1;
+            string temp;
+
+            while(option != 0)
+            {
+                patient.Print();
+                Console.WriteLine("\nWhat would you like to change?");
+                Console.WriteLine("1: Username");
+                Console.WriteLine("2: Password");
+                Console.WriteLine("3: Name");
+                Console.WriteLine("4: Last name");
+                Console.WriteLine("5: Gender");
+                Console.WriteLine("6: Date of birth");
+                Console.WriteLine("0: Back to menu");
+                option = OtherFunctions.EnterNumberWithLimit(0, 6);
+
+                switch(option)
+                {
+                    case 1:
+                        Console.Write("Username: ");
+                        temp = OtherFunctions.EnterString();
+                        while (SystemFunctions.Users.ContainsKey(temp))
+                        {
+                            Console.WriteLine("This username is taken. Please, try again.");
+                            Console.Write("Username: ");
+                            temp = OtherFunctions.EnterString();
+                        }
+                        patient.UserName = temp;
+                        break;
+                }
+            }
         }
     }
 }
