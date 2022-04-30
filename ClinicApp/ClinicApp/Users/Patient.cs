@@ -16,8 +16,6 @@ namespace ClinicApp.Users
     {
         public Blocked Blocked { get; set; }
         public List<Examination> Examinations { get; set; }
-        //public Dictionary<>
-        //public Dictionary<DateTime, string>;
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
         public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Blocked blocked)
@@ -187,7 +185,6 @@ namespace ClinicApp.Users
             }
             Examination examination = new Examination(id, dateTime, doctor,this,false);
             ActivityHistory.Add(DateTime.Now, "CREATE");
-            //dodaj upise u fajl
         }
 
         private void DeleteExamination()
@@ -271,8 +268,6 @@ namespace ClinicApp.Users
 
             DateTime requestPeriod = examination.DateTime - TimeSpan.FromDays(2);
             int requestValidation = DateTime.Compare(DateTime.Now, requestPeriod);
-
-            //todo edit doctor (get username of doctor validate examination?)
             Console.WriteLine("Do you want to edit date or time or the doctor? (d/t/dr)");
             string choice = Console.ReadLine();
             if (choice.ToUpper() == "D")
@@ -280,6 +275,24 @@ namespace ClinicApp.Users
                 Console.WriteLine("Enter the new date of your Examination (e.g 22/10/2022):");
                 DateTime newDate = OtherFunctions.AskForDate();
                 newDate += examination.DateTime.TimeOfDay;
+                bool validation = examination.Doctor.CheckAppointment(newDate);
+                if(validation == false)
+                {
+                    Console.WriteLine("Doctor is not available");
+                    return;
+                }
+                //dodaje secretary request
+                if (!(requestValidation < 0))
+                {
+                    Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
+                    /*string line = examination.ID.ToString() + "|" + "UPDATE" + "|"; //dodaj string
+                    using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
+                    {
+                        sw.WriteLine(line);
+                    }
+                    */ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
+                    return;
+                }
                 examination.DateTime = newDate;
             }
             else if (choice.ToUpper() == "T")
@@ -287,8 +300,18 @@ namespace ClinicApp.Users
                 //proveri kada se radi izmena i proveri da li je dostupan doktor
                 Console.WriteLine("Enter the new time of your Examination (e.g. 12:00)");
                 DateTime newTime = OtherFunctions.AskForTime();
+                DateTime oldTime = examination.DateTime;
                 examination.DateTime.Date.Add(newTime.TimeOfDay);
                 bool validation = examination.Doctor.CheckAppointment(examination.DateTime);
+                if(validation == false)
+                {
+                    Console.WriteLine("Doctor is not available.");
+                    examination.DateTime = oldTime;
+                    return;
+                }
+
+                //sedcretary request
+
             }
             else if (choice.ToUpper() == "DR")
             {
@@ -301,6 +324,21 @@ namespace ClinicApp.Users
                 }
                 Console.WriteLine("Write username of new doctor:");
                 string inputUserName = Console.ReadLine();
+                Doctor doctor = null;
+                if(!SystemFunctions.Doctors.TryGetValue(UserName, out doctor))
+                {
+                    Console.WriteLine("Doctor with that user name does not eixst.");
+                    return;
+                }
+                bool validate = doctor.CheckAppointment(examination.DateTime);
+                if(validate == false)
+                {
+                    Console.WriteLine("Doctor is not available");
+                    return;
+                }
+                //proveri kada se radi izmena
+                
+                examination.Doctor = doctor;
             }
             else
             {
@@ -310,7 +348,6 @@ namespace ClinicApp.Users
 
         private void AntiTroll()
         {
-            Console.WriteLine("Proveri koliko puta je korisnik zakazao ili obrisao pregled.");
             int update_delete = 0;
             int make = 0;
             DateTime today = DateTime.Now;
@@ -333,7 +370,7 @@ namespace ClinicApp.Users
                 {
                     update_delete += 1;
                 }
-                if(make == 8 || update_delete == 5)
+                if(make >= 8 || update_delete >= 5)
                 {
                     Console.WriteLine("You have been blocked by system.");
                     this.Blocked = Blocked.System;
