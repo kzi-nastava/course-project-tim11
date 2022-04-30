@@ -51,7 +51,7 @@ namespace ClinicApp
                 {
                     x = Convert.ToDouble(s);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("You didn't enter a decimal number. Try again.");
                 }
@@ -123,7 +123,7 @@ namespace ClinicApp
         }
     
 
-    private static string MaskPassword()
+    public static string MaskPassword()
     {
         string password = "";
         ConsoleKeyInfo key;
