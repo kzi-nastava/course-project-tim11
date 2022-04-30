@@ -39,3 +39,4 @@ C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\De
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.dll
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.pdb
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.genruntimeconfig.cache
+D:\Programiranje\C#\UVOD U SOFTVERSKO INZENJERSTVO\ConsoleProject\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.AssemblyReference.cache
