@@ -1,11 +1,15 @@
-﻿using System;
+﻿using ClinicApp.Clinic;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ClinicApp.Users
 {
     public class Patient : User
     {
+        public List<Examination> Examinations { get; set; }
+
         public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
         {
             UserName = userName;
@@ -15,6 +19,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Patient;
+            Examinations = new List<Examination>();
         }
 
         public Patient(string text)
@@ -28,6 +33,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Patient;
+            Examinations = new List<Examination>();
         }
 
         public override string Compress()
@@ -52,6 +58,35 @@ namespace ClinicApp.Users
                     //TODO
                     break;
             }
+        }
+
+        public static void ViewAllPatients()
+        {
+            int i = 1;
+            foreach (KeyValuePair<string, Patient> entry in SystemFunctions.Patients)
+            {
+                Patient patient = entry.Value;
+                Console.WriteLine($"{i}. User name: {patient.UserName}; Name: {patient.Name}; Last name: {patient.LastName}; Date of birth: {patient.DateOfBirth}");
+                i++;
+            }
+        }
+
+        public void InsertExamination(Examination newExamination)
+        {
+            if (this.Examinations.Count() == 0) {
+                this.Examinations.Add(newExamination);
+                return;
+            }
+            for (int i = 0; i < this.Examinations.Count(); i++)
+            {
+                if (this.Examinations[i].DateTime < newExamination.DateTime)
+                {
+                    Examinations.Insert(i, newExamination);
+                    return;
+                }
+            }
+            this.Examinations.Add(newExamination);
+
         }
     }
 }

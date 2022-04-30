@@ -17,7 +17,9 @@ namespace ClinicApp
             while(option != 0)
             {
                 numberOfOptions = currentUser.MenuWrite();
+                Console.Write(">> ");
                 option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                Console.WriteLine();
                 if (option == 1)
                 {
                     if (currentUser.Role == Roles.Nobody)

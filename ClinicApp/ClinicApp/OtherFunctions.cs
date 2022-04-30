@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace ClinicApp
 {
@@ -53,32 +54,78 @@ namespace ClinicApp
             return option;
         }
 
-        private static string MaskPassword()
+        public static DateTime AskForDate()
         {
-            string password = "";
-            ConsoleKeyInfo key;
-            while (true)
+            DateTime? date = null;
+            string format = "dd/MM/yyyy";
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            try
             {
-                key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Backspace)
+                date = DateTime.ParseExact(Console.ReadLine(), format, provider);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\nIncorrect date format, try again");
+            }
+            return (DateTime)date;
+        }
+        public static DateTime AskForTime()
+        {
+            DateTime? time = null;
+            while (time != null) {
+                string format = "HH:mm";
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
                 {
-                    if (password.Length > 0)
-                    {
-                        password = password.Substring(0, (password.Length - 1));
-                        Console.Write("\b \b");
-                    }
+                    time = DateTime.ParseExact(Console.ReadLine(), format, provider);
                 }
-                else if (key.Key == ConsoleKey.Enter && password.Length > 0)
+                catch (FormatException)
                 {
-                    return password;
-                }
-                else
-                {
-                    password += key.KeyChar;
-                    Console.Write("*");
+                    Console.WriteLine("\nIncorrect time format, try again");
                 }
             }
+            return (DateTime)time;
+            
         }
+
+        public static bool AskQuit()
+        {
+            Console.WriteLine("Do you wish to quit? (y/n)");
+            string choice = Console.ReadLine();
+            if (choice.ToUpper() == "Y")
+            {
+                return true;
+            }
+            else return false;
+        }
+    
+
+    private static string MaskPassword()
+    {
+        string password = "";
+        ConsoleKeyInfo key;
+        while (true)
+        {
+            key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.Backspace)
+            {
+                if (password.Length > 0)
+                {
+                    password = password.Substring(0, (password.Length - 1));
+                    Console.Write("\b \b");
+                }
+            }
+            else if (key.Key == ConsoleKey.Enter && password.Length > 0)
+            {
+                return password;
+            }
+            else
+            {
+                password += key.KeyChar;
+                Console.Write("*");
+            }
+        }
+    }        
 
         public static User LogIn()
         {
@@ -121,7 +168,6 @@ namespace ClinicApp
         public static User Register()
         {
             string text = "", password, passwordCheck, temp;
-            int option = 1;
 
             Console.Write("Username: ");
             temp = EnterString();
@@ -169,33 +215,29 @@ namespace ClinicApp
             }
             text += temp + "|";
 
-            Console.Write("Gender (m/f): ");
+            Console.Write("Gender (m/f/n): ");
             temp = EnterString();
-            while(temp != "m" && temp != "f")
+            while(temp != "m" && temp != "f" && temp!= "n")
             {
-                Console.Write("You didn't enter a valid option. Please, try again (m/f): ");
+                Console.Write("You didn't enter a valid option. Please, try again (m/f/n): ");
                 temp = EnterString();
             }
             text += temp + "|";
 
             Console.WriteLine("Chose your role: Doctor(d), Admin(a), Secretary(s), Patient(p)");
-            Console.WriteLine("1: Admin");
-            Console.WriteLine("2: Secretary");
-            Console.WriteLine("3: Doctor");
-            Console.WriteLine("4: Patient");
-            option = EnterNumberWithLimit(1, 4);
-            switch(option)
+            string choice = EnterString();
+            switch(choice.ToUpper())
             {
-                case 1:
+                case "A":
                     text += "Admin";
                     return RegisterAdmin(text);
-                case 2:
+                case "S":
                     text += "Secretary";
                     return RegisterSecretary(text);
-                case 3:
+                case "D":
                     text += "Doctor";
                     return RegisterDoctor(text);
-                case 4:
+                case "P":
                     text += "Patient";
                     return RegisterPatient(text);
                 default:
@@ -205,22 +247,48 @@ namespace ClinicApp
 
         private static User RegisterAdmin(string text)
         {
-            return new Users.Admin(text);
+            Users.Admin admin =  new Users.Admin(text);
+            string newLine = admin.Compress();
+            using (StreamWriter sw = File.AppendText(SystemFunctions.UsersFilePath))
+            {
+                sw.WriteLine(newLine);
+            }
+            return admin;
         }
 
         private static User RegisterSecretary(string text)
         {
-            return new Secretary(text);
+            Secretary secretary = new Secretary(text);
+            string newLine = secretary.Compress();
+            using (StreamWriter sw = File.AppendText(SystemFunctions.UsersFilePath))
+            {
+                sw.WriteLine(newLine);
+            }
+            return secretary;
         }
 
         private static User RegisterDoctor(string text)
         {
-            return new Doctor(text);
+            Doctor doctor = new Doctor(text);
+            string newLine = doctor.Compress();
+            using (StreamWriter sw = File.AppendText(SystemFunctions.UsersFilePath))
+            {
+                sw.WriteLine(newLine);
+            }
+            SystemFunctions.Doctors.Add(doctor.UserName, doctor);
+            return doctor;
         }
 
         private static User RegisterPatient(string text)
         {
-            return new Patient(text);
+            Patient patient = new Patient(text);
+            string newLine = patient.Compress();
+            using (StreamWriter sw = File.AppendText(SystemFunctions.UsersFilePath))
+            {
+                sw.WriteLine(newLine);
+            }
+            SystemFunctions.Patients.Add(patient.UserName, patient);
+            return patient;
         }
     }
 }
