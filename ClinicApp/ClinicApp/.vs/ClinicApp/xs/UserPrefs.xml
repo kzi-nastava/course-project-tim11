@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{88DE699E-B89F-46F2-8059-5CF2C9C34249}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Users/Doctor.cs">
+    <Files>
+      <File FileName="Users/Doctor.cs" Line="271" Column="36" />
+      <File FileName="SystemFunctions.cs" Line="72" Column="18" />
+      <File FileName="Clinic/Examination.cs" Line="1" Column="1" />
+      <File FileName="OtherFunctions.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ClinicApp" expanded="True">
+            <Node name="ClinicApp" expanded="True">
+              <Node name="Clinic" expanded="True" />
+              <Node name="Users" expanded="True">
+                <Node name="Doctor.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.ClinicApp PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
