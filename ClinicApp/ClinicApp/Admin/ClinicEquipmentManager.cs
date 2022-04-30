@@ -1,14 +1,14 @@
-using ClinicApp.Admin;
+using ClinicApp.AdminFunctions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public static class ClinicEquipmentService 
+public static class ClinicEquipmentManager 
 {
     static public List<ClinicEquipment> ClinicEquipmentList { get; set;}
 
-    static ClinicEquipmentService()
+    static ClinicEquipmentManager()
     {
         ClinicEquipmentList = LoadEquipment();
                 
@@ -17,10 +17,11 @@ public static class ClinicEquipmentService
 
     public static ClinicEquipment? Get(int id) => ClinicEquipmentList.FirstOrDefault(p => p.Id == id);
 
-    public static void Add(ClinicEquipment heq)
+    public static void Add(ClinicEquipment eq)
     {
-        heq.Id = ClinicEquipmentList.Last().Id + 1; 
-        ClinicEquipmentList.Add(heq);
+        eq.Id = ClinicEquipmentList.Last().Id + 1; 
+        ClinicEquipmentList.Add(eq);
+        PersistEquipment();
     }
     public static void Delete(int id)
     {
@@ -28,13 +29,25 @@ public static class ClinicEquipmentService
         if (heq is null)
             return;
         ClinicEquipmentList.Remove(heq);
+        PersistEquipment();
     }
     public static void AddToRoom(int eqId, int roomId)
     {
-        var heq = Get(eqId);
-        if (heq is null)
+        var eq = Get(eqId);
+        if (eq is null)
             return;
-        heq.RoomId = roomId;
+        eq.RoomId = roomId;
+        PersistEquipment();
+    }
+    public static void Update(int id, int newAmount)
+    {
+        var eqToUpdate = Get(id);
+        if (eqToUpdate == null)
+        {
+            return;
+        }
+        eqToUpdate.Amount = newAmount;
+        PersistEquipment();
     }
     //---------------SEARCH AND FILTERING-------------------------------------------------------------
     public static List<ClinicEquipment> Search(string searchTerm)
@@ -43,7 +56,7 @@ public static class ClinicEquipmentService
         var results = new List<ClinicEquipment>();
         foreach(var item in ClinicEquipmentList)
         {
-            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || ClinicRoomService.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
+            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || ClinicRoomManager.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
             {
                 results.Add(item);
             }
@@ -67,7 +80,7 @@ public static class ClinicEquipmentService
         var results = new List<ClinicEquipment>();
         foreach(var item in inputList)
         {
-            if(ClinicRoomService.Get(item.RoomId).Type == type)
+            if(ClinicRoomManager.Get(item.RoomId).Type == type)
             {
                 results.Add(item);
             }

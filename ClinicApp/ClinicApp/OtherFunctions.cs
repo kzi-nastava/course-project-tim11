@@ -32,9 +32,28 @@ namespace ClinicApp
                 {
                     x = Int32.Parse(s);
                 }
-                catch (Exception e)
+                catch
                 {
                     Console.WriteLine("You didn't enter a number. Try again.");
+                }
+                return x;
+            }
+        }
+
+        public static double EnterDouble()
+        {
+            double x = -1;
+            string s;
+            while (true)
+            {
+                s = EnterString();
+                try
+                {
+                    x = Convert.ToDouble(s);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("You didn't enter a decimal number. Try again.");
                 }
                 return x;
             }
@@ -58,22 +77,26 @@ namespace ClinicApp
         {
             DateTime? date = null;
             string format = "dd/MM/yyyy";
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            try
-            {
-                date = DateTime.ParseExact(Console.ReadLine(), format, provider);
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("\nIncorrect date format, try again");
+
+            while (date == null) {
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
+                {
+                    date = DateTime.ParseExact(Console.ReadLine(), format, provider);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("\nIncorrect date format, try again");
+                }
             }
             return (DateTime)date;
         }
         public static DateTime AskForTime()
         {
             DateTime? time = null;
-            while (time != null) {
-                string format = "HH:mm";
+            string format = "HH:mm";
+            while (time == null) {
+                
                 CultureInfo provider = CultureInfo.InvariantCulture;
                 try
                 {
@@ -100,7 +123,7 @@ namespace ClinicApp
         }
     
 
-    private static string MaskPassword()
+    public static string MaskPassword()
     {
         string password = "";
         ConsoleKeyInfo key;
@@ -286,6 +309,47 @@ namespace ClinicApp
         private static User RegisterPatient(string text)
         {
             return new Patient(text);
+        }
+
+        public static string Space(int length, string text)
+        {
+            string space = "";
+            for (int i = 1; i <= length - text.Length; i++)
+                space += " ";
+            return space;
+        }
+
+
+        public static string LineInTable(bool withRole = false)
+        {
+            if (withRole)
+                return "+----------------------+----------------------+----------------------+------------+-----------------+------------+";
+            else
+                return "+----------------------+----------------------+----------------------+------------+-----------------+";
+        }
+
+        public static string TableHeader(bool withRole = false)
+        {
+            if(withRole)
+                return "| Username             | Name                 | Last Name            | Gender     | Date of Birth   | Role       |";
+            else
+                return "| Username             | Name                 | Last Name            | Gender     | Date of Birth   |";
+        }
+
+        public static void PrintUsers(bool withRole = false, Roles role = Roles.Nobody)
+        {
+            Console.WriteLine(LineInTable(withRole));
+            Console.WriteLine(TableHeader(withRole));
+            Console.WriteLine(LineInTable(withRole));
+            foreach(KeyValuePair<string, User> pair in SystemFunctions.Users)
+            {
+                if(role == Roles.Nobody || pair.Value.Role == role)
+                {
+                    Console.WriteLine(pair.Value.TextInTable(withRole));
+                    Console.WriteLine(LineInTable(withRole));
+                }
+            }
+            Console.WriteLine();
         }
     }
 }
