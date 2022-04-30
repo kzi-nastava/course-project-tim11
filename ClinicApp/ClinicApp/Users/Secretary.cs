@@ -280,7 +280,7 @@ namespace ClinicApp.Users
 
         private static void ManageExaminationRequests()
         {
-            int id;
+            int id, option;
             Clinic.Examination examination;
 
             Console.WriteLine();
