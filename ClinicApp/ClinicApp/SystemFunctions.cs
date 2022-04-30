@@ -1,4 +1,5 @@
-﻿using ClinicApp.Users;
+﻿using ClinicApp.Clinic;
+using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,11 +18,18 @@ namespace ClinicApp
 
         // Dictionary of users created for faster and easier acces to information from the database
         public static Dictionary<string, User> Users { get; set; } = new Dictionary<string, User>();
-
+        public static Dictionary<string, Doctor> Doctors { get; set; } = new Dictionary<string, Doctor>();
+        public static Dictionary<string, Patient> Patients { get; set; } = new Dictionary<string, Patient>();
+        public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
+        public static Dictionary<int, Examination> AllExamtinations { get; set; } = new Dictionary<int, Examination>();
+        public static Dictionary<int, Examination> CurrentExamtinations { get; set; } = new Dictionary<int, Examination>();
 
         // User file path may change in release mode, this is the file path in debug mode
 
         public static string UsersFilePath =  "../../../Data/users.txt";
+        public static string ExaminationsFilePath = "../../../Data/examinations.txt";
+        public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
+
 
 
         // Loads the information from the database into objects and adds them to coresponding dictionaries
@@ -34,8 +42,46 @@ namespace ClinicApp
                 {
                     User user = ParseUser(line);
                     Users.Add(user.UserName, user);
+                    if (user.Role == Roles.Doctor)
+                    {
+                        Doctors.Add(user.UserName, (Doctor)user);
+                    }
+                    else if (user.Role == Roles.Patient) {
+                        Patients.Add(user.UserName, (Patient)user);
+                    }
                 }
             }
+            using (StreamReader reader = new StreamReader(ExaminationsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Examination examination = ParseExamination(line);
+                    if (!AllExamtinations.TryAdd(examination.ID, examination)) {
+                        AllExamtinations[examination.ID] = examination;
+                    }
+                    if (examination.DateTime.AddMinutes(15) > DateTime.Now)
+                    {
+                        if (!CurrentExamtinations.TryAdd(examination.ID, examination)) {
+                            CurrentExamtinations[examination.ID] = examination;
+                        };
+                    }
+                    foreach (int ID in CurrentExamtinations.Keys) {
+                        Examination currentExamination = CurrentExamtinations[ID];
+                        if (currentExamination.Tombstone)
+                        {
+                            CurrentExamtinations.Remove(ID);
+                        }
+                        else currentExamination.Doctor.Examinations.Add(currentExamination);
+                    }
+                }
+            }
+
+        }
+
+        private static Examination ParseExamination(string line)
+        {
+            return new Examination(line);
         }
 
         // Parsing functions

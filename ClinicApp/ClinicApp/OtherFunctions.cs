@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace ClinicApp
 {
@@ -53,32 +54,78 @@ namespace ClinicApp
             return option;
         }
 
-        private static string MaskPassword()
+        public static DateTime AskForDate()
         {
-            string password = "";
-            ConsoleKeyInfo key;
-            while (true)
+            DateTime? date = null;
+            string format = "dd/MM/yyyy";
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            try
             {
-                key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Backspace)
+                date = DateTime.ParseExact(Console.ReadLine(), format, provider);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\nIncorrect date format, try again");
+            }
+            return (DateTime)date;
+        }
+        public static DateTime AskForTime()
+        {
+            DateTime? time = null;
+            while (time != null) {
+                string format = "HH:mm";
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
                 {
-                    if (password.Length > 0)
-                    {
-                        password = password.Substring(0, (password.Length - 1));
-                        Console.Write("\b \b");
-                    }
+                    time = DateTime.ParseExact(Console.ReadLine(), format, provider);
                 }
-                else if (key.Key == ConsoleKey.Enter && password.Length > 0)
+                catch (FormatException)
                 {
-                    return password;
-                }
-                else
-                {
-                    password += key.KeyChar;
-                    Console.Write("*");
+                    Console.WriteLine("\nIncorrect time format, try again");
                 }
             }
+            return (DateTime)time;
+            
         }
+
+        public static bool AskQuit()
+        {
+            Console.WriteLine("Do you wish to quit? (y/n)");
+            string choice = Console.ReadLine();
+            if (choice.ToUpper() == "Y")
+            {
+                return true;
+            }
+            else return false;
+        }
+    
+
+    private static string MaskPassword()
+    {
+        string password = "";
+        ConsoleKeyInfo key;
+        while (true)
+        {
+            key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.Backspace)
+            {
+                if (password.Length > 0)
+                {
+                    password = password.Substring(0, (password.Length - 1));
+                    Console.Write("\b \b");
+                }
+            }
+            else if (key.Key == ConsoleKey.Enter && password.Length > 0)
+            {
+                return password;
+            }
+            else
+            {
+                password += key.KeyChar;
+                Console.Write("*");
+            }
+        }
+    }        
 
         public static User LogIn()
         {
@@ -121,7 +168,7 @@ namespace ClinicApp
         public static User Register(Roles role = Roles.Nobody)
         {
             string text = "", password, passwordCheck, temp;
-            int option = 1;
+            int option;
 
             Console.Write("Username: ");
             temp = EnterString();
@@ -169,11 +216,11 @@ namespace ClinicApp
             }
             text += temp + "|";
 
-            Console.Write("Gender (m/f): ");
+            Console.Write("Gender (m/f/n): ");
             temp = EnterString();
-            while(temp != "m" && temp != "f")
+            while(temp != "m" && temp != "f" && temp!= "n")
             {
-                Console.Write("You didn't enter a valid option. Please, try again (m/f): ");
+                Console.Write("You didn't enter a valid option. Please, try again (m/f/n): ");
                 temp = EnterString();
             }
             text += temp + "|";
