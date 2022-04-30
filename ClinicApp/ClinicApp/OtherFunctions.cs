@@ -118,7 +118,7 @@ namespace ClinicApp
             return user;
         }
 
-        public static User Register()
+        public static User Register(Roles role = Roles.Nobody)
         {
             string text = "", password, passwordCheck, temp;
             int option = 1;
@@ -178,24 +178,42 @@ namespace ClinicApp
             }
             text += temp + "|";
 
-            Console.WriteLine("Chose your role: Doctor(d), Admin(a), Secretary(s), Patient(p)");
-            Console.WriteLine("1: Admin");
-            Console.WriteLine("2: Secretary");
-            Console.WriteLine("3: Doctor");
-            Console.WriteLine("4: Patient");
-            option = EnterNumberWithLimit(1, 4);
-            switch(option)
+            switch(role)
             {
-                case 1:
+                case Roles.Nobody:
+                    Console.WriteLine("Chose your role.");
+                    Console.WriteLine("1: Admin");
+                    Console.WriteLine("2: Secretary");
+                    Console.WriteLine("3: Doctor");
+                    Console.WriteLine("4: Patient");
+                    option = EnterNumberWithLimit(1, 4);
+                    switch (option)
+                    {
+                        case 1:
+                            text += "Admin";
+                            return RegisterAdmin(text);
+                        case 2:
+                            text += "Secretary";
+                            return RegisterSecretary(text);
+                        case 3:
+                            text += "Doctor";
+                            return RegisterDoctor(text);
+                        case 4:
+                            text += "Patient";
+                            return RegisterPatient(text);
+                        default:
+                            return new Nobody();
+                    }
+                case Roles.Admin:
                     text += "Admin";
                     return RegisterAdmin(text);
-                case 2:
+                case Roles.Secretary:
                     text += "Secretary";
                     return RegisterSecretary(text);
-                case 3:
+                case Roles.Doctor:
                     text += "Doctor";
                     return RegisterDoctor(text);
-                case 4:
+                case Roles.Patient:
                     text += "Patient";
                     return RegisterPatient(text);
                 default:
