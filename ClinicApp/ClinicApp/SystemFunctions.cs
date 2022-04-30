@@ -26,7 +26,7 @@ namespace ClinicApp
 
         // User file path may change in release mode, this is the file path in debug mode
 
-        public static string UsersFilePath =  "../../../Data/users.txt";
+        public static string UsersFilePath = "../../../Data/users.txt";
         public static string ExaminationsFilePath = "../../../Data/examinations.txt";
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
 
@@ -46,27 +46,42 @@ namespace ClinicApp
                     {
                         Doctors.Add(user.UserName, (Doctor)user);
                     }
-                    else if (user.Role == Roles.Patient) {
+                    else if (user.Role == Roles.Patient)
+                    {
                         Patients.Add(user.UserName, (Patient)user);
                     }
                 }
             }
+            using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    HealthRecord healthRecord = ParseHealthRecord(line);
+                    HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
+
+                }
+            }
+
             using (StreamReader reader = new StreamReader(ExaminationsFilePath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     Examination examination = ParseExamination(line);
-                    if (!AllExamtinations.TryAdd(examination.ID, examination)) {
+                    if (!AllExamtinations.TryAdd(examination.ID, examination))
+                    {
                         AllExamtinations[examination.ID] = examination;
                     }
                     if (examination.DateTime.AddMinutes(15) > DateTime.Now)
                     {
-                        if (!CurrentExamtinations.TryAdd(examination.ID, examination)) {
+                        if (!CurrentExamtinations.TryAdd(examination.ID, examination))
+                        {
                             CurrentExamtinations[examination.ID] = examination;
                         };
                     }
-                    foreach (int ID in CurrentExamtinations.Keys) {
+                    foreach (int ID in CurrentExamtinations.Keys)
+                    {
                         Examination currentExamination = CurrentExamtinations[ID];
                         if (currentExamination.Tombstone)
                         {
@@ -79,6 +94,12 @@ namespace ClinicApp
 
         }
 
+        private static HealthRecord ParseHealthRecord(string line)
+        {
+            return new HealthRecord(line);
+        }
+
+
         private static Examination ParseExamination(string line)
         {
             return new Examination(line);
@@ -88,13 +109,13 @@ namespace ClinicApp
         private static User ParseUser(string line)
         {
             string[] data = line.Split('|');
-            if(data[6] == Roles.Admin.ToString())
+            if (data[6] == Roles.Admin.ToString())
                 return new Users.Admin(line);
-            if(data[6] == Roles.Secretary.ToString())
+            if (data[6] == Roles.Secretary.ToString())
                 return new Secretary(line);
-            if(data[6] == Roles.Doctor.ToString())
+            if (data[6] == Roles.Doctor.ToString())
                 return new Doctor(line);
-            if(data[6] == Roles.Patient.ToString())
+            if (data[6] == Roles.Patient.ToString())
                 return new Patient(line);
             return new Nobody();
         }
@@ -105,7 +126,24 @@ namespace ClinicApp
             string newLine = "";
             using (StreamWriter sw = File.CreateText(UsersFilePath))
             {
-                foreach(KeyValuePair<string, User> pair in Users)
+                foreach (KeyValuePair<string, User> pair in Users)
+                {
+                    newLine = pair.Value.Compress();
+                    sw.WriteLine(newLine);
+                }
+            }
+            using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
+            {
+                foreach (KeyValuePair<int, Examination> pair in AllExamtinations)
+                {
+                    newLine = pair.Value.Compress();
+                    sw.WriteLine(newLine);
+                }
+            }
+
+            using (StreamWriter sw = File.CreateText(HealthRecordsFilePath))
+            {
+                foreach (KeyValuePair<string, HealthRecord> pair in HealthRecords)
                 {
                     newLine = pair.Value.Compress();
                     sw.WriteLine(newLine);

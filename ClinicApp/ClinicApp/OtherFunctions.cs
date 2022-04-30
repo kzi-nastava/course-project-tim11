@@ -32,9 +32,28 @@ namespace ClinicApp
                 {
                     x = Int32.Parse(s);
                 }
-                catch (Exception e)
+                catch
                 {
                     Console.WriteLine("You didn't enter a number. Try again.");
+                }
+                return x;
+            }
+        }
+
+        public static double EnterDouble()
+        {
+            double x = -1;
+            string s;
+            while (true)
+            {
+                s = EnterString();
+                try
+                {
+                    x = Convert.ToDouble(s);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("You didn't enter a decimal number. Try again.");
                 }
                 return x;
             }
@@ -58,22 +77,26 @@ namespace ClinicApp
         {
             DateTime? date = null;
             string format = "dd/MM/yyyy";
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            try
-            {
-                date = DateTime.ParseExact(Console.ReadLine(), format, provider);
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("\nIncorrect date format, try again");
+
+            while (date == null) {
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
+                {
+                    date = DateTime.ParseExact(Console.ReadLine(), format, provider);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("\nIncorrect date format, try again");
+                }
             }
             return (DateTime)date;
         }
         public static DateTime AskForTime()
         {
             DateTime? time = null;
-            while (time != null) {
-                string format = "HH:mm";
+            string format = "HH:mm";
+            while (time == null) {
+                
                 CultureInfo provider = CultureInfo.InvariantCulture;
                 try
                 {

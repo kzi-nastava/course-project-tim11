@@ -46,5 +46,11 @@ namespace ClinicApp.Clinic
                 sw.WriteLine(line);
             };
         }
+
+        public void ViewExamination() {
+            Console.WriteLine($"Examination ID: {ID}\nDate and time:{DateTime}\nPatient name: {Patient.Name}; ");
+            Console.WriteLine($"Patient last name: {Patient.LastName};");
+            Console.WriteLine($"Date of birth {Patient.DateOfBirth.ToShortDateString()}");
+        }
     }
 }
