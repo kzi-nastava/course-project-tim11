@@ -1,14 +1,14 @@
-using ClinicApp.Admin;
+using ClinicApp.AdminFunctions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public static class ClinicEquipmentService 
+public static class ClinicEquipmentManager 
 {
     static public List<ClinicEquipment> ClinicEquipmentList { get; set;}
 
-    static ClinicEquipmentService()
+    static ClinicEquipmentManager()
     {
         ClinicEquipmentList = LoadEquipment();
                 
@@ -56,7 +56,7 @@ public static class ClinicEquipmentService
         var results = new List<ClinicEquipment>();
         foreach(var item in ClinicEquipmentList)
         {
-            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || ClinicRoomService.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
+            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || ClinicRoomManager.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
             {
                 results.Add(item);
             }
@@ -80,7 +80,7 @@ public static class ClinicEquipmentService
         var results = new List<ClinicEquipment>();
         foreach(var item in inputList)
         {
-            if(ClinicRoomService.Get(item.RoomId).Type == type)
+            if(ClinicRoomManager.Get(item.RoomId).Type == type)
             {
                 results.Add(item);
             }

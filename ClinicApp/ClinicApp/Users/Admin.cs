@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ClinicApp.Admin;
+using ClinicApp.AdminFunctions;
 
 namespace ClinicApp.Users
 {
@@ -96,7 +96,7 @@ namespace ClinicApp.Users
         public static void ListAllRooms()
         {
             Console.WriteLine("ID | NAME | TYPE");
-            foreach (ClinicRoom room in ClinicRoomService.ClinicRooms)
+            foreach (ClinicRoom room in ClinicRoomManager.ClinicRooms)
             {
                 Console.WriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
@@ -142,7 +142,7 @@ namespace ClinicApp.Users
 
             }
             ClinicRoom room = new ClinicRoom { Name = name, Type = roomType };
-            ClinicRoomService.Add(room);
+            ClinicRoomManager.Add(room);
         }
         public static void EditRoom()
         {
@@ -154,7 +154,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Edit");
                 int id = OtherFunctions.EnterNumber();
-                room = ClinicRoomService.Get(id);
+                room = ClinicRoomManager.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -209,7 +209,7 @@ namespace ClinicApp.Users
                     Console.WriteLine("Invalid option, try again");
                 }
             }
-            ClinicRoomService.Update(room.Id, name, roomType);
+            ClinicRoomManager.Update(room.Id, name, roomType);
         }
         public static void DeleteRoom()
         {
@@ -219,7 +219,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Delete");
                 id = OtherFunctions.EnterNumber();
-                room = ClinicRoomService.Get(id);
+                room = ClinicRoomManager.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -230,7 +230,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("You cannot delete Storage!");
             }
-            else ClinicRoomService.Delete(id);
+            else ClinicRoomManager.Delete(id);
 
         }
         //------------------------------------------------------MANAGE EQUIPMENT------------------------------------------
@@ -266,9 +266,9 @@ namespace ClinicApp.Users
         public static void ListAllEquipment()
         {
             Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (ClinicEquipment eq in ClinicEquipmentService.ClinicEquipmentList)
+            foreach (ClinicEquipment eq in ClinicEquipmentManager.ClinicEquipmentList)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + ClinicRoomService.Get(eq.RoomId).Name + " " + ClinicRoomService.Get(eq.RoomId).Type + " " + eq.Type);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + ClinicRoomManager.Get(eq.RoomId).Name + " " + ClinicRoomManager.Get(eq.RoomId).Type + " " + eq.Type);
             }
         }
         public static void SearchEquipment()
@@ -290,7 +290,7 @@ namespace ClinicApp.Users
                 }
             }
 
-            Results = ClinicEquipmentService.Search(STerms.SearchTerm);
+            Results = ClinicEquipmentManager.Search(STerms.SearchTerm);
 
             while (true)
             {
@@ -438,31 +438,31 @@ namespace ClinicApp.Users
             }
             if (STerms.FilterByEqTypeBool == true)
             {
-                Results = ClinicEquipmentService.FilterByEqType(Results, STerms.FilterByEq);
+                Results = ClinicEquipmentManager.FilterByEqType(Results, STerms.FilterByEq);
             }
             if (STerms.FilterByRoomTypeBool == true)
             {
-                Results = ClinicEquipmentService.FilterByRoomType(Results, STerms.FilterByRoom);
+                Results = ClinicEquipmentManager.FilterByRoomType(Results, STerms.FilterByRoom);
             }
             if (STerms.FilterByAmountBool == true)
             {
                 switch (STerms.STAmount)
                 {
                     case 1:
-                        Results = ClinicEquipmentService.FilterByNumbers(Results, 0, 0);
+                        Results = ClinicEquipmentManager.FilterByNumbers(Results, 0, 0);
                         break;
                     case 2:
-                        Results = ClinicEquipmentService.FilterByNumbers(Results, 1, 10);
+                        Results = ClinicEquipmentManager.FilterByNumbers(Results, 1, 10);
                         break;
                     case 3:
-                        Results = ClinicEquipmentService.FilterByNumbers(Results, 11, 10000000);
+                        Results = ClinicEquipmentManager.FilterByNumbers(Results, 11, 10000000);
                         break;
                 }
             }
             Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
             foreach (ClinicEquipment eq in Results)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + ClinicRoomService.Get(eq.RoomId).Name + " " + ClinicRoomService.Get(eq.RoomId).Type + " " + eq.Type);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + ClinicRoomManager.Get(eq.RoomId).Name + " " + ClinicRoomManager.Get(eq.RoomId).Type + " " + eq.Type);
             }
 
         }
@@ -503,11 +503,11 @@ namespace ClinicApp.Users
                 if (answer.ToLower() == "y")
                 {
                     Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-                    foreach (ClinicEquipment item in ClinicEquipmentService.ClinicEquipmentList)
+                    foreach (ClinicEquipment item in ClinicEquipmentManager.ClinicEquipmentList)
                     {
                         if (item.RoomId == 0)
                         {
-                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + ClinicRoomService.Get(item.RoomId).Name + " " + ClinicRoomService.Get(item.RoomId).Type + " " + item.Type);
+                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + ClinicRoomManager.Get(item.RoomId).Name + " " + ClinicRoomManager.Get(item.RoomId).Type + " " + item.Type);
                         }
                     }
                     break;
@@ -528,7 +528,7 @@ namespace ClinicApp.Users
                     EquipmentType type;
                     int amount = OtherFunctions.EnterNumber();
                     List<string> exsistingNames = new List<string>();
-                    foreach(ClinicEquipment item in ClinicEquipmentService.ClinicEquipmentList)
+                    foreach(ClinicEquipment item in ClinicEquipmentManager.ClinicEquipmentList)
                     {
                         if (item.RoomId == 0)
                         {
@@ -581,7 +581,7 @@ namespace ClinicApp.Users
 
                     }
                     ClinicEquipment eq = new ClinicEquipment { Amount = amount, Name = name, RoomId = 0, Type = type };
-                    ClinicEquipmentService.Add(eq);
+                    ClinicEquipmentManager.Add(eq);
                     break;
                 }
                 else if (answer == "2")
@@ -591,7 +591,7 @@ namespace ClinicApp.Users
                     {
                         Console.WriteLine("Enter ID of equipment to change:");
                         int id = OtherFunctions.EnterNumber();
-                        eq = ClinicEquipmentService.Get(id);
+                        eq = ClinicEquipmentManager.Get(id);
                         if (eq is null)
                         {
                             Console.WriteLine("Invalid option, try again");
@@ -610,7 +610,7 @@ namespace ClinicApp.Users
                     {
                         Console.WriteLine("Enter new amount");
                         int amount = OtherFunctions.EnterNumber();
-                        ClinicEquipmentService.Update(eq.Id, amount);
+                        ClinicEquipmentManager.Update(eq.Id, amount);
                     }
                     
                     
