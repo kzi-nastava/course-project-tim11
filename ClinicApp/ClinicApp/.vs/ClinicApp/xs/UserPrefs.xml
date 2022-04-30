@@ -1,0 +1,32 @@
+﻿<Properties StartupConfiguration="{88DE699E-B89F-46F2-8059-5CF2C9C34249}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="SystemFunctions.cs">
+    <Files>
+      <File FileName="Users/Patient.cs" Line="28" Column="35" />
+      <File FileName="Clinic/Examination.cs" />
+      <File FileName="Users/Doctor.cs" Line="16" Column="33" NotebookId="1" />
+      <File FileName="SystemFunctions.cs" Line="33" Column="1" NotebookId="1" />
+      <File FileName="OtherFunctions.cs" Line="1" Column="1" NotebookId="1" />
+      <File FileName="Program.cs" Line="1" Column="1" NotebookId="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ClinicApp" expanded="True">
+            <Node name="ClinicApp" expanded="True">
+              <Node name="Clinic" expanded="True" />
+              <Node name="Users" expanded="True" />
+              <Node name="SystemFunctions.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.ClinicApp PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
