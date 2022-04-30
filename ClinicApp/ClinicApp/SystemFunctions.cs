@@ -111,6 +111,14 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
+            using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
+            {
+                foreach(KeyValuePair<int, Examination> pair in AllExamtinations)
+                {
+                    newLine = pair.Value.Compress();
+                    sw.WriteLine(newLine);
+                }
+            }
         }
     }
 }
