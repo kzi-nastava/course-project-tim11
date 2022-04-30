@@ -37,12 +37,12 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Manage patient accounts");
             Console.WriteLine("0: Exit");
 
-            return 1;
+            return 2;
         }
 
         public override void MenuDo(int option)
@@ -57,10 +57,11 @@ namespace ClinicApp.Users
 
         private void PatientsCRUD()
         {
-            int option = 1, numberOfOptions = 4;
+            int option = 1, option2, numberOfOptions = 4;
+            User tempUser;
             while (option != 0)
             {
-                Console.WriteLine("What would you like to do?");
+                Console.WriteLine("\nWhat would you like to do?");
                 Console.WriteLine("1: Create a patient account");
                 Console.WriteLine("2: View all patient accounts");
                 Console.WriteLine("3: Update a patient account");
@@ -75,6 +76,141 @@ namespace ClinicApp.Users
                         User patient = OtherFunctions.Register(Roles.Patient);
                         SystemFunctions.Users.Add(patient.UserName, patient);
                         SystemFunctions.Patients.Add(patient.UserName, (Patient)patient);
+                        break;
+                    case 2:
+                        OtherFunctions.PrintUsers(role : Roles.Patient);
+                        break;
+                    case 3:
+                        option2 = 1;
+                        while (option2 != 0)
+                        {
+                            Console.WriteLine("\nWrite the username of the patient who's account you want deleted:");
+                            string userName = OtherFunctions.EnterString();
+                            if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                            {
+                                if (tempUser.Role == Roles.Patient)
+                                {
+                                    UpdatePatient((Patient)tempUser);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nThis account doesn't belong to a patient. Want to try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
+                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nThere is no account with this username. Want to try again?");
+                                Console.WriteLine("1: Yes");
+                                Console.WriteLine("0: No");
+                                option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                            }
+                        }
+                        break;
+                    case 4:
+                        option2 = 1;
+                        while(option2 != 0)
+                        {
+                            Console.WriteLine("\nWrite the username of the patient who's account you want deleted:");
+                            string userName = OtherFunctions.EnterString();
+                            if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                            {
+                                if (tempUser.Role == Roles.Patient)
+                                {
+                                    SystemFunctions.Users.Remove(userName);
+                                    SystemFunctions.Patients.Remove(userName);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\nThis account doesn't belong to a patient. Want to try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
+                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nThere is no account with this username. Want to try again?");
+                                Console.WriteLine("1: Yes");
+                                Console.WriteLine("0: No");
+                                option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        private static void UpdatePatient(Patient patient)
+        {
+            int option = 1;
+            string temp;
+
+            while(option != 0)
+            {
+                patient.Print();
+                Console.WriteLine("\nWhat would you like to change?");
+                Console.WriteLine("1: Username");
+                Console.WriteLine("2: Password");
+                Console.WriteLine("3: Name");
+                Console.WriteLine("4: Last name");
+                Console.WriteLine("5: Gender");
+                Console.WriteLine("6: Date of birth");
+                Console.WriteLine("0: Back to menu");
+                option = OtherFunctions.EnterNumberWithLimit(0, 6);
+
+                switch(option)
+                {
+                    case 1:
+                        Console.Write("Username: ");
+                        temp = OtherFunctions.EnterString();
+                        while (SystemFunctions.Users.ContainsKey(temp))
+                        {
+                            Console.WriteLine("This username is taken. Please, try again.");
+                            Console.Write("Username: ");
+                            temp = OtherFunctions.EnterString();
+                        }
+                        patient.UserName = temp;
+                        break;
+                    case 2:
+                        string password, passwordCheck;
+                        Console.Write("Password: ");
+                        password = OtherFunctions.MaskPassword();
+                        Console.Write("\nRepeat password: ");
+                        passwordCheck = OtherFunctions.MaskPassword();
+                        while (password != passwordCheck)
+                        {
+                            Console.WriteLine("Passwords don't match. Please, try again.");
+                            Console.Write("Password: ");
+                            password = OtherFunctions.MaskPassword();
+                            Console.Write("\nRepeat password: ");
+                            passwordCheck = OtherFunctions.MaskPassword();
+                        }
+                        patient.Password = password;
+                        break;
+                    case 3:
+                        Console.Write("\nName: ");
+                        patient.Name = OtherFunctions.EnterString();
+                        break;
+                    case 4:
+                        Console.Write("\nLast name: ");
+                        patient.LastName = OtherFunctions.EnterString();
+                        break;
+                    case 5:
+                        Console.Write("Gender (m/f/n): ");
+                        temp = OtherFunctions.EnterString();
+                        while (temp != "m" && temp != "f" && temp != "n")
+                        {
+                            Console.Write("You didn't enter a valid option. Please, try again (m/f/n): ");
+                            temp = OtherFunctions.EnterString();
+                        }
+                        patient.Gender = temp[0];
+                        break;
+                    case 6:
+                        Console.Write("Date of birth (e.g. 02/05/1984): ");
+                        patient.DateOfBirth = OtherFunctions.AskForDate();
                         break;
                 }
             }

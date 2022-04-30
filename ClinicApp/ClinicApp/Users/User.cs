@@ -22,8 +22,8 @@ namespace ClinicApp.Users
             Console.WriteLine("Username: " + UserName);
             Console.WriteLine("Name: " + Name);
             Console.WriteLine("Last name: " + LastName);
-            Console.WriteLine("Gender: " + Gender);
             Console.WriteLine("Date of birth: " + DateOfBirth.ToString("dd/MM/yyyy"));
+            Console.WriteLine("Gender: " + Gender);
             if(withRole)
                 Console.WriteLine("Role: " + Role.ToString());
         }

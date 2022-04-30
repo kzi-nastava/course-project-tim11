@@ -123,7 +123,7 @@ namespace ClinicApp
         }
     
 
-    private static string MaskPassword()
+    public static string MaskPassword()
     {
         string password = "";
         ConsoleKeyInfo key;
