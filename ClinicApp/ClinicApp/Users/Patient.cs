@@ -11,7 +11,7 @@ namespace ClinicApp.Users
     {
         Unblocked,Secretary,System
     };
-    
+
     public class Patient : User
     {
         public Blocked Blocked { get; set; }
@@ -107,7 +107,7 @@ namespace ClinicApp.Users
         public static void ViewAllDoctors()
         {
             int i = 1;
-            foreach (KeyValuePair<string,Doctor>entry in SystemFunctions.Doctors)
+            foreach (KeyValuePair<string, Doctor> entry in SystemFunctions.Doctors)
             {
                 Doctor doctor = entry.Value;
                 Console.WriteLine($"{i}.User name: {doctor.UserName} ; Name: {doctor.Name}; Last Name: {doctor.LastName}");
@@ -138,13 +138,13 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("Enter the date of your Examination(e.g 22/10/2022):");
             DateTime date = OtherFunctions.AskForDate();
-            if(date == null)
+            if (date == null)
             {
                 CreateExamination();
             }
             Console.WriteLine("Enter the time of your Examination (e.g. 14:30):");
             DateTime time = OtherFunctions.AskForTime();
-            if(time == null)
+            if (time == null)
             {
                 CreateExamination();
             }
@@ -161,7 +161,7 @@ namespace ClinicApp.Users
             Console.WriteLine("Enter the username:");
             string userName = Console.ReadLine();
             Doctor doctor = null;
-            if(!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
             {
                 Console.WriteLine("Doctor with that username does not exist");
                 return;
@@ -183,7 +183,7 @@ namespace ClinicApp.Users
             {
                 id = 1;
             }
-            Examination examination = new Examination(id, dateTime, doctor,this,false);
+            Examination examination = new Examination(id, dateTime, doctor, this, false, false, false);
             ActivityHistory.Add(DateTime.Now, "CREATE");
         }
 
@@ -194,7 +194,7 @@ namespace ClinicApp.Users
             Examination examination = null;
             foreach (Examination tmp in this.Examinations)
             {
-                if(tmp.ID == Convert.ToInt32(id))
+                if (tmp.ID == Convert.ToInt32(id))
                 {
                     examination = tmp;
                     DateTime now = DateTime.Now;
@@ -205,12 +205,12 @@ namespace ClinicApp.Users
                     int dateValidationSecretary = DateTime.Compare(now, beforeExamination);
                     if (choice.ToUpper() == "Y")
                     {
-                        if (!(dateValidation<0))
+                        if (!(dateValidation < 0))
                         {
                             Console.WriteLine("You can not perform this action.");
                             return;
-                        }       
-                        else if (!(dateValidationSecretary<0))
+                        }
+                        else if (!(dateValidationSecretary < 0))
                         {
                             Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
                             string line = examination.ID.ToString() + "|" + "DELETE";
@@ -222,7 +222,7 @@ namespace ClinicApp.Users
                             return;
                         }
                         this.Examinations.Remove(examination);
-                        Examination deletedExamination = new Examination(examination.ID, examination.DateTime,examination.Doctor,this,true);
+                        Examination deletedExamination = new Examination(examination.ID, examination.DateTime, examination.Doctor, this, examination.Finished, true, examination.Edited);
                         SystemFunctions.AllExamtinations.Add(deletedExamination.ID, deletedExamination);
                         SystemFunctions.CurrentExamtinations.Remove(examination.ID);
                         examination.Doctor.Examinations.Remove(examination);
@@ -255,11 +255,11 @@ namespace ClinicApp.Users
                     Console.WriteLine($"No examinations matches ID: {id}");
                     quit = OtherFunctions.AskQuit();
                     if (quit) return;
-                }            
+                }
             }
             DateTime dayBefore = examination.DateTime - TimeSpan.FromDays(1);
             int actionValidation = DateTime.Compare(DateTime.Now, dayBefore);
-            if (actionValidation>0)
+            if (actionValidation > 0)
             {
                 Console.WriteLine("Sorry, you can not perform this action.");
                 Console.WriteLine("You can change the appointment the day before the appointment at the latest/");
@@ -276,7 +276,7 @@ namespace ClinicApp.Users
                 DateTime newDate = OtherFunctions.AskForDate();
                 newDate += examination.DateTime.TimeOfDay;
                 bool validation = examination.Doctor.CheckAppointment(newDate);
-                if(validation == false)
+                if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available");
                     return;
@@ -290,7 +290,8 @@ namespace ClinicApp.Users
                     {
                         sw.WriteLine(line);
                     }
-                    */ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
+                    */
+                    ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
                 examination.DateTime = newDate;
@@ -303,7 +304,7 @@ namespace ClinicApp.Users
                 DateTime oldTime = examination.DateTime;
                 examination.DateTime.Date.Add(newTime.TimeOfDay);
                 bool validation = examination.Doctor.CheckAppointment(examination.DateTime);
-                if(validation == false)
+                if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available.");
                     examination.DateTime = oldTime;
@@ -325,19 +326,19 @@ namespace ClinicApp.Users
                 Console.WriteLine("Write username of new doctor:");
                 string inputUserName = Console.ReadLine();
                 Doctor doctor = null;
-                if(!SystemFunctions.Doctors.TryGetValue(UserName, out doctor))
+                if (!SystemFunctions.Doctors.TryGetValue(UserName, out doctor))
                 {
                     Console.WriteLine("Doctor with that user name does not eixst.");
                     return;
                 }
                 bool validate = doctor.CheckAppointment(examination.DateTime);
-                if(validate == false)
+                if (validate == false)
                 {
                     Console.WriteLine("Doctor is not available");
                     return;
                 }
                 //proveri kada se radi izmena
-                
+
                 examination.Doctor = doctor;
             }
             else
@@ -352,17 +353,17 @@ namespace ClinicApp.Users
             int make = 0;
             DateTime today = DateTime.Now;
             DateTime monthBefore = DateTime.Now - TimeSpan.FromDays(30);
-            foreach(KeyValuePair<DateTime,string> activity in ActivityHistory)
+            foreach (KeyValuePair<DateTime, string> activity in ActivityHistory)
             {
                 DateTime date = activity.Key;
                 string activity_performed = activity.Value;
                 int lower_limit = DateTime.Compare(date, monthBefore);
-                int upper_limit = DateTime.Compare(date,today);
-                if (lower_limit<0 || upper_limit>0)
+                int upper_limit = DateTime.Compare(date, today);
+                if (lower_limit < 0 || upper_limit > 0)
                 {
                     continue;
                 }
-                if(activity_performed == "MAKE")
+                if (activity_performed == "MAKE")
                 {
                     make += 1;
                 }
@@ -370,13 +371,17 @@ namespace ClinicApp.Users
                 {
                     update_delete += 1;
                 }
-                if(make >= 8 || update_delete >= 5)
+                if (make >= 8 || update_delete >= 5)
                 {
                     Console.WriteLine("You have been blocked by system.");
                     this.Blocked = Blocked.System;
                     //todo system exit
                 }
             }
+        }
+
+        public void ViewPatient() {
+            Console.WriteLine($"Patient {Name} {LastName};\nDate of birth {DateOfBirth.ToShortDateString()}; Gender:\n{Gender}");
         }
     }
 }

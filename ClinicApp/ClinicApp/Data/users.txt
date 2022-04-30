@@ -4,3 +4,5 @@ relja_radeka|sifra|Relja|Radeka|01-01-2001|m|Secretary
 danilo_babic|sifra|Danilo|Babic|01-01-2001|m|Patient
 marko_markovic|password|Marko|Markovic|05-10-2002|m|Doctor
 luka_svetic|lukavolisaki|Luka|Svetic|09-10-2001|m|Doctor
+danilo_jevtic|newpassword|Danilo|Jevtic|30-04-2022|m|Patient
+jelena_mikovic|password|Jelena|Mikovic|07-12-2001|f|Doctor
