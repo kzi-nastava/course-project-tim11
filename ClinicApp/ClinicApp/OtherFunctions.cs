@@ -51,7 +51,7 @@ namespace ClinicApp
                 {
                     x = Convert.ToDouble(s);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("You didn't enter a decimal number. Try again.");
                 }
