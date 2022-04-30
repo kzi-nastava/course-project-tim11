@@ -282,12 +282,12 @@ namespace ClinicApp.Users
             if (!SystemFunctions.HealthRecords.TryGetValue(examination.Patient.UserName, out healthRecord))
             {
                 Console.WriteLine("No health record found, creating a new record");
-                healthRecord = new HealthRecord();
+                //healthRecord = new HealthRecord();
             }
             healthRecord.ShowHealthRecord();
             Console.WriteLine("Write you Anamnesis: ");
             string anamnesisText = Console.ReadLine();
-            Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
+            //Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
             healthRecord.Anamneses.Add(anamnesis);
             Console.WriteLine("Anamnesis added\nDo you want to change medical record?(y/n)");
             string choice = Console.ReadLine().ToUpper();

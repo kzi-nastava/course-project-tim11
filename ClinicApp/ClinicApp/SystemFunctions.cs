@@ -32,6 +32,7 @@ namespace ClinicApp
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
 
 
+
         // Loads the information from the database into objects and adds them to coresponding dictionaries
         public static void LoadData()
         {
