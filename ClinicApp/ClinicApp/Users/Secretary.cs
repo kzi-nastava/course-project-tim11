@@ -39,6 +39,7 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
+            Console.WriteLine("2: Manage patient accounts");
             Console.WriteLine("0: Exit");
 
             return 1;
@@ -49,8 +50,33 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    //TODO
+                    PatientsCRUD();
                     break;
+            }
+        }
+
+        private void PatientsCRUD()
+        {
+            int option = 1, numberOfOptions = 4;
+            while (option != 0)
+            {
+                Console.WriteLine("What would you like to do?");
+                Console.WriteLine("1: Create a patient account");
+                Console.WriteLine("2: View all patient accounts");
+                Console.WriteLine("3: Update a patient account");
+                Console.WriteLine("4: Delete a patient account");
+                Console.WriteLine("0: Back to menue");
+                Console.Write(">> ");
+                option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                Console.WriteLine();
+                switch(option)
+                {
+                    case 1:
+                        User patient = OtherFunctions.Register(Roles.Patient);
+                        SystemFunctions.Users.Add(patient.UserName, patient);
+                        SystemFunctions.Patients.Add(patient.UserName, (Patient)patient);
+                        break;
+                }
             }
         }
     }
