@@ -174,6 +174,44 @@ namespace ClinicApp.Users
                         }
                         patient.UserName = temp;
                         break;
+                    case 2:
+                        string password, passwordCheck;
+                        Console.Write("Password: ");
+                        password = OtherFunctions.MaskPassword();
+                        Console.Write("\nRepeat password: ");
+                        passwordCheck = OtherFunctions.MaskPassword();
+                        while (password != passwordCheck)
+                        {
+                            Console.WriteLine("Passwords don't match. Please, try again.");
+                            Console.Write("Password: ");
+                            password = OtherFunctions.MaskPassword();
+                            Console.Write("\nRepeat password: ");
+                            passwordCheck = OtherFunctions.MaskPassword();
+                        }
+                        patient.Password = password;
+                        break;
+                    case 3:
+                        Console.Write("\nName: ");
+                        patient.Name = OtherFunctions.EnterString();
+                        break;
+                    case 4:
+                        Console.Write("\nLast name: ");
+                        patient.LastName = OtherFunctions.EnterString();
+                        break;
+                    case 5:
+                        Console.Write("Gender (m/f/n): ");
+                        temp = OtherFunctions.EnterString();
+                        while (temp != "m" && temp != "f" && temp != "n")
+                        {
+                            Console.Write("You didn't enter a valid option. Please, try again (m/f/n): ");
+                            temp = OtherFunctions.EnterString();
+                        }
+                        patient.Gender = temp[0];
+                        break;
+                    case 6:
+                        Console.Write("Date of birth (e.g. 02/05/1984): ");
+                        patient.DateOfBirth = OtherFunctions.AskForDate();
+                        break;
                 }
             }
         }
