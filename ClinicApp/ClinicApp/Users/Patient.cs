@@ -199,9 +199,17 @@ namespace ClinicApp.Users
                 id = 1;
             }
             Examination examination = new Examination(id, dateTime, doctor,this,false);
+            Examinations.Add(examination);
+            string line = examination.Compress();
+            using (StreamWriter sw = File.AppendText(SystemFunctions.ExaminationsFilePath))
+            {
+                sw.WriteLine(line);
+            }
             ActivityHistory.Add(DateTime.Now, "CREATE");
-        }
 
+
+        }
+       
         private void DeleteExamination()
         {
             Console.WriteLine("Enter the ID of the examination you want to delete?");

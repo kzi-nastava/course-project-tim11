@@ -3,3 +3,4 @@ stefan_bogdanovic|sifra|Stefan|Bogdanovic|01.01.2001|m|Doctor
 relja_radeka|sifra|Relja|Radeka|01.01.2001|m|Secretary
 danilo_babic|sifra|Danilo|Babic|01.01.2001|m|Patient
 stefan|123|Stefan|Bogdanovic|28.08.2001|m|Admin
+marko_markovic|password|Marko|Markovic|05.10.2002|m|Doctor
