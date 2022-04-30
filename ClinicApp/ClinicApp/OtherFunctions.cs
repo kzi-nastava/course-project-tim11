@@ -287,5 +287,46 @@ namespace ClinicApp
         {
             return new Patient(text);
         }
+
+        public static string Space(int length, string text)
+        {
+            string space = "";
+            for (int i = 1; i <= length - text.Length; i++)
+                space += " ";
+            return space;
+        }
+
+
+        public static string LineInTable(bool withRole = false)
+        {
+            if (withRole)
+                return "+----------------------+----------------------+----------------------+------------+-----------------+------------+";
+            else
+                return "+----------------------+----------------------+----------------------+------------+-----------------+";
+        }
+
+        public static string TableHeader(bool withRole = false)
+        {
+            if(withRole)
+                return "| Username             | Name                 | Last Name            | Gender     | Date of Birth   | Role       |";
+            else
+                return "| Username             | Name                 | Last Name            | Gender     | Date of Birth   |";
+        }
+
+        public static void PrintUsers(bool withRole = false, Roles role = Roles.Nobody)
+        {
+            Console.WriteLine(LineInTable(withRole));
+            Console.WriteLine(TableHeader(withRole));
+            Console.WriteLine(LineInTable(withRole));
+            foreach(KeyValuePair<string, User> pair in SystemFunctions.Users)
+            {
+                if(role == Roles.Nobody || pair.Value.Role == role)
+                {
+                    Console.WriteLine(pair.Value.TextInTable(withRole));
+                    Console.WriteLine(LineInTable(withRole));
+                }
+            }
+            Console.WriteLine();
+        }
     }
 }
