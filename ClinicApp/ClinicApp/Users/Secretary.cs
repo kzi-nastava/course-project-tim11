@@ -42,7 +42,7 @@ namespace ClinicApp.Users
             Console.WriteLine("2: Manage patient accounts");
             Console.WriteLine("0: Exit");
 
-            return 1;
+            return 2;
         }
 
         public override void MenuDo(int option)
@@ -75,6 +75,15 @@ namespace ClinicApp.Users
                         User patient = OtherFunctions.Register(Roles.Patient);
                         SystemFunctions.Users.Add(patient.UserName, patient);
                         SystemFunctions.Patients.Add(patient.UserName, (Patient)patient);
+                        break;
+                    case 2:
+                        OtherFunctions.PrintUsers(role : Roles.Patient);
+                        break;
+                    case 3:
+
+                        break;
+                    case 4:
+
                         break;
                 }
             }
