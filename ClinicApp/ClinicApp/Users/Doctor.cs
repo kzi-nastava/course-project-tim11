@@ -331,7 +331,7 @@ namespace ClinicApp.Users
                         SystemFunctions.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
                     }
                     Console.WriteLine($"Information about patient:");
-                    healthRecord.Patient.ViewPatient();
+                   // healthRecord.Patient.ViewPatient();
                     healthRecord.ShowHealthRecord();
                 }
             }
@@ -370,8 +370,8 @@ namespace ClinicApp.Users
             healthRecord.ShowHealthRecord();
             Console.WriteLine("\nWrite you Anamnesis: ");
             string anamnesisText = Console.ReadLine();
-            Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
-            healthRecord.Anamneses.Add(anamnesis);
+            //Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
+            //healthRecord.Anamneses.Add(anamnesis);
             Console.WriteLine("Anamnesis added\nDo you want to change medical record?(y/n)");
             string choice = Console.ReadLine().ToUpper();
             if (choice == "Y")

@@ -84,14 +84,17 @@ namespace ClinicApp.Users
                 Console.WriteLine();
                 switch(option)
                 {
+                    //Create
                     case 1:
                         User patient = OtherFunctions.Register(Roles.Patient);
                         SystemFunctions.Users.Add(patient.UserName, patient);
                         SystemFunctions.Patients.Add(patient.UserName, (Patient)patient);
                         break;
+                    //Read
                     case 2:
                         OtherFunctions.PrintUsers(role : Roles.Patient);
                         break;
+                    //Update
                     case 3:
                         option2 = 1;
                         while (option2 != 0)
@@ -121,6 +124,7 @@ namespace ClinicApp.Users
                             }
                         }
                         break;
+                    //Delete
                     case 4:
                         option2 = 1;
                         while(option2 != 0)
@@ -176,6 +180,7 @@ namespace ClinicApp.Users
 
                 switch(option)
                 {
+                    //Username
                     case 1:
                         Console.Write("Username: ");
                         temp = OtherFunctions.EnterString();
@@ -187,6 +192,7 @@ namespace ClinicApp.Users
                         }
                         patient.UserName = temp;
                         break;
+                    //Password
                     case 2:
                         string password, passwordCheck;
                         Console.Write("Password: ");
@@ -203,14 +209,17 @@ namespace ClinicApp.Users
                         }
                         patient.Password = password;
                         break;
+                    //Name
                     case 3:
                         Console.Write("\nName: ");
                         patient.Name = OtherFunctions.EnterString();
                         break;
+                    //Last name
                     case 4:
                         Console.Write("\nLast name: ");
                         patient.LastName = OtherFunctions.EnterString();
                         break;
+                    //Gender
                     case 5:
                         Console.Write("Gender (m/f/n): ");
                         temp = OtherFunctions.EnterString();
@@ -221,6 +230,7 @@ namespace ClinicApp.Users
                         }
                         patient.Gender = temp[0];
                         break;
+                    //Date of birth
                     case 6:
                         Console.Write("Date of birth (e.g. 02/05/1984): ");
                         patient.DateOfBirth = OtherFunctions.AskForDate();
@@ -247,6 +257,7 @@ namespace ClinicApp.Users
                 Console.WriteLine();
                 switch (option)
                 {
+                    //List all
                     case 1:
                         Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
                         Console.WriteLine(OtherFunctions.TableHeader() + " Blocked by      |");
@@ -258,6 +269,7 @@ namespace ClinicApp.Users
                         }
                         Console.WriteLine();
                         break;
+                    //Block
                     case 2:
                         Console.WriteLine("\nEnter the username of the account you want to block:");
                         username = OtherFunctions.EnterString();
@@ -269,6 +281,7 @@ namespace ClinicApp.Users
                         else
                             Console.WriteLine("There is no patient's account with such username.");
                         break;
+                    //Unblock
                     case 3:
                         Console.WriteLine("\nEnter the username of the account you want to unblock:");
                         username = OtherFunctions.EnterString();
