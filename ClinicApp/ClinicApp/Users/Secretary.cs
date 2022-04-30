@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace ClinicApp.Users
 {
@@ -40,10 +40,11 @@ namespace ClinicApp.Users
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Manage patient accounts");
-            Console.WriteLine("3: Blocked or unbolcked patient accounts");
+            Console.WriteLine("3: Block or unbolck patient accounts");
+            Console.WriteLine("4: Manage examination requests");
             Console.WriteLine("0: Exit");
 
-            return 3;
+            return 4;
         }
 
         public override void MenuDo(int option)
@@ -54,6 +55,9 @@ namespace ClinicApp.Users
                     PatientsCRUD();
                     break;
                 case 3:
+                    ManageBlockedPatients();
+                    break;
+                case 4:
                     ManageBlockedPatients();
                     break;
             }
@@ -272,6 +276,46 @@ namespace ClinicApp.Users
                         break;
                 }
             }
+        }
+
+        private static void ManageExaminationRequests()
+        {
+            int id;
+            Clinic.Examination examination;
+
+            Console.WriteLine();
+            using (StreamReader reader = new StreamReader(SystemFunctions.PatientRequestsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                    Console.WriteLine("1: Approve");
+                    Console.WriteLine("2: Deny");
+                    option = OtherFunctions.EnterNumberWithLimit(1, 2);
+                    if(option == 1)
+                    {
+                        if (!Int32.TryParse(line.Split("|")[0], out id))
+                            id = -1;
+                        if (line.Split("|")[1] == "DELETE")
+                            SystemFunctions.AllExamtinations.Remove(id);
+                        else if (line.Split("|")[1] == "UPDATE" && SystemFunctions.AllExamtinations.TryGetValue(id, out examination))
+                        {
+
+                            examination.DateTime = DateTime.Parse(line.Split("|")[2]);
+                            Doctor doctor;
+                            if (SystemFunctions.Doctors.TryGetValue(line.Split("|")[3], out doctor))
+                            {
+                                examination.Doctor.Examinations.Remove(examination);
+                                examination.Doctor = doctor;
+                                examination.Doctor.Examinations.Add(examination);
+                            }
+                        }
+                    }
+                }
+            }
+            File.Delete(SystemFunctions.PatientRequestsFilePath);
+            Console.WriteLine();
         }
     }
 }

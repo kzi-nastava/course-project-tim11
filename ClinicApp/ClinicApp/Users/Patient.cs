@@ -288,12 +288,12 @@ namespace ClinicApp.Users
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
-                    /*string line = examination.ID.ToString() + "|" + "UPDATE" + "|"; //dodaj string
+                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
                     using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
                     {
                         sw.WriteLine(line);
                     }
-                    */ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
+                    ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
                 examination.DateTime = newDate;
@@ -316,16 +316,15 @@ namespace ClinicApp.Users
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
-                    /*string line = examination.ID.ToString() + "|" + "UPDATE" + "|"; //dodaj string
+                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
                     using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
                     {
                         sw.WriteLine(line);
                     }
-                    */
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
-                //sedcretary request
+                //secretary request
 
             }
             else if (choice.ToUpper() == "DR")
