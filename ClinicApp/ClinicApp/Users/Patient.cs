@@ -18,7 +18,7 @@ namespace ClinicApp.Users
         public List<Examination> Examinations { get; set; }
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
-        public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Blocked blocked)
+        public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
         {
             UserName = userName;
             Password = password;
@@ -27,10 +27,10 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Patient;
-            Blocked = blocked;
             Examinations = new List<Examination>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
+            Blocked = Blocked.Unblocked;
         }
 
         public Patient(string text)
@@ -44,23 +44,20 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Patient;
-            Blocked temp;
-            if (Blocked.TryParse(data[7], out temp))
-                Blocked = temp;
-            else
-                Blocked = Blocked.Unblocked;
             Examinations = new List<Examination>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
+            Blocked = Blocked.Unblocked;
         }
 
         public override string Compress()
         {
-            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role + "|" + Blocked.ToString();
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
         }
 
         public override int MenuWrite()
         {
+            AntiTroll();
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Make appointment");
@@ -68,7 +65,7 @@ namespace ClinicApp.Users
             Console.WriteLine("4: Cancel appointment");
             Console.WriteLine("0: Exit");
 
-            return 1;
+            return 4;
         }
 
         public override void MenuDo(int option)
@@ -76,7 +73,16 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
+                    CreateExamination();
+                    break;
+                case 3:
+                    EditExamination();
+                    break;
+                case 4:
+                    DeleteExamination();
+
                     //TODOs
+
                     break;
             }
         }
@@ -94,17 +100,23 @@ namespace ClinicApp.Users
 
         public void LoadActivityHistory()
         {
-            string fileName = this.UserName + "activity.txt";
-            using (StreamReader reader = new StreamReader("../../../Data/"+fileName))
+            string fileName = this.UserName + "_activity.txt";
+            fileName = "../../../Data/" + fileName;
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(fileName))
                 {
-                    string[] tmp = line.Split("|");
-                    DateTime datetime = Convert.ToDateTime(tmp[0]);
-                    ActivityHistory.Add(datetime, tmp[1]);
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] tmp = line.Split("|");
+                        DateTime datetime = Convert.ToDateTime(tmp[0]);
+                        ActivityHistory.Add(datetime, tmp[1]);
+                    }
                 }
             }
+            catch {  }
+            
         }
 
         public static void ViewAllDoctors()
@@ -159,7 +171,7 @@ namespace ClinicApp.Users
             string choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                Console.WriteLine("view doctors implement");
+                ViewAllDoctors();
             }
             Console.WriteLine("Enter the username:");
             string userName = Console.ReadLine();
@@ -187,9 +199,17 @@ namespace ClinicApp.Users
                 id = 1;
             }
             Examination examination = new Examination(id, dateTime, doctor,this,false);
+            Examinations.Add(examination);
+            string line = examination.Compress();
+            using (StreamWriter sw = File.AppendText(SystemFunctions.ExaminationsFilePath))
+            {
+                sw.WriteLine(line);
+            }
             ActivityHistory.Add(DateTime.Now, "CREATE");
-        }
 
+
+        }
+       
         private void DeleteExamination()
         {
             Console.WriteLine("Enter the ID of the examination you want to delete?");
@@ -288,7 +308,7 @@ namespace ClinicApp.Users
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
-                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
+                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|"; //dodaj string
                     using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
                     {
                         sw.WriteLine(line);
@@ -316,15 +336,16 @@ namespace ClinicApp.Users
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
-                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
+                    /*string line = examination.ID.ToString() + "|" + "UPDATE" + "|"; //dodaj string
                     using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
                     {
                         sw.WriteLine(line);
                     }
+                    */
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
-                //secretary request
+                //sedcretary request
 
             }
             else if (choice.ToUpper() == "DR")
@@ -376,7 +397,7 @@ namespace ClinicApp.Users
                 {
                     continue;
                 }
-                if(activity_performed == "MAKE")
+                if(activity_performed == "CREATE")
                 {
                     make += 1;
                 }
@@ -388,7 +409,7 @@ namespace ClinicApp.Users
                 {
                     Console.WriteLine("You have been blocked by system.");
                     this.Blocked = Blocked.System;
-                    //todo system exit
+                    Environment.Exit(0);
                 }
             }
         }

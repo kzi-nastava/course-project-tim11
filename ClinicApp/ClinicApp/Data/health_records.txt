@@ -1,1 +1,0 @@
-danilo_babic|90|175|lung disease/Diabetes|marko_markovic;my first anamnesis;30-Apr-22 21:26:01/marko_markovic;My second anamnesis;30-Apr-22 22:58:47/luka_svetic;My third anamnesis;30-Apr-22 23:05:57/luka_svetic;My fourth anamnesis;30-Apr-22 23:22:05|pollen/Dogs/Bread

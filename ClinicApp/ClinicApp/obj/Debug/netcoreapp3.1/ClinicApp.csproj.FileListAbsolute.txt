@@ -25,6 +25,10 @@ D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\De
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.dll
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.pdb
 D:\Relja\Факултет\УСИ\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.genruntimeconfig.cache
+C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.AssemblyInfoInputs.cache
+C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.AssemblyInfo.cs
+C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.CoreCompileInputs.cache
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.exe
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.deps.json
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.runtimeconfig.json
@@ -32,10 +36,6 @@ C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\bin\De
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.dll
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\bin\Debug\netcoreapp3.1\ClinicApp.pdb
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.AssemblyReference.cache
-C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.AssemblyInfoInputs.cache
-C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.AssemblyInfo.cs
-C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.csproj.CoreCompileInputs.cache
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.dll
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.pdb
 C:\Users\Stefan\Desktop\PROJEKAT\course-project-tim11\ClinicApp\ClinicApp\obj\Debug\netcoreapp3.1\ClinicApp.genruntimeconfig.cache
