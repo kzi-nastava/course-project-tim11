@@ -7,8 +7,14 @@ using System.IO;
 
 namespace ClinicApp.Users
 {
+    public enum Blocked
+    {
+        Unblocked, Secretary, System
+    };
+
     public class Patient : User
     {
+        public Blocked Blocked { get; set; }
         public List<Examination> Examinations { get; set; }
         //public Dictionary<>
         //public Dictionary<DateTime, string>;
@@ -22,6 +28,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Patient;
+            Blocked = Blocked.Unblocked;
             Examinations = new List<Examination>();
         }
 
@@ -36,6 +43,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Patient;
+            Blocked = Blocked.Unblocked;
             Examinations = new List<Examination>();
         }
 
