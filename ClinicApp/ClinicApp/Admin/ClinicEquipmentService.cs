@@ -21,6 +21,7 @@ public static class ClinicEquipmentService
     {
         heq.Id = ClinicEquipmentList.Last().Id + 1; 
         ClinicEquipmentList.Add(heq);
+        PersistEquipment();
     }
     public static void Delete(int id)
     {
@@ -28,6 +29,7 @@ public static class ClinicEquipmentService
         if (heq is null)
             return;
         ClinicEquipmentList.Remove(heq);
+        PersistEquipment();
     }
     public static void AddToRoom(int eqId, int roomId)
     {
@@ -35,6 +37,17 @@ public static class ClinicEquipmentService
         if (heq is null)
             return;
         heq.RoomId = roomId;
+        PersistEquipment();
+    }
+    public static void Update(int id, int newAmount)
+    {
+        var eqToUpdate = Get(id);
+        if (eqToUpdate == null)
+        {
+            return;
+        }
+        eqToUpdate.Amount = newAmount;
+        PersistEquipment();
     }
     //---------------SEARCH AND FILTERING-------------------------------------------------------------
     public static List<ClinicEquipment> Search(string searchTerm)

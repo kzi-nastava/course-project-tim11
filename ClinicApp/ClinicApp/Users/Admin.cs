@@ -40,6 +40,8 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
+            Console.WriteLine("2. Manage Clinic Rooms");
+            Console.WriteLine("3. Manage Clinic Equipment");
             Console.WriteLine("0: Exit");
 
             return 1;
@@ -50,34 +52,11 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    //TODO
+                    RoomManagmentMenu();
                     break;
-            }
-        }
-
-        public static void AdminMenu()
-        {
-            while (true)
-            {
-                Console.WriteLine("Admin menu, choose an option");
-                Console.WriteLine("1. Manage Clinic Rooms");
-                Console.WriteLine("2. Manage Clinic Equipment");
-                Console.WriteLine("X to exit");
-                string choice = Console.ReadLine();
-                switch (choice.ToUpper())
-                {
-                    case "1":
-                        RoomManagmentMenu();
-                        break;
-                    case "2":
-                        EquipmentManagmentMenu();
-                        break;
-                    case "X":
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option, try again");
-                        break;
-                }
+                case 3:
+                    EquipmentManagmentMenu();
+                    break;
             }
         }
         public static void RoomManagmentMenu()
@@ -174,7 +153,7 @@ namespace ClinicApp.Users
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Edit");
-                int id = Convert.ToInt32(Console.ReadLine());
+                int id = OtherFunctions.EnterNumber();
                 room = ClinicRoomService.Get(id);
                 if (room is null)
                 {
@@ -239,7 +218,7 @@ namespace ClinicApp.Users
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Delete");
-                id = Convert.ToInt32(Console.ReadLine());
+                id = OtherFunctions.EnterNumber();
                 room = ClinicRoomService.Get(id);
                 if (room is null)
                 {
@@ -263,6 +242,7 @@ namespace ClinicApp.Users
                 Console.WriteLine("1. List all");
                 Console.WriteLine("2. Search");
                 Console.WriteLine("3. Move equipment");
+                Console.WriteLine("X to return");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
                 {
@@ -273,7 +253,7 @@ namespace ClinicApp.Users
                         SearchEquipment();
                         break;
                     case "3":
-                        MoveEquipment();
+                        MoveEquipmentMenu();
                         break;
                     case "X":
                         return;
@@ -486,9 +466,169 @@ namespace ClinicApp.Users
             }
 
         }
+        public static void MoveEquipmentMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("1. Move Equipment");
+                Console.WriteLine("2. Add new Equipment to Storage");
+                Console.WriteLine("X to return");
+                string answer = Console.ReadLine();
+                if (answer == "1")
+                {
+                    MoveEquipment();
+                }
+                else if (answer == "2")
+                {
+                    AddEqToStorage();
+                }
+                else if (answer.ToUpper() == "X")
+                {
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+
+            }
+
+        }
+        public static void AddEqToStorage()
+        {
+            while (true)
+            {
+                Console.WriteLine("List Equipment in Storage? (y/n): ");
+                string answer = Console.ReadLine();
+                if (answer.ToLower() == "y")
+                {
+                    Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+                    foreach (ClinicEquipment item in ClinicEquipmentService.ClinicEquipmentList)
+                    {
+                        if (item.RoomId == 0)
+                        {
+                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + ClinicRoomService.Get(item.RoomId).Name + " " + ClinicRoomService.Get(item.RoomId).Type + " " + item.Type);
+                        }
+                    }
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true)
+            {
+                Console.WriteLine("1. Add new Equipment");
+                Console.WriteLine("2. Edit amount of existing Equipment");
+                string answer = Console.ReadLine();
+                if (answer == "1")
+                {
+                    string name;
+                    EquipmentType type;
+                    int amount = OtherFunctions.EnterNumber();
+                    List<string> exsistingNames = new List<string>();
+                    foreach(ClinicEquipment item in ClinicEquipmentService.ClinicEquipmentList)
+                    {
+                        if (item.RoomId == 0)
+                        {
+                            exsistingNames.Add(item.Name);
+                        }
+                    }
+
+                    while (true)
+                    {
+                        Console.Write("Name: ");
+                        name = Console.ReadLine();
+                        if (name.Contains("|"))
+                        {
+                            Console.WriteLine("Invalid option, name cannot contain |, try again");
+                        }
+                        else if (exsistingNames.Contains(name))
+                        {
+                            Console.WriteLine("Invalid option, equipment with this name already exists");
+                        }
+                        else { break; }
+                    }
+                    while (true)
+                    {
+                        Console.Write("\nChoose Type (1 for Operations, 2 for RoomFurniture, 3 for Hallway, 4 for Examinations): ");
+                        answer = Console.ReadLine();
+                        if (answer == "1")
+                        {
+                            type = EquipmentType.Operations;
+                            break;
+                        }
+                        else if (answer == "2")
+                        {
+                            type = EquipmentType.RoomFurniture; 
+                            break;
+                        }
+                        else if (answer == "3")
+                        {
+                            type = EquipmentType.Hallway;
+                            break;
+                        }
+                        else if (answer == "4")
+                        {
+                            type = EquipmentType.Examinations;
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid option, try again");
+                        }
+
+                    }
+                    ClinicEquipment eq = new ClinicEquipment { Amount = amount, Name = name, RoomId = 0, Type = type };
+                    ClinicEquipmentService.Add(eq);
+                    break;
+                }
+                else if (answer == "2")
+                {
+                    ClinicEquipment eq;
+                    while (true)
+                    {
+                        Console.WriteLine("Enter ID of equipment to change:");
+                        int id = OtherFunctions.EnterNumber();
+                        eq = ClinicEquipmentService.Get(id);
+                        if (eq is null)
+                        {
+                            Console.WriteLine("Invalid option, try again");
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (eq.RoomId != 0)
+                    {
+                        Console.WriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in Equipment Menu");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Enter new amount");
+                        int amount = OtherFunctions.EnterNumber();
+                        ClinicEquipmentService.Update(eq.Id, amount);
+                    }
+                    
+                    
+                    break;
+                }
+                else if (answer.ToUpper() == "X")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+            }
+        }
         public static void MoveEquipment()
         {
-            Console.WriteLine("Moving");
+            
         }
         public class SearchTerms
         {
