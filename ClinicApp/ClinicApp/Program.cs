@@ -35,6 +35,15 @@ namespace ClinicApp
                     if(currentUser.Role != Roles.Nobody)
                     {
                         SystemFunctions.Users.Add(currentUser.UserName, currentUser);
+                        switch(currentUser.Role)
+                        {
+                            case Roles.Patient:
+                                SystemFunctions.Patients.Add(currentUser.UserName, (Patient)currentUser);
+                                break;
+                            case Roles.Doctor:
+                                SystemFunctions.Doctors.Add(currentUser.UserName, (Doctor)currentUser);
+                                break;
+                        }
                         Console.WriteLine($"\nWelcome {currentUser.UserName}\n");
                     }
                 }

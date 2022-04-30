@@ -1,14 +1,14 @@
-using ClinicApp.Admin;
+using ClinicApp.AdminFunctions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public static class ClinicRoomService {
+public static class ClinicRoomManager {
 
     public static List<ClinicRoom> ClinicRooms { get; set;}
 
-    static ClinicRoomService()
+    static ClinicRoomManager()
     {
         ClinicRooms = LoadRooms();        
     }
@@ -55,6 +55,7 @@ public static class ClinicRoomService {
         roomToUpdate.Type = newType;
         PersistRooms();
     }
+    //-------------FILES STUFF----------------------------------------------
     public static void PersistRooms()
     {
         File.Delete("../../../Admin/Data/rooms.txt");
