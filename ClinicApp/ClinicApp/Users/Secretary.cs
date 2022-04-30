@@ -30,11 +30,13 @@ namespace ClinicApp.Users
             Role = Roles.Secretary;
         }
 
+        //Compresses a Secretary object intu a string for easier upload.
         public override string Compress()
         {
             return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
         }
 
+        //Writes all the option a secretary has once he logs in.
         public override int MenuWrite()
         {
             Console.WriteLine("\nWhat would you like to do?");
@@ -47,6 +49,7 @@ namespace ClinicApp.Users
             return 4;
         }
 
+        //Executes the chosen command.
         public override void MenuDo(int option)
         {
             switch (option)
@@ -58,11 +61,12 @@ namespace ClinicApp.Users
                     ManageBlockedPatients();
                     break;
                 case 4:
-                    ManageBlockedPatients();
+                    ManageExaminationRequests();
                     break;
             }
         }
 
+        //Manages the Patient CRUD.
         private void PatientsCRUD()
         {
             int option = 1, option2, numberOfOptions = 4;
@@ -151,6 +155,7 @@ namespace ClinicApp.Users
             }
         }
 
+        //Puts the U in CRUD.
         private static void UpdatePatient(Patient patient)
         {
             int option = 1;
@@ -224,6 +229,7 @@ namespace ClinicApp.Users
             }
         }
 
+        //Manages blocked and unblocked patients.
         private static void ManageBlockedPatients()
         {
             int option = 1, numberOfOptions = 4;
@@ -278,6 +284,7 @@ namespace ClinicApp.Users
             }
         }
 
+        //Manages patient requests.
         private static void ManageExaminationRequests()
         {
             int id, option;
