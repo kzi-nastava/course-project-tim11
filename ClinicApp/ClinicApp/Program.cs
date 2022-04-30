@@ -17,7 +17,9 @@ namespace ClinicApp
             while(option != 0)
             {
                 numberOfOptions = currentUser.MenuWrite();
+                Console.Write(">> ");
                 option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                Console.WriteLine();
                 if (option == 1)
                 {
                     if (currentUser.Role == Roles.Nobody)
@@ -33,6 +35,15 @@ namespace ClinicApp
                     if(currentUser.Role != Roles.Nobody)
                     {
                         SystemFunctions.Users.Add(currentUser.UserName, currentUser);
+                        switch(currentUser.Role)
+                        {
+                            case Roles.Patient:
+                                SystemFunctions.Patients.Add(currentUser.UserName, (Patient)currentUser);
+                                break;
+                            case Roles.Doctor:
+                                SystemFunctions.Doctors.Add(currentUser.UserName, (Doctor)currentUser);
+                                break;
+                        }
                         Console.WriteLine($"\nWelcome {currentUser.UserName}\n");
                     }
                 }
