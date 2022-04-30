@@ -12,5 +12,6 @@ namespace ClinicApp.AdminFunctions
         public int NewRoomId { get; set; }
         public int Amount { get; set; }
         public DateTime MovementDate { get; set; }
+        public bool Done { get; set; }
     }
 }

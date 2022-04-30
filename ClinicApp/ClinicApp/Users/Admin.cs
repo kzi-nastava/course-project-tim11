@@ -38,13 +38,14 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
+            EquipmentMovementManager.LoadEquipmentMovement(); //load to check if there is any equipment to move today
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2. Manage Clinic Rooms");
             Console.WriteLine("3. Manage Clinic Equipment");
             Console.WriteLine("0: Exit");
 
-            return 1;
+            return 3;
         }
 
         public override void MenuDo(int option)
@@ -238,6 +239,7 @@ namespace ClinicApp.Users
         {
             while (true)
             {
+                EquipmentMovementManager.CheckForMovements();
                 Console.WriteLine("Manage Equipment");
                 Console.WriteLine("1. List all");
                 Console.WriteLine("2. Search");
@@ -517,7 +519,7 @@ namespace ClinicApp.Users
                     break;
                 }
             }
-            while (true)
+            while (true) //storage submenu
             {
                 Console.WriteLine("1. Add new Equipment");
                 Console.WriteLine("2. Edit amount of existing Equipment");
@@ -603,17 +605,16 @@ namespace ClinicApp.Users
                     }
                     if (eq.RoomId != 0)
                     {
-                        Console.WriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in Equipment Menu");
+                        Console.WriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in the Manage Equipment menu");
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("Enter new amount");
-                        int amount = OtherFunctions.EnterNumber();
+                        Console.WriteLine("Enter new amount: ");
+                        int amount = OtherFunctions.EnterNumberWithLimit(1, 99999999);
                         ClinicEquipmentManager.Update(eq.Id, amount);
                     }
-                    
-                    
+
                     break;
                 }
                 else if (answer.ToUpper() == "X")
@@ -626,11 +627,56 @@ namespace ClinicApp.Users
                 }
             }
         }
-        public static void MoveEquipment()
+        public static void MoveEquipment() //menu for creating a new equipment movement 
         {
-            
-        }
-        public class SearchTerms
+            ClinicEquipment eq;
+            while (true)
+            {
+                Console.WriteLine("Enter ID of equipment to change:");
+                int id = OtherFunctions.EnterNumber();
+                eq = ClinicEquipmentManager.Get(id);
+                if (eq is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Console.WriteLine("Enter amount to move");
+            int amount = OtherFunctions.EnterNumberWithLimit(1, eq.Amount);
+            ClinicRoom cr;
+            while (true)
+            {
+                Console.WriteLine("Enter the Id of the room where the equipment is going to");
+                int id = OtherFunctions.EnterNumber();
+                cr = ClinicRoomManager.Get(id);
+                if (cr is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else break;
+            }
+            DateTime date;
+            while (true)
+            {
+                Console.WriteLine("Enter date on which the equipment is being moved");
+                string dateString = Console.ReadLine();
+                if (DateTime.TryParse(dateString, out date) == false)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else
+                {
+                    date = DateTime.Parse(dateString);
+                    break;
+                };
+            }
+            EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = cr.Id, MovementDate = date, Done = false };
+            EquipmentMovementManager.Add(movement);
+            }
+        public class SearchTerms  //small helper class to ease searching equipment
         {
             public string SearchTerm { get; set; }
             public bool FilterByEqTypeBool { get; set; }

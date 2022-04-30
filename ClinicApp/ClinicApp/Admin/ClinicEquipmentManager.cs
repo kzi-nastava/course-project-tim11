@@ -17,10 +17,10 @@ public static class ClinicEquipmentManager
 
     public static ClinicEquipment? Get(int id) => ClinicEquipmentList.FirstOrDefault(p => p.Id == id);
 
-    public static void Add(ClinicEquipment heq)
+    public static void Add(ClinicEquipment eq)
     {
-        heq.Id = ClinicEquipmentList.Last().Id + 1; 
-        ClinicEquipmentList.Add(heq);
+        eq.Id = ClinicEquipmentList.Last().Id + 1; 
+        ClinicEquipmentList.Add(eq);
         PersistEquipment();
     }
     public static void Delete(int id)
@@ -33,10 +33,10 @@ public static class ClinicEquipmentManager
     }
     public static void AddToRoom(int eqId, int roomId)
     {
-        var heq = Get(eqId);
-        if (heq is null)
+        var eq = Get(eqId);
+        if (eq is null)
             return;
-        heq.RoomId = roomId;
+        eq.RoomId = roomId;
         PersistEquipment();
     }
     public static void Update(int id, int newAmount)

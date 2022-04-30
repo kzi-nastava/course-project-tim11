@@ -55,6 +55,7 @@ public static class ClinicRoomManager {
         roomToUpdate.Type = newType;
         PersistRooms();
     }
+    //-------------FILES STUFF----------------------------------------------
     public static void PersistRooms()
     {
         File.Delete("../../../Admin/Data/rooms.txt");

@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class EquipmentMovmentManager
+    public static class EquipmentMovementManager
     {
         static public List<EquipmentMovement> EquipmentMovementList { get; set; }
 
-        static EquipmentMovmentManager()
+        static EquipmentMovementManager()
         {
             EquipmentMovementList = LoadEquipmentMovement();
         }
@@ -20,8 +20,49 @@ namespace ClinicApp.AdminFunctions
 
         public static void Add(EquipmentMovement item)
         {
-            item.Id = EquipmentMovementList.Last().Id + 1;
+            if (EquipmentMovementList.Count == 0)
+            {
+                item.Id = 1;
+            }
+            else
+            {
+                item.Id = EquipmentMovementList.Last().Id + 1;
+            }
             EquipmentMovementList.Add(item);
+            PersistChanges();
+        }
+        public static void CommitChanges(EquipmentMovement item)   //actually moves the equipment
+        {
+            Dictionary<string,int> newRoomEqNames = new Dictionary<string, int>();
+            foreach (ClinicEquipment eq in ClinicEquipmentManager.ClinicEquipmentList)
+            {
+                if (eq.RoomId == item.NewRoomId)
+                {
+                    newRoomEqNames.Add(eq.Name, eq.Id);
+                }
+            }
+            if (newRoomEqNames.ContainsKey(ClinicEquipmentManager.Get(item.EquipmentId).Name)) 
+            {
+
+                int eqId = newRoomEqNames[ClinicEquipmentManager.Get(item.EquipmentId).Name];
+                ClinicEquipmentManager.Update(eqId, ClinicEquipmentManager.Get(eqId).Amount + item.Amount);
+            }
+            else
+            {
+                ClinicEquipment newEq = new ClinicEquipment
+                {
+                    Name = ClinicEquipmentManager.Get(item.EquipmentId).Name,
+                    Amount = item.Amount,
+                    RoomId = item.NewRoomId,
+                    Type = ClinicEquipmentManager.Get(item.EquipmentId).Type
+                };
+                
+                ClinicEquipmentManager.Add(newEq);
+            }
+            int remaining = ClinicEquipmentManager.Get(item.EquipmentId).Amount - item.Amount;
+            ClinicEquipmentManager.Update(item.EquipmentId, remaining);
+            item.Done = true;
+
         }
         public static void Delete(int id)
         {
@@ -29,8 +70,20 @@ namespace ClinicApp.AdminFunctions
             if (item is null)
                 return;
             EquipmentMovementList.Remove(item);
+            PersistChanges();
         }
-        //--------------FILES STUFF-----------------
+        public static void CheckForMovements() 
+        {
+            foreach(var item in EquipmentMovementList)
+            {
+                if (item.MovementDate <= DateTime.Today && item.Done == false)
+                {
+                    CommitChanges(item);
+                }
+            }
+            PersistChanges();
+        }
+//--------------FILES STUFF------------------------------------------------------------------------------------
         public static List<EquipmentMovement> LoadEquipmentMovement()
         {
             List<EquipmentMovement> movements = new List<EquipmentMovement>();
@@ -39,7 +92,7 @@ namespace ClinicApp.AdminFunctions
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    EquipmentMovement movement = ParseMovement(line);
+                    EquipmentMovement movement = ParseMovement(line); 
                     movements.Add(movement);
                 }
             }
@@ -54,7 +107,8 @@ namespace ClinicApp.AdminFunctions
                 EquipmentId = Convert.ToInt32(parameteres[1]),
                 NewRoomId = Convert.ToInt32(parameteres[2]),
                 Amount = Convert.ToInt32(parameteres[3]),
-                MovementDate = DateTime.Parse(parameteres[4])
+                MovementDate = DateTime.Parse(parameteres[4]),
+                Done = Boolean.Parse(parameteres[5])
             };
             return movement;
         }
@@ -63,13 +117,12 @@ namespace ClinicApp.AdminFunctions
             File.Delete("../../../Admin/Data/equipmentMovement.txt");
             foreach (EquipmentMovement movement in EquipmentMovementList)
             {
-                string newLine = Convert.ToString(movement.Id) + "|" + Convert.ToString(movement.EquipmentId) + "|" + Convert.ToString(movement.NewRoomId) + "|" + Convert.ToString(movement.Amount) + "|" + movement.MovementDate.ToString("d");
+                string newLine = Convert.ToString(movement.Id) + "|" + Convert.ToString(movement.EquipmentId) + "|" + Convert.ToString(movement.NewRoomId) + "|" + Convert.ToString(movement.Amount) + "|" + movement.MovementDate.ToString("d") + "|" + movement.Done.ToString();
                 using (StreamWriter sw = File.AppendText("../../../Admin/Data/equipmentMovement.txt"))
                 {
                     sw.WriteLine(newLine);
                 }
             }
         }
-
     }
 }
