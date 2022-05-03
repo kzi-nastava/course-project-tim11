@@ -288,7 +288,7 @@ namespace ClinicApp.Users
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
-                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
+                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + newDate.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
                     using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
                     {
                         sw.WriteLine(line);
@@ -314,10 +314,11 @@ namespace ClinicApp.Users
                     examination.DateTime = oldTime;
                     return;
                 }
+                //secretary request
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
-                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
+                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + newTime.ToString("dd/MM/yyyy") + "|" + examination.Doctor.UserName;
                     using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
                     {
                         sw.WriteLine(line);
@@ -325,7 +326,7 @@ namespace ClinicApp.Users
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
-                //secretary request
+                examination.DateTime = newTime;
 
             }
             else if (choice.ToUpper() == "DR")
@@ -349,6 +350,17 @@ namespace ClinicApp.Users
                 if (validate == false)
                 {
                     Console.WriteLine("Doctor is not available");
+                    return;
+                }
+                if (!(requestValidation < 0))
+                {
+                    Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
+                    string line = examination.ID.ToString() + "|" + "UPDATE" + "|" + examination.DateTime.ToString("dd/MM/yyyy") + "|" + doctor.UserName;
+                    using (StreamWriter sw = File.AppendText(SystemFunctions.PatientRequestsFilePath))
+                    {
+                        sw.WriteLine(line);
+                    }
+                    ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
                 //proveri kada se radi izmena
