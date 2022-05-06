@@ -15,10 +15,10 @@ namespace ClinicApp.Clinic
 
         public bool Finished { get; set; }
 
-        public bool Tombstone { get; set; }
+        public int Tombstone { get; set; }
 
-        public bool Edited { get; set; }
-        public Examination(int id, DateTime dateTime, Doctor doctor, Patient patient, bool finished, bool tombstone, bool edited)
+        public int Edited { get; set; }
+        public Examination(int id, DateTime dateTime, Doctor doctor, Patient patient, bool finished, int tombstone, int edited)
         {
             this.ID = id;
             this.DateTime = dateTime;
@@ -38,8 +38,8 @@ namespace ClinicApp.Clinic
             Doctor = SystemFunctions.Doctors[data[2]];
             Patient = SystemFunctions.Patients[data[3]];
             Finished = Convert.ToBoolean(data[4]);
-            Tombstone = Convert.ToBoolean(data[5]);
-            Edited = Convert.ToBoolean(data[6]);
+            Tombstone = Convert.ToInt32(data[5]);
+            Edited = Convert.ToInt32(data[6]);
         }
 
         public string Compress()
