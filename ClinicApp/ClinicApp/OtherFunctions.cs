@@ -308,6 +308,7 @@ namespace ClinicApp
 
         private static User RegisterPatient(string text)
         {
+            text += "|Unblocked";
             return new Patient(text);
         }
 
