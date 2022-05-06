@@ -444,7 +444,7 @@ namespace ClinicApp.Users
             }
         }
 
-        private void AntiTroll()
+        public void AntiTroll()
         {
             int update_delete = 0;
             int make = 0;

@@ -349,7 +349,6 @@ namespace ClinicApp.Users
                     }
                 }
             }
-            File.Delete(SystemFunctions.PatientRequestsFilePath);
             Console.WriteLine();
         }
     }
