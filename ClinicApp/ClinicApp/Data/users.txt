@@ -6,3 +6,6 @@ marko_markovic|password|Marko|Markovic|05-10-2002|m|Doctor
 luka_svetic|lukavolisaki|Luka|Svetic|09-10-2001|m|Doctor
 danilo_jevtic|newpassword|Danilo|Jevtic|30-04-2022|m|Patient|Unblocked
 jelena_mikovic|password|Jelena|Mikovic|07-12-2001|f|Doctor
+stefan_stefanovic|password|Stefan|Stefanovic|05-10-2001|m|Doctor
+danilo_danilovic|password|Danilo|Danilovic|05-10-2022|m|Patient|Unblocked
+martina_|password|Martina|Martic|05-10-2001|f|Secretary

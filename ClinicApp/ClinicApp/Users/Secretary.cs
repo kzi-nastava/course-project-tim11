@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ClinicApp.Users
 {
@@ -318,7 +319,15 @@ namespace ClinicApp.Users
                         if (!Int32.TryParse(line.Split("|")[0], out id))
                             id = -1;
                         if (line.Split("|")[1] == "DELETE")
-                            SystemFunctions.AllExamtinations.Remove(id);
+                        {
+                            examination = SystemFunctions.AllExamtinations[id];
+                            examination.Doctor.Examinations.Remove(examination);
+                            examination.Patient.Examinations.Remove(examination);
+                            var last = SystemFunctions.AllExamtinations.Values.Last();
+                            Clinic.Examination deletedExamination = new Clinic.Examination(last.ID + 1, examination.DateTime, examination.Doctor, examination.Patient, examination.Finished, examination.ID, examination.Edited);
+                            SystemFunctions.AllExamtinations.Add(deletedExamination.ID, deletedExamination);
+                            SystemFunctions.CurrentExamtinations.Remove(examination.ID);
+                        }
                         else if (line.Split("|")[1] == "UPDATE" && SystemFunctions.AllExamtinations.TryGetValue(id, out examination))
                         {
 
@@ -327,8 +336,14 @@ namespace ClinicApp.Users
                             if (SystemFunctions.Doctors.TryGetValue(line.Split("|")[3], out doctor))
                             {
                                 examination.Doctor.Examinations.Remove(examination);
-                                examination.Doctor = doctor;
-                                examination.Doctor.Examinations.Add(examination);
+                                examination.Patient.Examinations.Remove(examination);
+                                var last = SystemFunctions.AllExamtinations.Values.Last();
+                                Clinic.Examination editedExamination = new Clinic.Examination(last.ID + 1, examination.DateTime, doctor, examination.Patient, examination.Finished, 0, examination.ID);
+                                SystemFunctions.AllExamtinations.Add(editedExamination.ID, editedExamination);
+                                SystemFunctions.CurrentExamtinations.Remove(examination.ID);
+                                SystemFunctions.CurrentExamtinations.Add(editedExamination.ID, editedExamination);
+                                examination.Patient.Examinations.Add(editedExamination);
+                                editedExamination.Doctor.Examinations.Add(editedExamination);
                             }
                         }
                     }

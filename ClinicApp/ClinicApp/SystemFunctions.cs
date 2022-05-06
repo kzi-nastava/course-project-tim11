@@ -76,20 +76,30 @@ namespace ClinicApp
                     }
                     if (examination.DateTime.AddMinutes(15) > DateTime.Now)
                     {
-                        if (!CurrentExamtinations.TryAdd(examination.ID, examination))
+                        if (examination.Tombstone != 0)
                         {
-                            CurrentExamtinations[examination.ID] = examination;
-                        };
-                    }
-                    foreach (int ID in CurrentExamtinations.Keys)
-                    {
-                        Examination currentExamination = CurrentExamtinations[ID];
-                        if (currentExamination.Tombstone || currentExamination.Finished)
-                        {
-                            CurrentExamtinations.Remove(ID);
+                            CurrentExamtinations.Remove(examination.Tombstone);
                         }
-                        else currentExamination.Doctor.Examinations.Add(currentExamination);
+                        else if (examination.Edited != 0)
+                        {
+                            CurrentExamtinations.Remove(examination.Edited);
+                           if (!examination.Finished)
+                            {
+                                CurrentExamtinations.Add(examination.ID, examination);
+                            }
+                            
+                        }
+                        else if (!examination.Finished) {
+                            CurrentExamtinations.Add(examination.ID, examination);
+                        }
                     }
+                    
+                }
+                foreach (int ID in CurrentExamtinations.Keys)
+                {
+                    Examination currentExamination = CurrentExamtinations[ID];
+                    currentExamination.Doctor.Examinations.Add(currentExamination);
+                    currentExamination.Patient.Examinations.Add(currentExamination);
                 }
             }
 
