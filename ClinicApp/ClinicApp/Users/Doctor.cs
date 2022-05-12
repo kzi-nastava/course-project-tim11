@@ -19,6 +19,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Doctor;
+            MessageBox = new MessageBox(this);
             Examinations = new List<Examination>();
         }
 
@@ -33,6 +34,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Doctor;
+            MessageBox = new MessageBox(this);
             Examinations = new List<Examination>();
         }
 
@@ -49,11 +51,12 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
-            Console.WriteLine("2. Manage examinations");
-            Console.WriteLine("3. View schedule");
+            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage examinations");
+            Console.WriteLine("4: View schedule");
             Console.WriteLine("0: Exit");
 
-            return 3;
+            return 4;
         }
 
         public override void MenuDo(int option)
@@ -61,9 +64,12 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    ManageExaminations();
+                    MessageBox.DisplayMessages();
                     break;
                 case 3:
+                    ManageExaminations();
+                    break;
+                case 4:
                     ViewSchedule();
                     break;
                 default:
