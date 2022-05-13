@@ -369,5 +369,18 @@ namespace ClinicApp
             }
             Console.WriteLine();
         }
+        public static DateTime GetGoodDate()
+        {
+            DateTime date;
+            do
+            {
+                date = OtherFunctions.AskForDate();
+                if (date.Date < DateTime.Now.Date)
+                {
+                    Console.WriteLine("You can't enter a date that's in the past");
+                }
+            } while (date.Date < DateTime.Now.Date);
+            return date;
+        }
     }
 }

@@ -199,14 +199,15 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
-
+            //Uploads the referrals.
             using (StreamWriter sw = File.CreateText(ReferralsFilePath))
             {
                 foreach (Referral referral in Referrals)
                 {
                     newLine = referral.Compress();
                     sw.WriteLine(newLine);
-
+                }
+            }
             //Uploads the messages.
             using (StreamWriter sw = File.CreateText(MessageBoxesFilePath))
             {

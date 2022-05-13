@@ -107,7 +107,7 @@ namespace ClinicApp.Users
 
             Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
 
-            DateTime date = GetGoodDate();
+            DateTime date = OtherFunctions.GetGoodDate();
             
             Console.Write("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
 
@@ -316,7 +316,7 @@ namespace ClinicApp.Users
         private void ViewSchedule()
         {
             Console.WriteLine("Enter a date for which you wish to see your schedule (e.g. 22/10/1987): ");
-            DateTime date = GetGoodDate();
+            DateTime date = OtherFunctions.GetGoodDate();
             Console.WriteLine($"Examinations on date: {date.ToShortDateString()} and the next three days: \n");
 
             foreach (Examination examination in this.Examinations)
@@ -452,7 +452,7 @@ namespace ClinicApp.Users
             {
                 if (examination.DateTime.Date == dateTime.Date)
                 {
-                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime) || (dateTime < examination.DateTime && dateTime.AddMinutes(15) > examination.DateTime))
+                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime) || (dateTime <= examination.DateTime && dateTime.AddMinutes(15) > examination.DateTime))
                     {
                         return false;
                     }
@@ -483,18 +483,6 @@ namespace ClinicApp.Users
             }
             this.Examinations.Add(newExamination);
 
-        }
-        public static DateTime GetGoodDate() {
-            DateTime date;
-            do
-            {
-                date = OtherFunctions.AskForDate();
-                if (date.Date < DateTime.Now.Date)
-                {
-                    Console.WriteLine("You can't enter a date that's in the past");
-                }
-            } while (date.Date < DateTime.Now.Date);
-            return date;
         }
     }
 

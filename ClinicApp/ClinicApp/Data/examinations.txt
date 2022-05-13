@@ -14,3 +14,4 @@
 14|10.05.2022. 14:40:00|jelena_mikovic|danilo_jevtic|False|0|0
 15|11.05.2022. 14:40:00|jelena_mikovic|danilo_jevtic|False|0|14
 16|11.05.2022. 14:40:00|jelena_mikovic|danilo_jevtic|False|15|14
+17|15.06.2022. 10:20:00|jelena_mikovic|danilo_babic|False|0|0
