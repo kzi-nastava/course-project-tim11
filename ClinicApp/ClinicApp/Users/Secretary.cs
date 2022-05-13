@@ -138,6 +138,7 @@ namespace ClinicApp.Users
                                 {
                                     SystemFunctions.Users.Remove(userName);
                                     SystemFunctions.Patients.Remove(userName);
+                                    option2 = 0;
                                 }
                                 else
                                 {
@@ -250,8 +251,8 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("\nWhat would you like to do?");
                 Console.WriteLine("1: List patient accounts");
-                Console.WriteLine("2: Block a patient accounts");
-                Console.WriteLine("3: Unblock a patient account");
+                Console.WriteLine("2: Block patient accounts");
+                Console.WriteLine("3: Unblock patient accounts");
                 Console.WriteLine("0: Back to menue");
                 Console.Write(">> ");
                 option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
