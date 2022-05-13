@@ -121,8 +121,23 @@ namespace ClinicApp
             }
             else return false;
         }
-    
 
+
+        public static Fields AskField() {
+
+            Console.WriteLine("\nChose specialization by number:\n");
+            int i = 1;
+            foreach (string field in Enum.GetNames(typeof(Fields)))
+            {
+                Console.WriteLine($"{i}. {field}");
+                i++;
+            }
+            int choice = EnterNumberWithLimit(1, Enum.GetNames(typeof(Fields)).Length);
+            Fields specialization = (Fields)(choice - 1);
+            return specialization;
+
+
+        }
     public static string MaskPassword()
     {
         string password = "";
@@ -303,6 +318,8 @@ namespace ClinicApp
 
         private static User RegisterDoctor(string text)
         {
+            Fields field = AskField();            
+            text += "|" + field.ToString();
             return new Doctor(text);
         }
 
