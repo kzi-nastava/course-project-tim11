@@ -13,6 +13,12 @@ namespace ClinicApp
         Nobody, Admin, Secretary, Doctor, Patient
     };
 
+    public enum Fields
+    {
+        Cardiologist, Pneumologist, Gynecologist, Neurologist, Psychiatrist, Anesthesiologist, Pediatrician, Dermatologist, Endocrinologist, Gastroenterologist,
+        Oncologist, Ophthalmologist, Urologist, PlasticSurgeon, Pathologist
+    };
+
     public class SystemFunctions
     {
 
@@ -23,6 +29,7 @@ namespace ClinicApp
         public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
         public static Dictionary<int, Examination> AllExamtinations { get; set; } = new Dictionary<int, Examination>();
         public static Dictionary<int, Examination> CurrentExamtinations { get; set; } = new Dictionary<int, Examination>();
+        public static List<Referral> Referrals { get; set; } = new List<Referral>();
 
         // User file path may change in release mode, this is the file path in debug mode
 
@@ -30,6 +37,7 @@ namespace ClinicApp
         public static string ExaminationsFilePath = "../../../Data/examinations.txt";
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
+        public static string ReferralsFilePath = "../../../Data/referrals.txt";
 
 
 
@@ -58,8 +66,20 @@ namespace ClinicApp
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    HealthRecord healthRecord = ParseHealthRecord(line);
+                    HealthRecord healthRecord = new HealthRecord(line );
                     HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
+
+                }
+            }
+            using (StreamReader reader = new StreamReader(ReferralsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Referral referral = new Referral(line);
+                    referral.Patient.Referrals.Add(referral);
+                    Referrals.Add(referral);
+                    ;
 
                 }
             }
@@ -69,7 +89,7 @@ namespace ClinicApp
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    Examination examination = ParseExamination(line);
+                    Examination examination = new Examination(line);
                     if (!AllExamtinations.TryAdd(examination.ID, examination))
                     {
                         AllExamtinations[examination.ID] = examination;
@@ -105,16 +125,6 @@ namespace ClinicApp
 
         }
 
-        private static HealthRecord ParseHealthRecord(string line)
-        {
-            return new HealthRecord(line);
-        }
-
-
-        private static Examination ParseExamination(string line)
-        {
-            return new Examination(line);
-        }
 
         // Parsing functions
         private static User ParseUser(string line)
@@ -165,6 +175,14 @@ namespace ClinicApp
                 foreach(KeyValuePair<int, Examination> pair in AllExamtinations)
                 {
                     newLine = pair.Value.Compress();
+                    sw.WriteLine(newLine);
+                }
+            }
+            using (StreamWriter sw = File.CreateText(ReferralsFilePath))
+            {
+                foreach (Referral referral in Referrals)
+                {
+                    newLine = referral.Compress();
                     sw.WriteLine(newLine);
                 }
             }
