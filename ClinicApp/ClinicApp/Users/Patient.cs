@@ -27,6 +27,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Patient;
+            MessageBox = new MessageBox(this);
             Blocked = blocked;
             Examinations = new List<Examination>();
             ActivityHistory = new Dictionary<DateTime, string>();
@@ -44,6 +45,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Patient;
+            MessageBox = new MessageBox(this);
             Blocked temp;
             try
             {
@@ -68,13 +70,14 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
-            Console.WriteLine("2: Make appointment");
-            Console.WriteLine("3: Edit appointment");
-            Console.WriteLine("4: Cancel appointment");
-            Console.WriteLine("5: View appointments");
+            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Make appointment");
+            Console.WriteLine("4: Edit appointment");
+            Console.WriteLine("5: Cancel appointment");
+            Console.WriteLine("6: View appointments");
             Console.WriteLine("0: Exit");
 
-            return 5;
+            return 6;
         }
 
         public override void MenuDo(int option)
@@ -82,15 +85,18 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    CreateExamination();
+                    MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    EditExamination();
+                    CreateExamination();
                     break;
                 case 4:
-                    DeleteExamination();
+                    EditExamination();
                     break;
                 case 5:
+                    DeleteExamination();
+                    break;
+                case 6:
                     ViewExaminations();
                     break;
             }
