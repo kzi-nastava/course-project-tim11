@@ -16,6 +16,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Admin;
+            MessageBox = new MessageBox(this);
         }
 
         public Admin(string text)
@@ -29,6 +30,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Admin;
+            MessageBox = new MessageBox(this);
         }
 
         public override string Compress()
@@ -41,11 +43,12 @@ namespace ClinicApp.Users
             EquipmentMovementManager.LoadEquipmentMovement(); //load to check if there is any equipment to move today
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
-            Console.WriteLine("2. Manage Clinic Rooms");
-            Console.WriteLine("3. Manage Clinic Equipment");
+            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage Clinic Rooms");
+            Console.WriteLine("4: Manage Clinic Equipment");
             Console.WriteLine("0: Exit");
 
-            return 3;
+            return 4;
         }
 
         public override void MenuDo(int option)
@@ -53,9 +56,12 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    RoomManagmentMenu();
+                    MessageBox.DisplayMessages();
                     break;
                 case 3:
+                    RoomManagmentMenu();
+                    break;
+                case 4:
                     EquipmentManagmentMenu();
                     break;
             }

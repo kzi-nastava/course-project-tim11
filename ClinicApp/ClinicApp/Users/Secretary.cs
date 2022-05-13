@@ -16,6 +16,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Secretary;
+            MessageBox = new MessageBox(this);
         }
 
         public Secretary(string text)
@@ -29,6 +30,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Secretary;
+            MessageBox = new MessageBox(this);
         }
 
         //Compresses a Secretary object intu a string for easier upload.
@@ -42,12 +44,13 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1: Log out");
-            Console.WriteLine("2: Manage patient accounts");
-            Console.WriteLine("3: Block or unbolck patient accounts");
-            Console.WriteLine("4: Manage examination requests");
+            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage patient accounts");
+            Console.WriteLine("4: Block or unbolck patient accounts");
+            Console.WriteLine("5: Manage examination requests");
             Console.WriteLine("0: Exit");
 
-            return 4;
+            return 5;
         }
 
         //Executes the chosen command.
@@ -56,19 +59,22 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    PatientsCRUD();
+                    MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    ManageBlockedPatients();
+                    PatientsCRUD();
                     break;
                 case 4:
+                    ManageBlockedPatients();
+                    break;
+                case 5:
                     ManageExaminationRequests();
                     break;
             }
         }
 
         //Manages the Patient CRUD.
-        private void PatientsCRUD()
+        private static void PatientsCRUD()
         {
             int option = 1, option2, numberOfOptions = 4;
             User tempUser;
@@ -138,6 +144,7 @@ namespace ClinicApp.Users
                                 {
                                     SystemFunctions.Users.Remove(userName);
                                     SystemFunctions.Patients.Remove(userName);
+                                    option2 = 0;
                                 }
                                 else
                                 {
@@ -250,8 +257,8 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("\nWhat would you like to do?");
                 Console.WriteLine("1: List patient accounts");
-                Console.WriteLine("2: Block a patient accounts");
-                Console.WriteLine("3: Unblock a patient account");
+                Console.WriteLine("2: Block patient accounts");
+                Console.WriteLine("3: Unblock patient accounts");
                 Console.WriteLine("0: Back to menue");
                 Console.Write(">> ");
                 option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);

@@ -13,6 +13,7 @@ namespace ClinicApp.Users
         public DateTime DateOfBirth { get; set; }
         public char Gender { get; set; }
         public Roles Role { get; set; }
+        public MessageBox MessageBox { get; set; }
 
         public abstract string Compress();
         public abstract int MenuWrite();

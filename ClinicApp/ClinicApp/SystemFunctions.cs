@@ -38,12 +38,14 @@ namespace ClinicApp
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         public static string ReferralsFilePath = "../../../Data/referrals.txt";
+        public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
 
 
 
         // Loads the information from the database into objects and adds them to coresponding dictionaries
         public static void LoadData()
         {
+            //Loads the users.
             using (StreamReader reader = new StreamReader(UsersFilePath))
             {
                 string line;
@@ -61,6 +63,7 @@ namespace ClinicApp
                     }
                 }
             }
+            //Loads the health records.
             using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
             {
                 string line;
@@ -83,6 +86,9 @@ namespace ClinicApp
 
                 }
             }
+
+
+            //Loads the examinations.
 
             using (StreamReader reader = new StreamReader(ExaminationsFilePath))
             {
@@ -122,11 +128,22 @@ namespace ClinicApp
                     currentExamination.Patient.Examinations.Add(currentExamination);
                 }
             }
-
+            //Loads the messages.
+            using (StreamReader reader = new StreamReader(MessageBoxesFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    User user;
+                    string[] data = line.Split("|");
+                    if (Users.TryGetValue(data[0], out user))
+                        user.MessageBox.LoadMessages(data[1]);
+                }
+            }
         }
 
 
-        // Parsing functions
+
         private static User ParseUser(string line)
         {
             string[] data = line.Split('|');
@@ -144,7 +161,9 @@ namespace ClinicApp
         // Uploads the information from the objects into the database
         public static void UploadData()
         {
-            string newLine = "";
+            string newLine;
+
+            //Uploads the users.
             using (StreamWriter sw = File.CreateText(UsersFilePath))
             {
                 foreach (KeyValuePair<string, User> pair in Users)
@@ -153,6 +172,7 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
+            //Uploads the examinations.
             using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
             {
                 foreach (KeyValuePair<int, Examination> pair in AllExamtinations)
@@ -161,7 +181,7 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
-
+            //Uploads the health records.
             using (StreamWriter sw = File.CreateText(HealthRecordsFilePath))
             {
                 foreach (KeyValuePair<string, HealthRecord> pair in HealthRecords)
@@ -170,6 +190,7 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
+            //Uploads the examinations.
             using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
             {
                 foreach(KeyValuePair<int, Examination> pair in AllExamtinations)
@@ -178,12 +199,23 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
+
             using (StreamWriter sw = File.CreateText(ReferralsFilePath))
             {
                 foreach (Referral referral in Referrals)
                 {
                     newLine = referral.Compress();
                     sw.WriteLine(newLine);
+
+            //Uploads the messages.
+            using (StreamWriter sw = File.CreateText(MessageBoxesFilePath))
+            {
+                foreach (KeyValuePair<string, User> pair in Users)
+                {
+                    newLine = pair.Value.MessageBox.Compress();
+                    if(newLine != null)
+                        sw.WriteLine(newLine);
+
                 }
             }
         }

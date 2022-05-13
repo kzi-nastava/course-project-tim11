@@ -15,6 +15,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Now;
             Gender = ' ';
             Role = Roles.Nobody;
+            MessageBox = new MessageBox(this);
         }
 
         public override string Compress()
