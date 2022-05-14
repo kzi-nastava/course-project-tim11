@@ -468,7 +468,7 @@ namespace ClinicApp.Users
         {
             string userName;
             Patient patient;
-            int option = 1;
+            int option = 1, id;
             while (option != 0)
             {
                 //Finding the patient.
@@ -520,7 +520,7 @@ namespace ClinicApp.Users
                                 {
                                     hasFoundTime = true;
                                     //Finds the id.
-                                    int id = 0;
+                                    id = 0;
                                     foreach (int examinationID in SystemFunctions.AllExamtinations.Keys)
                                     {
                                         if (examinationID > id)
@@ -548,7 +548,75 @@ namespace ClinicApp.Users
 
                     //First, we make a list of all the examinations that can be delayed and by how much can they be delayed.
                     List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelaying = new List<KeyValuePair<Clinic.Examination, DateTime>>();
+                    foreach(KeyValuePair<int, Clinic.Examination> examinationForDelay in SystemFunctions.CurrentExamtinations)
+                        if(examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || patient.CheckAppointment(examinationForDelay.Value.DateTime)))
+                            examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>(examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
+                    if(examinationsForDelaying.Count == 0)
+                    {
+                        Console.WriteLine("\nThere are no examinations available for delaying.");
+                        return;
+                    }
 
+                    //Then, we make a list of 5 options.
+                    numberOfOptions = 0;
+                    List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelayingOptions = new List<KeyValuePair<Clinic.Examination, DateTime>>();
+                    while(numberOfOptions < 5 && examinationsForDelayingOptions.Count() > 0)
+                    {
+                        KeyValuePair<Clinic.Examination, DateTime> temp = examinationsForDelaying[0];
+                        foreach (KeyValuePair<Clinic.Examination, DateTime> pair in examinationsForDelaying)
+                            if (pair.Value < temp.Value)
+                                temp = pair;
+                        numberOfOptions++;
+                        examinationsForDelaying.Remove(temp);
+                        examinationsForDelayingOptions.Add(temp);
+                    }
+
+                    //The secretary chooses which one will be delayed.
+                    Console.WriteLine("\nWhich examination should we delay?");
+                    for(int i = 0; i < numberOfOptions; i++)
+                    {
+                        Console.WriteLine((i + 1) + ": " + examinationsForDelayingOptions[i].Key.ID + " will be delayed from " + examinationsForDelayingOptions[i].Key.DateTime + " to " + examinationsForDelayingOptions[i].Value);
+                    }
+                    Console.WriteLine("0: Back to menu");
+                    if (numberOfOptions < 5)
+                        Console.WriteLine("There are no more examinations left that can be delayed.");
+
+                    //Finally, we create the examination and delay the other one.
+                    option2 = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                    if (option2 == 0)
+                        return;
+                    KeyValuePair<Clinic.Examination, DateTime> examinationForDelaying = examinationsForDelayingOptions[option2 - 1]; //-1 because it starts from zero and options start from 1.
+                    //Finds the id.
+                    id = 0;
+                    foreach (int examinationID in SystemFunctions.AllExamtinations.Keys)
+                    {
+                        if (examinationID > id)
+                        {
+                            id = examinationID;
+                        }
+                    }
+                    id++;
+
+                    //Creates the examination.
+                    Clinic.Examination examination2 = new Clinic.Examination(id, dateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
+                    examinationForDelaying.Key.Doctor.InsertExamination(examination2);
+                    patient.InsertExamination(examination2);
+                    SystemFunctions.AllExamtinations.Add(id, examination2);
+                    SystemFunctions.CurrentExamtinations.Add(id, examination2);
+                    examinationForDelaying.Key.Doctor.MessageBox.AddMessage("You have an emergency examination.");
+                    patient.MessageBox.AddMessage("You have an emergency examination.");
+                    Console.WriteLine("The examination has been created successfully.");
+
+                    //Delays the other examination.
+                    examinationForDelaying.Key.Doctor.Examinations.Remove(examinationForDelaying.Key);
+                    examinationForDelaying.Key.Patient.Examinations.Remove(examinationForDelaying.Key);
+                    examinationForDelaying.Key.DateTime = examinationForDelaying.Value;
+                    examinationForDelaying.Key.Edited++;
+                    examinationForDelaying.Key.Doctor.InsertExamination(examination2);
+                    examinationForDelaying.Key.Patient.InsertExamination(examination2);
+                    examinationForDelaying.Key.Doctor.MessageBox.AddMessage("Your examination has been delayed.");
+                    examinationForDelaying.Key.Patient.MessageBox.AddMessage("Your examination has been delayed.");
+                    Console.WriteLine("The other examination has been delayed successfully.");
                 }
                 else
                 {
