@@ -83,6 +83,7 @@ namespace ClinicApp.AdminFunctions
             }
             PersistChanges();
         }
+        
 //--------------FILES STUFF------------------------------------------------------------------------------------
         public static List<EquipmentMovement> LoadEquipmentMovement()
         {

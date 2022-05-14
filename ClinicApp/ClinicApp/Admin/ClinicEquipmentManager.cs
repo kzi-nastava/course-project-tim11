@@ -49,6 +49,22 @@ public static class ClinicEquipmentManager
         eqToUpdate.Amount = newAmount;
         PersistEquipment();
     }
+    public static void CheckForZeroAmount() //eq with zero amount shouldn't exist so we have to go through all of them and remove it
+    {
+
+    }
+    public static List<ClinicEquipment> GetEquipmentFromRoom(int id)
+    {
+        List<ClinicEquipment> movements = new List<ClinicEquipment>();
+        foreach (var eq in ClinicEquipmentList)
+        {
+            if (eq.RoomId == id)
+            {
+                movements.Add(eq);
+            }
+        }
+        return movements;
+    }
     //---------------SEARCH AND FILTERING-------------------------------------------------------------
     public static List<ClinicEquipment> Search(string searchTerm)
     {
