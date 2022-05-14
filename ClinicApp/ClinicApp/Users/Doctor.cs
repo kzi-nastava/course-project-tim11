@@ -406,6 +406,10 @@ namespace ClinicApp.Users
             {
                 ChangePatientRecord(ref healthRecord);
             }
+            if (!SystemFunctions.HealthRecords.TryAdd(examination.Patient.UserName, healthRecord))
+            {
+                SystemFunctions.HealthRecords[examination.Patient.UserName] = healthRecord;
+            }
             Console.WriteLine("Create referral for patient? (y/n)");
             choice = Console.ReadLine().ToUpper();
             if (choice == "Y")
@@ -419,23 +423,19 @@ namespace ClinicApp.Users
                 if(choice.ToUpper() == "Y")
                 {
                     Prescription prescription = WritePrecription(healthRecord.Patient);
-                    if (prescription == null) {
-                        choice = "N";
-                        break;
+                    if (prescription != null) {
+                        healthRecord.Patient.Prescriptions.Add(prescription);
+                        using (StreamWriter sw = File.AppendText(SystemFunctions.PrescriptionsFilePath))
+                        {
+                            sw.WriteLine(prescription.Compress());
+                        }
                     }
-                    healthRecord.Patient.Prescriptions.Add(prescription);
-                    using (StreamWriter sw = File.AppendText(SystemFunctions.PrescriptionsFilePath))
-                    {
-                        sw.WriteLine(prescription.Compress());
-                    }
+                    
                 }
             }while (choice.ToUpper() == "Y") ;
             
 
-            if (!SystemFunctions.HealthRecords.TryAdd(examination.Patient.UserName, healthRecord))
-            {
-                SystemFunctions.HealthRecords[examination.Patient.UserName] = healthRecord;
-            }
+
             examination.Finished = true;
             SystemFunctions.CurrentExamtinations.Remove(examination.ID);
             this.Examinations.Remove(examination);
@@ -512,6 +512,7 @@ namespace ClinicApp.Users
                 SystemFunctions.Referrals.Add(referral);
 
             }
+            Console.WriteLine("Referral created successfully!");
             
         }
         //=======================================================================================================================================================================
@@ -534,14 +535,16 @@ namespace ClinicApp.Users
             Console.WriteLine("Enter the number of pills to take in 1) the morning 2) at noon 3) the afternoon:");
             for(int i = 0; i < 3; i++)
             {
-                Console.Write(i + ") >> ");
+                Console.Write((i+1) + ") >> ");
                 frequency[i] = OtherFunctions.EnterNumber();
                 Console.WriteLine();
             }
-            Console.WriteLine("Should the patient take the medicine: \n(1) Before a meal\n(2)After a meal\n(3)During a meal\n(4)Doesn't matter\n\n Chose by number");
+            Console.WriteLine("Should the patient take the medicine: \n(1) Before a meal\n(2) After a meal\n(3) During a meal\n(4) Doesn't matter\n\nChose by number");
             int medicineMealInfo = OtherFunctions.EnterNumberWithLimit(0, 5);
-            MedicineFoodIntake medicineFoodIntake = (MedicineFoodIntake)(medicineMealInfo);
+            MedicineFoodIntake medicineFoodIntake = (MedicineFoodIntake)(medicineMealInfo - 1);
             Prescription prescription = new Prescription(patient, this, DateTime.Now, medicine, frequency, medicineFoodIntake);
+            prescription.ShowPrescription();
+            Console.Write("Prescription created\n");
             return prescription;
 
         }
@@ -598,6 +601,7 @@ namespace ClinicApp.Users
                 foreach(string alergen in medicine.Ingredients)
                 {
                     if (alergen.ToUpper() == alergy.ToUpper()) {
+                        Console.WriteLine($"Error: Patient alergic to medicine. Alergen: {alergen}");
                         return true;
                     }
                 }
