@@ -383,11 +383,11 @@ namespace ClinicApp
             } while (date.Date < DateTime.Now.Date);
             return date;
         }
-        public static bool CheckForRenovations(DateTime examinationTime, int roomId)
+        public static bool CheckForRenovations(DateRange examinationTime, int roomId)
         {
             foreach(var renovation in RoomRenovationManager.RoomRenovationList)
             {
-                if (roomId == renovation.RoomId && renovation.Duration.IsInRange(examinationTime))
+                if (roomId == renovation.RoomId && renovation.Duration.IsOverlaping(examinationTime))
                 {
                     return true;
                 }
@@ -399,7 +399,7 @@ namespace ClinicApp
             foreach (int examId in SystemFunctions.AllExamtinations.Keys )
             {
                 Clinic.Examination exam = SystemFunctions.AllExamtinations[examId];
-                if(exam.Doctor.RoomId == roomId && dateRange.IsInRange(exam.DateTime))
+                if(exam.Doctor.RoomId == roomId && dateRange.IsOverlaping(new DateRange(exam.DateTime, exam.DateTime.AddMinutes(15))))
                 {
                     return true;
                 }

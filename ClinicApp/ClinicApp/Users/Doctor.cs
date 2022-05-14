@@ -10,10 +10,10 @@ namespace ClinicApp.Users
     public class Doctor : User
     {
         public List<Examination> Examinations;
-        Fields Field;
+        public Fields Field;
         public int RoomId { get; set; } // id of the room in which the doctor works
 
-        public Doctor(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
+        public Doctor(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Fields field)
         {
             UserName = userName;
             Password = password;

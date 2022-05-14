@@ -9,7 +9,19 @@ namespace ClinicApp
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-            
+        
+        public DateRange()
+        {
+            StartDate = DateTime.Now;
+            EndDate = DateTime.Now.AddMinutes(1);
+        }
+        
+        public DateRange(DateTime start, DateTime end)
+        {
+            StartDate = start;
+            EndDate = end;
+        }
+
         public bool IsInRange(DateTime date)
         {
             return (date >= StartDate && date <= EndDate);
