@@ -13,6 +13,11 @@ namespace ClinicApp
         Nobody, Admin, Secretary, Doctor, Patient
     };
 
+    public enum MedicineFoodIntake
+    {
+       Before, After, During, Irrelevant
+    };
+
     public enum Fields
     {
         Cardiologist, Pneumologist, Gynecologist, Neurologist, Psychiatrist, Anesthesiologist, Pediatrician, Dermatologist, Endocrinologist, Gastroenterologist,
@@ -29,6 +34,8 @@ namespace ClinicApp
         public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
         public static Dictionary<int, Examination> AllExamtinations { get; set; } = new Dictionary<int, Examination>();
         public static Dictionary<int, Examination> CurrentExamtinations { get; set; } = new Dictionary<int, Examination>();
+
+        public static Dictionary<string, Medicine> Medicine { get; set; } = new Dictionary<string, Medicine>();
         public static List<Referral> Referrals { get; set; } = new List<Referral>();
 
         // User file path may change in release mode, this is the file path in debug mode
@@ -39,6 +46,8 @@ namespace ClinicApp
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         public static string ReferralsFilePath = "../../../Data/referrals.txt";
         public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
+        public static string MedicineFilePath = "../../../Data/medicine.txt";
+        public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
 
 
 
@@ -74,6 +83,34 @@ namespace ClinicApp
 
                 }
             }
+            using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Prescription prescription = new Prescription(line);
+                    prescription.Patient.Prescriptions.Add(prescription);
+
+                }
+            }
+
+            //Load medicine
+
+            using (StreamReader reader = new StreamReader(MedicineFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Medicine medicine= new Medicine(line);
+                    Medicine.Add(medicine.Name, medicine);
+
+                }
+            }
+
+
+
+            // Load referrals
+
             using (StreamReader reader = new StreamReader(ReferralsFilePath))
             {
                 string line;
@@ -215,6 +252,16 @@ namespace ClinicApp
                 {
                     newLine = pair.Value.MessageBox.Compress();
                     if(newLine != null)
+                        sw.WriteLine(newLine);
+
+                }
+            }
+            using (StreamWriter sw = File.CreateText(MedicineFilePath))
+            {
+                foreach (KeyValuePair<string, Medicine> pair in Medicine)
+                {
+                    newLine = pair.Value.Compress();
+                    if (newLine != null)
                         sw.WriteLine(newLine);
 
                 }
