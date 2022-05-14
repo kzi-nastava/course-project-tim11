@@ -73,14 +73,18 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
+
             Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
             Console.WriteLine("3: Make appointment");
             Console.WriteLine("4: Edit appointment");
             Console.WriteLine("5: Cancel appointment");
             Console.WriteLine("6: View appointments");
+            Console.WriteLine("7: Appointment suggestion");
+            Console.WriteLine("8: View health record history");
             Console.WriteLine("0: Exit");
 
-            return 6;
+            return 8;
+
         }
 
         public override void MenuDo(int option)
@@ -101,6 +105,12 @@ namespace ClinicApp.Users
                     break;
                 case 6:
                     ViewExaminations();
+                    break;
+                case 7:
+                    SuggestAppointment();
+                    break;
+                case 8:
+                    ViewAnamnesis();
                     break;
             }
             
@@ -221,6 +231,7 @@ namespace ClinicApp.Users
                 Console.WriteLine("Doctor with that username does not exist");
                 return;
             }
+            doctor = SystemFunctions.Doctors[userName];
             bool validateAppointment = doctor.CheckAppointment(dateTime);
             if (validateAppointment == false)
             {
@@ -366,7 +377,6 @@ namespace ClinicApp.Users
             }
             else if (choice.ToUpper() == "T")
             {
-                //proveri kada se radi izmena i proveri da li je dostupan doktor
                 Console.WriteLine("Enter the new time of your Examination (e.g. 12:00)");
                 DateTime newTime = OtherFunctions.AskForTime();
                 DateTime oldTime = examination.DateTime;
@@ -508,6 +518,135 @@ namespace ClinicApp.Users
 
             }
             return true;
+        }
+
+        private void SuggestAppointment()
+        {
+            //todo take user input for doctor and time for examination, also time period for appoinment to be done and priority(doctor or time of examination)
+            Console.WriteLine("You are currently using the appointment suggestion system.");
+            Console.WriteLine("System will suggest your appointment by priority, your priority can be doctor or time of appointment.");
+            Console.WriteLine("Please enter the date and time by which the appointment must be made at the latest.");
+            DateTime lastAppointment = DateTime.Now;
+
+            Console.Write("\nPlease enter the date for the last possible Examination (e.g. 22/10/1987)\n>> ");
+
+            DateTime date = OtherFunctions.GetGoodDate();
+
+            Console.Write("\nenter the time for the last possible Examination (e.g. 14:30)\n>> ");
+
+            DateTime time;
+            do
+            {
+                time = OtherFunctions.AskForTime();
+                time = date.Date + time.TimeOfDay;
+                if (time < DateTime.Now)
+                {
+                    Console.WriteLine("You can't enter that time, its in the past");
+                }
+            } while (time < DateTime.Now);
+
+            lastAppointment = time;
+
+            //todo take time of appointment
+            Console.WriteLine("Please enter the preferred time of your Examination in format [HH:mm]:");
+            DateTime preferredTime = OtherFunctions.AskForTime();
+
+
+            Console.WriteLine("Enter the username of your preferred doctor. Do you want to view the list of doctors? (y/n)");
+            Console.Write(">>");
+            string choice = Console.ReadLine();
+            Console.WriteLine();
+            if (choice.ToUpper() == "Y")
+            {
+                ViewAllDoctors();
+            }
+            Console.WriteLine("\nEnter the username:");
+            string userName = Console.ReadLine();
+            Doctor doctor = null;
+            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+            {
+                Console.WriteLine("Doctor with that username does not exist");
+                return;
+            }
+
+            Console.WriteLine("Please enter the priority for your search. Enter 'd' if doctor is your priority, enter 'a' if appointment is your priority.");
+            string priority = Console.ReadLine();
+            //first check preferred doctor and preferred time
+            if (priority.ToUpper() == "D")
+            {
+                //todo doctor priority
+                //SuggestDoctorPriority(ref doctor,lastAppointment);
+            }
+            else if(priority.ToUpper() == "A")
+            {
+                //todo appointment priority
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
+                return;
+            }
+        }
+
+
+        //suggest appointment doctor priority
+        private void SuggestDoctorPriority(ref Doctor doctor, DateTime lastAppointment)
+        {
+            bool appointmentFound = false;
+            
+        }
+
+        //suggest appointment appointment priority
+        private void SuggestAppointmentPriority(DateTime preferredTime,DateTime lastAppointment)
+        {
+            //todo appointment priority
+            bool appoinmentFound = false;
+        }
+
+        private void ViewAnamnesis()
+        {
+            //todo list all anamneses from patients health record
+            HealthRecord healthRecord = null;
+            if (!SystemFunctions.HealthRecords.TryGetValue(this.UserName, out healthRecord))
+            {
+                Console.WriteLine("Health record with that username does not exist");
+                return;
+            }
+            healthRecord = SystemFunctions.HealthRecords[this.UserName];
+       
+            Console.WriteLine("Patient health record.");
+            healthRecord.ShowHealthRecord();
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++");
+            Console.WriteLine("1.Sort amnesis list by date.");
+            Console.WriteLine("2.Sort amnesis list by doctor.");
+            Console.WriteLine("3.Find amnesis that contains specific word.");
+            Console.WriteLine("4.Return to home page.");
+            string user_input = Console.ReadLine();
+            if (user_input == "1")
+            {
+                //sort by date
+                healthRecord.AnamnesisSortedDate();
+            }
+            else if (user_input == "2")
+            {
+                //sort by doctor
+                healthRecord.AnamnesisSortedDoctor();
+            }
+            else if (user_input == "3")
+            {
+                Console.WriteLine("Enter the specific word for amnesis search:");
+                string specific_word = Console.ReadLine();
+                healthRecord.SearchAnamnesis(specific_word);
+            }
+            else if(user_input == "4")
+            {
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input.");
+                return;
+            }
         }
     }
 }
