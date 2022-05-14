@@ -64,18 +64,16 @@ namespace ClinicApp.AdminFunctions
 
         public static void CheckForRenovations()
         {
-            DateTime today = DateTime.Today;
             foreach (var renovation in RoomRenovationList)
             {
                 if (!renovation.Done)
                 {
-                    if (renovation.Duration.EndDate == today)
+                    if (renovation.Duration.EndDate <= DateTime.Today)
                     {
                         switch (renovation.Type)
                         {
                             case RenovationType.Simple:
                                 renovation.Done = true;
-                                PersistChanges();
                                 break;
                             case RenovationType.ComplexJoin:
                                 CommitComplexJoinRenovation(renovation);
@@ -91,7 +89,7 @@ namespace ClinicApp.AdminFunctions
         }
         //==================== FILES STUFF =======================
 
-        static List<RoomRenovation> LoadRoomRenovations()
+        public static List<RoomRenovation> LoadRoomRenovations()
         {
             List<RoomRenovation> renovations = new List<RoomRenovation>();
             using (StreamReader reader = new StreamReader("../../../Admin/Data/roomRenovations.txt"))
@@ -106,7 +104,7 @@ namespace ClinicApp.AdminFunctions
             return renovations;
         }
 
-        static RoomRenovation ParseSimpleRenovation(string [] parameteres)
+        public static RoomRenovation ParseSimpleRenovation(string [] parameteres)
         {
             RoomRenovation renovation = new RoomRenovation
             {
@@ -123,7 +121,7 @@ namespace ClinicApp.AdminFunctions
             return renovation;
         }
 
-        static RoomRenovation ParseComplexJoinRenovation(string[] parameteres)
+        public static RoomRenovation ParseComplexJoinRenovation(string[] parameteres)
         {
             RoomRenovation renovation = new RoomRenovation
             {
@@ -141,7 +139,7 @@ namespace ClinicApp.AdminFunctions
             return renovation;
         }
 
-        static RoomRenovation ParseComplexSplitRenovation(string[] parameteres)
+        public static RoomRenovation ParseComplexSplitRenovation(string[] parameteres)
         {
             RoomType roomType;
             switch (parameteres[7])
@@ -179,7 +177,7 @@ namespace ClinicApp.AdminFunctions
             return renovation;
         }
 
-        static RoomRenovation ParseRenovation(string line)
+        public static RoomRenovation ParseRenovation(string line)
         {
             string[] parameteres = line.Split("|");
             if (parameteres[5] == "Simple")
@@ -196,7 +194,7 @@ namespace ClinicApp.AdminFunctions
             }
         }
 
-        static void PersistChanges()
+        public static void PersistChanges()
         {
             File.Delete("../../../Admin/Data/roomRenovations.txt");
             foreach (RoomRenovation renovation in RoomRenovationList)

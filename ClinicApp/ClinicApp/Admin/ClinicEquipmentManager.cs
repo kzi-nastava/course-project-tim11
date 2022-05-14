@@ -6,7 +6,7 @@ using System.Linq;
 
 public static class ClinicEquipmentManager 
 {
-    static public List<ClinicEquipment> ClinicEquipmentList { get; set;}
+    static public List<ClinicEquipment> ClinicEquipmentList { get; set; }
 
     static ClinicEquipmentManager()
     {

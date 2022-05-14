@@ -742,9 +742,8 @@ namespace ClinicApp.Users
             RoomRenovationManager.Add(renovation);
 
         }
-        public static void CreateComplexSplitRenovation(RoomRenovation renovation)
+        public static void CreateComplexSplitRenovation()
         {
-            renovation.Type = RenovationType.ComplexSplit;
             //get renovated room id
             ClinicRoom room;
             int id;
@@ -770,8 +769,6 @@ namespace ClinicApp.Users
             DateTime end = EnterDate();
             DateRange duration = new DateRange { StartDate = start, EndDate = end };
             duration.ValidateDates();
-            renovation.RoomId = room.Id;
-            renovation.Duration = duration;
             //create new room
             string name;
             string type;
@@ -812,13 +809,19 @@ namespace ClinicApp.Users
 
             }
             ClinicRoom newRoom = new ClinicRoom { Name = name, Type = roomType };
-            renovation.NewRoom = newRoom;
+            RoomRenovation renovation = new RoomRenovation
+            {
+                RoomId = room.Id,
+                Duration = duration,
+                Type = RenovationType.ComplexSplit,
+                Done = false,
+                NewRoom = newRoom
+            };
             RoomRenovationManager.Add(renovation);
-            return;
         }
-        public static void CreateComplexJoinRenovation(RoomRenovation renovation)
+        public static void CreateComplexJoinRenovation()
         {
-            renovation.Type = RenovationType.ComplexJoin;
+            
             //get renovated room id
             ClinicRoom room;
             int id;
@@ -844,8 +847,6 @@ namespace ClinicApp.Users
             DateTime end = EnterDate();
             DateRange duration = new DateRange { StartDate = start, EndDate = end };
             duration.ValidateDates();
-            renovation.RoomId = room.Id;
-            renovation.Duration = duration;
 
             //get the joined room
             ClinicRoom otherRoom;
@@ -866,12 +867,19 @@ namespace ClinicApp.Users
                 Console.WriteLine("You cannot delete Storage!");
                 return;
             }
-            renovation.JoinedRoomId = otherRoom.Id;
+            RoomRenovation renovation = new RoomRenovation
+            {
+                RoomId = room.Id,
+                Duration = duration,
+                Type = RenovationType.ComplexJoin,
+                Done = false,
+                JoinedRoomId = otherRoom.Id,
+            };
             RoomRenovationManager.Add(renovation);
         }
         public static void ComplexRoomRenovationMenu()
         {
-            RoomRenovation renovation = new RoomRenovation();
+            
             Console.WriteLine("1. Split room");
             Console.WriteLine("2. Join 2 rooms");
             Console.WriteLine("0. Return");
@@ -883,11 +891,11 @@ namespace ClinicApp.Users
                     case 0:
                         return;
                     case 1:
-                        CreateComplexSplitRenovation(renovation);
-                        break;
+                        CreateComplexSplitRenovation();
+                        return;
                     case 2:
-                        CreateComplexJoinRenovation(renovation);
-                        break;
+                        CreateComplexJoinRenovation();
+                        return;
                     default:
                         Console.WriteLine("Invalid option, try again");
                         break;
@@ -897,7 +905,7 @@ namespace ClinicApp.Users
         public static void ListAllRenovations()
         {
             string newLine;
-            foreach (var renovation in RoomRenovationManager.GetAll())
+            foreach (RoomRenovation renovation in RoomRenovationManager.GetAll())
             {
                 switch (renovation.Type)
                 {
@@ -907,9 +915,11 @@ namespace ClinicApp.Users
                         break;
                     case RenovationType.ComplexJoin:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| ID of joined room: " + Convert.ToString(renovation.JoinedRoomId);
+                        Console.WriteLine(newLine);
                         break;
                     case RenovationType.ComplexSplit:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| new room will be: " + renovation.NewRoom.Name + "|" + Convert.ToString(renovation.NewRoom.Type);
+                        Console.WriteLine(newLine);
                         break;
                 }
             }
