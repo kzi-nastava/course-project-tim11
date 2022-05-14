@@ -726,12 +726,8 @@ namespace ClinicApp.Users
                 Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
-            Console.WriteLine("Enter the start date of the renovation");
-            DateTime start = EnterDate();
-            Console.WriteLine("Enter the end date of the renovation");
-            DateTime end = EnterDate();
-            DateRange duration = new DateRange { StartDate = start, EndDate = end };
-            duration.ValidateDates();
+            DateRange duration = GetUninterruptedDateRange(room.Id);
+
             RoomRenovation renovation = new RoomRenovation
             {
                 RoomId = room.Id,
@@ -763,12 +759,7 @@ namespace ClinicApp.Users
                 Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
-            Console.WriteLine("Enter the start date of the renovation");
-            DateTime start = EnterDate();
-            Console.WriteLine("Enter the end date of the renovation");
-            DateTime end = EnterDate();
-            DateRange duration = new DateRange { StartDate = start, EndDate = end };
-            duration.ValidateDates();
+            DateRange duration = GetUninterruptedDateRange(room.Id);
             //create new room
             string name;
             string type;
@@ -841,12 +832,7 @@ namespace ClinicApp.Users
                 Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
-            Console.WriteLine("Enter the start date of the renovation");
-            DateTime start = EnterDate();
-            Console.WriteLine("Enter the end date of the renovation");
-            DateTime end = EnterDate();
-            DateRange duration = new DateRange { StartDate = start, EndDate = end };
-            duration.ValidateDates();
+            DateRange duration = GetUninterruptedDateRange(room.Id);
 
             //get the joined room
             ClinicRoom otherRoom;
@@ -865,6 +851,11 @@ namespace ClinicApp.Users
             if (otherRoom.Id == 0)
             {
                 Console.WriteLine("You cannot delete Storage!");
+                return;
+            }
+            if (OtherFunctions.CheckForExaminations(duration, otherRoom.Id))
+            {
+                Console.WriteLine("This room has an appointment at the given time, discarding");
                 return;
             }
             RoomRenovation renovation = new RoomRenovation
@@ -942,6 +933,22 @@ namespace ClinicApp.Users
                 };
             }
         }
-        
+        public static DateRange GetUninterruptedDateRange(int roomId)
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter the start date of the renovation");
+                DateTime start = EnterDate();
+                Console.WriteLine("Enter the end date of the renovation");
+                DateTime end = EnterDate();
+                DateRange duration = new DateRange { StartDate = start, EndDate = end };
+                duration.ValidateDates();
+                if (OtherFunctions.CheckForExaminations(duration, roomId) == false)
+                {
+                    return duration;
+                }
+                Console.WriteLine("You have entered invalid dates, there is an examination during the date range!");
+            }
+        }
     }
 }
