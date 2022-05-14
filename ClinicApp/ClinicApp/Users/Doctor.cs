@@ -10,7 +10,8 @@ namespace ClinicApp.Users
     public class Doctor : User
     {
         public List<Examination> Examinations;
-        public Doctor(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
+        Fields Field;
+        public Doctor(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Fields field)
         {
             UserName = userName;
             Password = password;
@@ -21,6 +22,7 @@ namespace ClinicApp.Users
             Role = Roles.Doctor;
             MessageBox = new MessageBox(this);
             Examinations = new List<Examination>();
+            Field = field;
         }
 
         public Doctor(string text)
@@ -34,13 +36,14 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Doctor;
+            Enum.TryParse(data[7], out Field);
             MessageBox = new MessageBox(this);
             Examinations = new List<Examination>();
         }
 
         public override string Compress()
         {
-            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role + "|" + Field.ToString();
         }
 
 
@@ -394,12 +397,58 @@ namespace ClinicApp.Users
             string anamnesisText = Console.ReadLine();
             Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
             healthRecord.Anamneses.Add(anamnesis);
-            Console.WriteLine("Anamnesis added\nDo you want to change medical record?(y/n)");
+            Console.WriteLine("Anamnesis added\nDo you want to change medical record? (y/n)");
             string choice = Console.ReadLine().ToUpper();
             if (choice == "Y")
             {
+                ChangePatientRecord(ref healthRecord);
+            }
+            Console.WriteLine("Create referral for patient? (y/n)");
+            choice = Console.ReadLine().ToUpper();
+            if (choice == "Y")
+            {
+                Patient patient = healthRecord.Patient;
+                CreateReferral(ref patient);
+            }
 
-                Console.Write("Change weight?(y/n): ");
+            do{ Console.WriteLine("Write prescription for patient? (y/n)");
+                choice = Console.ReadLine().ToUpper(); 
+                if(choice.ToUpper() == "Y")
+                {
+                    Prescription prescription = WritePrecription(healthRecord.Patient);
+                    if (prescription == null) {
+                        choice = "N";
+                        break;
+                    }
+                    healthRecord.Patient.Prescriptions.Add(prescription);
+                    using (StreamWriter sw = File.AppendText(SystemFunctions.PrescriptionsFilePath))
+                    {
+                        sw.WriteLine(prescription.Compress());
+                    }
+                }
+            }while (choice.ToUpper() == "Y") ;
+            
+
+            if (!SystemFunctions.HealthRecords.TryAdd(examination.Patient.UserName, healthRecord))
+            {
+                SystemFunctions.HealthRecords[examination.Patient.UserName] = healthRecord;
+            }
+            examination.Finished = true;
+            SystemFunctions.CurrentExamtinations.Remove(examination.ID);
+            this.Examinations.Remove(examination);
+
+            examination.Patient.Examinations.Remove(examination);
+            Console.WriteLine("Examination ended");
+        }
+
+
+        //=======================================================================================================================================================================
+        // CHANGE PATIENT HEALTH RECORD
+
+
+        private void ChangePatientRecord( ref HealthRecord healthRecord) { 
+        Console.Write("Change weight?(y/n): ");
+            string choice;
                 choice = Console.ReadLine();
                 if (choice.ToUpper() == "Y")
                 {
@@ -431,17 +480,71 @@ namespace ClinicApp.Users
                 }
             }
 
-            if (!SystemFunctions.HealthRecords.TryAdd(examination.Patient.UserName, healthRecord))
-            {
-                SystemFunctions.HealthRecords[examination.Patient.UserName] = healthRecord;
-            }
-            examination.Finished = true;
-            SystemFunctions.CurrentExamtinations.Remove(examination.ID);
-            this.Examinations.Remove(examination);
+        //=======================================================================================================================================================================
+        // CREATE REFERRAL FOR PATIENT
 
-            examination.Patient.Examinations.Remove(examination);
-            Console.WriteLine("Examination ended");
+        void CreateReferral(ref Patient patient) {
+            Console.WriteLine("Create referral for (1) specific doctor or (2) specific field");
+            int i = OtherFunctions.EnterNumberWithLimit(0, 3);
+            if (i == 1)
+            {
+                Patient.ViewAllDoctors();
+                Console.WriteLine("\n Enter doctor username: ");
+                Console.Write(">> ");
+                string userName = Console.ReadLine();
+                Doctor doctor = null;
+                if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+                {
+                    Console.WriteLine("Doctor with that username does not exist.");
+                    return;
+                }
+                Referral referral = new Referral(this, patient, doctor, doctor.Field);
+                patient.Referrals.Add(referral);
+                SystemFunctions.Referrals.Add(referral);
+            }
+            else {
+                Fields field = OtherFunctions.AskField();
+                Referral referral = new Referral(this, patient, null, field);
+                patient.Referrals.Add(referral);
+                SystemFunctions.Referrals.Add(referral);
+
+            }
+            
         }
+        //=======================================================================================================================================================================
+        // WRITE UP A PRESCRIPTION FOR A PATIENT
+
+        private Prescription WritePrecription(Patient patient) {
+            Console.Write("Insert the name of Medicine: ");
+            string medicineName = Console.ReadLine();
+            Console.WriteLine();
+            Medicine medicine;
+            if (!SystemFunctions.Medicine.TryGetValue(medicineName, out medicine))
+            {
+                Console.WriteLine("Medicine with that name does not exist.");
+                return null;
+            }
+            bool alergic = CheckAlergy(medicine, patient.UserName);
+            if (alergic) return null;
+            int[] frequency = {0, 0, 0};
+
+            Console.WriteLine("Enter the number of pills to take in 1) the morning 2) at noon 3) the afternoon:");
+            for(int i = 0; i < 3; i++)
+            {
+                Console.Write(i + ") >> ");
+                frequency[i] = OtherFunctions.EnterNumber();
+                Console.WriteLine();
+            }
+            Console.WriteLine("Should the patient take the medicine: \n(1) Before a meal\n(2)After a meal\n(3)During a meal\n(4)Doesn't matter\n\n Chose by number");
+            int medicineMealInfo = OtherFunctions.EnterNumberWithLimit(0, 5);
+            MedicineFoodIntake medicineFoodIntake = (MedicineFoodIntake)(medicineMealInfo);
+            Prescription prescription = new Prescription(patient, this, DateTime.Now, medicine, frequency, medicineFoodIntake);
+            return prescription;
+
+        }
+
+
+
 
 
         //=======================================================================================================================================================================
@@ -484,6 +587,23 @@ namespace ClinicApp.Users
             this.Examinations.Add(newExamination);
 
         }
+
+        private bool CheckAlergy(Medicine medicine, string userName)
+        {
+            HealthRecord healthRecord = SystemFunctions.HealthRecords[userName];
+            foreach(string alergy in healthRecord.Alergies) {
+                foreach(string alergen in medicine.Ingredients)
+                {
+                    if (alergen.ToUpper() == alergy.ToUpper()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
     }
 
+
 }
+
