@@ -10,6 +10,7 @@ namespace ClinicApp.Users
     public class Doctor : User
     {
         public List<Examination> Examinations;
+        public int RoomId { get; set; } // id of the room in which the doctor works
         public Doctor(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender)
         {
             UserName = userName;
@@ -34,13 +35,14 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Doctor;
+            RoomId = Convert.ToInt32(data[7]);
             MessageBox = new MessageBox(this);
             Examinations = new List<Examination>();
         }
 
         public override string Compress()
         {
-            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role + "|" + Convert.ToString(RoomId);
         }
 
 

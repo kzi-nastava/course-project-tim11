@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using ClinicApp.AdminFunctions;
 
 namespace ClinicApp
 {
@@ -381,6 +382,29 @@ namespace ClinicApp
                 }
             } while (date.Date < DateTime.Now.Date);
             return date;
+        }
+        public static bool CheckForRenovations(DateTime examinationTime, int roomId)
+        {
+            foreach(var renovation in RoomRenovationManager.RoomRenovationList)
+            {
+                if (roomId == renovation.RoomId && renovation.Duration.IsInRange(examinationTime))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool CheckForExaminations(DateRange dateRange, int roomId)
+        {
+            foreach (int examId in SystemFunctions.AllExamtinations.Keys )
+            {
+                Clinic.Examination exam = SystemFunctions.AllExamtinations[examId];
+                if(exam.Doctor.RoomId == roomId && dateRange.IsInRange(exam.DateTime))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
