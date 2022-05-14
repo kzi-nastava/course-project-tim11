@@ -16,6 +16,7 @@ namespace ClinicApp.Users
     {
         public Blocked Blocked { get; set; }
         public List<Examination> Examinations { get; set; }
+        public List<Referral> Referrals { get; set; }
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
         public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Blocked blocked)
@@ -30,6 +31,7 @@ namespace ClinicApp.Users
             MessageBox = new MessageBox(this);
             Blocked = blocked;
             Examinations = new List<Examination>();
+            Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
         }
@@ -57,6 +59,7 @@ namespace ClinicApp.Users
             }
                 
             Examinations = new List<Examination>();
+            Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
         }
@@ -185,7 +188,7 @@ namespace ClinicApp.Users
 
             Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
 
-            DateTime date = Doctor.GetGoodDate();
+            DateTime date = OtherFunctions.GetGoodDate();
 
             Console.Write("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
 
@@ -485,6 +488,26 @@ namespace ClinicApp.Users
 
         public void ViewPatient() {
             Console.WriteLine($"Patient {Name} {LastName};\nDate of birth {DateOfBirth.ToShortDateString()}; Gender:\n{Gender}");
+        }
+
+        public bool CheckAppointment(DateTime dateTime)
+        {
+            foreach (Examination examination in this.Examinations)
+            {
+                if (examination.DateTime.Date == dateTime.Date)
+                {
+                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime) || (dateTime <= examination.DateTime && dateTime.AddMinutes(15) > examination.DateTime))
+                    {
+                        return false;
+                    }
+                }
+                if (examination.DateTime.Date > dateTime.Date)
+                {
+                    break;
+                }
+
+            }
+            return true;
         }
     }
 }

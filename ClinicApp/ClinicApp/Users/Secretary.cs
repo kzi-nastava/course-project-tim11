@@ -48,9 +48,10 @@ namespace ClinicApp.Users
             Console.WriteLine("3: Manage patient accounts");
             Console.WriteLine("4: Block or unbolck patient accounts");
             Console.WriteLine("5: Manage examination requests");
+            Console.WriteLine("6: Create examinations based upon referrals.");
             Console.WriteLine("0: Exit");
 
-            return 5;
+            return 6;
         }
 
         //Executes the chosen command.
@@ -69,6 +70,9 @@ namespace ClinicApp.Users
                     break;
                 case 5:
                     ManageExaminationRequests();
+                    break;
+                case 6:
+                    CreateExaminationsFromReferrals();
                     break;
             }
         }
@@ -357,6 +361,102 @@ namespace ClinicApp.Users
                 }
             }
             Console.WriteLine();
+        }
+
+        //Creates examinations based upon referrals.
+        private static void CreateExaminationsFromReferrals()
+        {
+            int option = 1;
+            string userName;
+            Patient patient;
+            while(option != 0)
+            {
+                Console.WriteLine("\nWrite the username of tha patient:");
+                userName = OtherFunctions.EnterString();
+                if (SystemFunctions.Patients.TryGetValue(userName, out patient))
+                {
+                    option = 0; //We found the patient. No need tosearch for him again.
+                    if(patient.Referrals.Count() == 0)
+                    {
+                        Console.WriteLine("\nThis patient has no referrals.");
+                        return;
+                    }
+                    else
+                    {
+                        //Finds the doctor.
+                        Clinic.Referral referral = patient.Referrals[0];
+                        Doctor doctor = referral.DoctorSpecialist;
+
+                        //Finds the id.
+                        int id = 0;
+                        foreach (int examinationID in SystemFunctions.AllExamtinations.Keys)
+                        {
+                            if (examinationID > id)
+                            {
+                                id = examinationID;
+                            }
+                        }
+                        id++;
+
+                        //Finds the date and time for the examination.
+                        bool hasTime = false;
+                        int option2 = 1;
+                        DateTime dateTime = DateTime.Now, date, time;
+                        while(hasTime == false && option2 != 0)
+                        {
+                            Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
+                            date = OtherFunctions.GetGoodDate();
+
+                            Console.Write("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
+                            time = OtherFunctions.AskForTime();
+
+                            dateTime = date.Date + time.TimeOfDay;
+                            if (dateTime < DateTime.Now)
+                            {
+                                Console.WriteLine("You can't enter that time, it's in the past");
+                            }
+                            else
+                            {
+                                hasTime = true;
+                                if (!doctor.CheckAppointment(dateTime))
+                                {
+                                    hasTime = false;
+                                    Console.WriteLine("The doctor is not availible at that time. Try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
+                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                }
+                                else if (!patient.CheckAppointment(dateTime))
+                                {
+                                    hasTime = false;
+                                    Console.WriteLine("The patient is not availible at that time. Try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
+                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                }
+                                else
+                                {
+                                    //Creates the examination.
+                                    Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor, patient, false, 0, 0);
+                                    doctor.InsertExamination(examination);
+                                    patient.InsertExamination(examination);
+                                    SystemFunctions.AllExamtinations.Add(id, examination);
+                                    SystemFunctions.CurrentExamtinations.Add(id, examination);
+                                    patient.Referrals.RemoveAt(0);
+                                    Console.WriteLine("\nNew examination successfully created\n");
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nThere is no such patient. Try again?");
+                    Console.WriteLine("1: Yes");
+                    Console.WriteLine("0: No");
+                    option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                }
+            }
         }
     }
 }
