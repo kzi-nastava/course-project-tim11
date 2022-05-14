@@ -19,6 +19,8 @@ namespace ClinicApp.Users
         public List<Referral> Referrals { get; set; }
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
+        public List<Prescription> Prescriptions { get; set; } = new List<Prescription>();
+
         public Patient(string userName, string password, string name, string lastName, DateTime dateOfBirth, char gender, Blocked blocked)
         {
             UserName = userName;
@@ -34,6 +36,7 @@ namespace ClinicApp.Users
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
+            Prescriptions = new List<Prescription>();
         }
 
         public Patient(string text)
@@ -61,7 +64,9 @@ namespace ClinicApp.Users
             Examinations = new List<Examination>();
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
+            Prescriptions = new List<Prescription>();
             LoadActivityHistory();
+
         }
 
         public override string Compress()
