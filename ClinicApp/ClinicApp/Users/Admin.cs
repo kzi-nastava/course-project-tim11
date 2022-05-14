@@ -16,6 +16,7 @@ namespace ClinicApp.Users
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Role = Roles.Admin;
+            MessageBox = new MessageBox(this);
         }
 
         public Admin(string text)
@@ -29,6 +30,7 @@ namespace ClinicApp.Users
             DateOfBirth = DateTime.Parse(data[4]);
             Gender = data[5][0];
             Role = Roles.Admin;
+            MessageBox = new MessageBox(this);
         }
 
         public override string Compress()
@@ -41,11 +43,13 @@ namespace ClinicApp.Users
             EquipmentMovementManager.LoadEquipmentMovement(); //load to check if there is any equipment to move today
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
-            Console.WriteLine("2. Manage Clinic Rooms");
-            Console.WriteLine("3. Manage Clinic Equipment");
+            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage Clinic Rooms");
+            Console.WriteLine("4: Manage Clinic Equipment");
+            Console.WriteLine("5: Manage Room Renovations");
             Console.WriteLine("0: Exit");
 
-            return 3;
+            return 5;
         }
 
         public override void MenuDo(int option)
@@ -53,10 +57,16 @@ namespace ClinicApp.Users
             switch (option)
             {
                 case 2:
-                    RoomManagmentMenu();
+                    MessageBox.DisplayMessages();
                     break;
                 case 3:
+                    RoomManagmentMenu();
+                    break;
+                case 4:
                     EquipmentManagmentMenu();
+                    break;
+                case 5:
+                    RoomRenovationMenu();
                     break;
             }
         }
@@ -658,10 +668,259 @@ namespace ClinicApp.Users
                 }
                 else break;
             }
+            Console.WriteLine("Enter date on which the equipment is being moved");
+            DateTime date = EnterDate();
+            EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = cr.Id, MovementDate = date, Done = false };
+            EquipmentMovementManager.Add(movement);
+            }
+        //-------------------------------------------------RENOVATIONS---------------------------------------------
+        public static void RoomRenovationMenu()
+        {
+            while (true)
+            {
+                RoomRenovationManager.CheckForRenovations();
+                Console.WriteLine("Room Renovation Menu");
+                Console.WriteLine("1. Simple Renovation");
+                Console.WriteLine("2. Complex Renovation");
+                Console.WriteLine("3. List all Renovations");
+                Console.WriteLine("0. Return");
+                int choice = OtherFunctions.EnterNumber();
+                switch (choice)
+                {
+                    case 0:
+                        return;
+                    case 1:
+                        SimpleRoomRenovationMenu();
+                        break;
+                    case 2:
+                        ComplexRoomRenovationMenu();
+                        break;
+                    case 3:
+                        ListAllRenovations();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option, try again");
+                        break;
+                }
+            }
+            
+
+        }
+        public static void SimpleRoomRenovationMenu()
+        {
+            ClinicRoom room;
+            int id;
+            while (true)
+            {
+                Console.WriteLine("Enter ID of the room you want to Renovate");
+                id = OtherFunctions.EnterNumber();
+                room = ClinicRoomManager.Get(id);
+                if (room is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else break;
+            }
+            if (room.Id == 0)
+            {
+                Console.WriteLine("You cannot renovate Storage!");
+                return;
+            }
+            DateRange duration = GetUninterruptedDateRange(room.Id);
+
+            RoomRenovation renovation = new RoomRenovation
+            {
+                RoomId = room.Id,
+                Duration = duration,
+                Type = RenovationType.Simple,
+                Done = false
+            };
+            RoomRenovationManager.Add(renovation);
+
+        }
+        public static void CreateComplexSplitRenovation()
+        {
+            //get renovated room id
+            ClinicRoom room;
+            int id;
+            while (true)
+            {
+                Console.WriteLine("Enter ID of the room you want to Renovate");
+                id = OtherFunctions.EnterNumber();
+                room = ClinicRoomManager.Get(id);
+                if (room is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else break;
+            }
+            if (room.Id == 0)
+            {
+                Console.WriteLine("You cannot renovate Storage!");
+                return;
+            }
+            DateRange duration = GetUninterruptedDateRange(room.Id);
+            //create new room
+            string name;
+            string type;
+            RoomType roomType;
+            while (true)
+            {
+                Console.Write("Name: ");
+                name = Console.ReadLine();
+                if (name.Contains("|"))
+                {
+                    Console.WriteLine("Invalid option, name cannot contain |, try again");
+                }
+                else { break; }
+            }
+            while (true)
+            {
+                Console.Write("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+                type = Console.ReadLine();
+                if (type == "1")
+                {
+                    roomType = RoomType.Operations;
+                    break;
+                }
+                else if (type == "2")
+                {
+                    roomType = RoomType.Examinations; break;
+                }
+                else if (type == "3")
+                {
+                    roomType = RoomType.Waiting;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option, try again");
+                    type = Console.ReadLine();
+                }
+
+            }
+            ClinicRoom newRoom = new ClinicRoom { Name = name, Type = roomType };
+            RoomRenovation renovation = new RoomRenovation
+            {
+                RoomId = room.Id,
+                Duration = duration,
+                Type = RenovationType.ComplexSplit,
+                Done = false,
+                NewRoom = newRoom
+            };
+            RoomRenovationManager.Add(renovation);
+        }
+        public static void CreateComplexJoinRenovation()
+        {
+            
+            //get renovated room id
+            ClinicRoom room;
+            int id;
+            while (true)
+            {
+                Console.WriteLine("Enter ID of the room you want to Renovate");
+                id = OtherFunctions.EnterNumber();
+                room = ClinicRoomManager.Get(id);
+                if (room is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else break;
+            }
+            if (room.Id == 0)
+            {
+                Console.WriteLine("You cannot renovate Storage!");
+                return;
+            }
+            DateRange duration = GetUninterruptedDateRange(room.Id);
+
+            //get the joined room
+            ClinicRoom otherRoom;
+            int otherId;
+            while (true)
+            {
+                Console.WriteLine("Enter ID of the room you want to Renovate");
+                otherId = OtherFunctions.EnterNumber();
+                otherRoom = ClinicRoomManager.Get(otherId);
+                if (otherRoom is null)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else break;
+            }
+            if (otherRoom.Id == 0)
+            {
+                Console.WriteLine("You cannot delete Storage!");
+                return;
+            }
+            if (OtherFunctions.CheckForExaminations(duration, otherRoom.Id))
+            {
+                Console.WriteLine("This room has an appointment at the given time, discarding");
+                return;
+            }
+            RoomRenovation renovation = new RoomRenovation
+            {
+                RoomId = room.Id,
+                Duration = duration,
+                Type = RenovationType.ComplexJoin,
+                Done = false,
+                JoinedRoomId = otherRoom.Id,
+            };
+            RoomRenovationManager.Add(renovation);
+        }
+        public static void ComplexRoomRenovationMenu()
+        {
+            
+            Console.WriteLine("1. Split room");
+            Console.WriteLine("2. Join 2 rooms");
+            Console.WriteLine("0. Return");
+            int answer = OtherFunctions.EnterNumber();
+            while (true)
+            {
+                switch (answer)
+                {
+                    case 0:
+                        return;
+                    case 1:
+                        CreateComplexSplitRenovation();
+                        return;
+                    case 2:
+                        CreateComplexJoinRenovation();
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option, try again");
+                        break;
+                }
+            }
+        }
+        public static void ListAllRenovations()
+        {
+            string newLine;
+            foreach (RoomRenovation renovation in RoomRenovationManager.GetAll())
+            {
+                switch (renovation.Type)
+                {
+                    case RenovationType.Simple:
+                        newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type);
+                        Console.WriteLine( newLine);
+                        break;
+                    case RenovationType.ComplexJoin:
+                        newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| ID of joined room: " + Convert.ToString(renovation.JoinedRoomId);
+                        Console.WriteLine(newLine);
+                        break;
+                    case RenovationType.ComplexSplit:
+                        newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| new room will be: " + renovation.NewRoom.Name + "|" + Convert.ToString(renovation.NewRoom.Type);
+                        Console.WriteLine(newLine);
+                        break;
+                }
+            }
+        }
+        public static DateTime EnterDate()
+        {
             DateTime date;
             while (true)
             {
-                Console.WriteLine("Enter date on which the equipment is being moved");
+                
                 string dateString = Console.ReadLine();
                 if (DateTime.TryParse(dateString, out date) == false)
                 {
@@ -670,21 +929,26 @@ namespace ClinicApp.Users
                 else
                 {
                     date = DateTime.Parse(dateString);
-                    break;
+                    return date.Date;
                 };
             }
-            EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = cr.Id, MovementDate = date, Done = false };
-            EquipmentMovementManager.Add(movement);
-            }
-        public class SearchTerms  //small helper class to ease searching equipment
+        }
+        public static DateRange GetUninterruptedDateRange(int roomId)
         {
-            public string SearchTerm { get; set; }
-            public bool FilterByEqTypeBool { get; set; }
-            public EquipmentType FilterByEq { get; set; }
-            public bool FilterByAmountBool { get; set; }
-            public int STAmount { get; set; }
-            public bool FilterByRoomTypeBool { get; set; }
-            public RoomType FilterByRoom { get; set; }
+            while (true)
+            {
+                Console.WriteLine("Enter the start date of the renovation");
+                DateTime start = EnterDate();
+                Console.WriteLine("Enter the end date of the renovation");
+                DateTime end = EnterDate();
+                DateRange duration = new DateRange { StartDate = start, EndDate = end };
+                duration.ValidateDates();
+                if (OtherFunctions.CheckForExaminations(duration, roomId) == false)
+                {
+                    return duration;
+                }
+                Console.WriteLine("You have entered invalid dates, there is an examination during the date range!");
+            }
         }
     }
 }

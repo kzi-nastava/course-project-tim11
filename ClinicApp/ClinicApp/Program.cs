@@ -39,6 +39,8 @@ namespace ClinicApp
                         {
                             case Roles.Patient:
                                 SystemFunctions.Patients.Add(currentUser.UserName, (Patient)currentUser);
+                                Patient patient = (Patient)currentUser;
+                                patient.AntiTroll();
                                 break;
                             case Roles.Doctor:
                                 SystemFunctions.Doctors.Add(currentUser.UserName, (Doctor)currentUser);

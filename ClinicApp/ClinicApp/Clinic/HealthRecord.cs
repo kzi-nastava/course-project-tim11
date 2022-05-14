@@ -128,19 +128,19 @@ namespace ClinicApp.Clinic
             foreach (string illness in MedicalHistory) {
                 allIlnesses += illness + "/";
             }
-            allIlnesses.Remove(allIlnesses.Length - 1);
+            allIlnesses = allIlnesses.Remove(allIlnesses.Length - 1);
             string anamneses = "";
             foreach (Anamnesis anamnesis in Anamneses)
             {
                 anamneses += anamnesis.Compress() + "/";
             }
-            anamneses.Remove(anamneses.Length - 1);
+            anamneses = anamneses.Remove(anamneses.Length - 1);
             string allAlergies = ""; 
             foreach (string alergy in Alergies)
             {
                 allAlergies += alergy + "/";
             }
-            allAlergies.Remove(allAlergies.Length - 1);
+            allAlergies = allAlergies.Remove(allAlergies.Length - 1);
             return Patient.UserName + "|" + Weight + "|" + Height + "|" + allIlnesses + "|" + anamneses + "|" + allAlergies;
         }
 

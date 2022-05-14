@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using ClinicApp.AdminFunctions;
 
 namespace ClinicApp
 {
@@ -51,7 +52,7 @@ namespace ClinicApp
                 {
                     x = Convert.ToDouble(s);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("You didn't enter a decimal number. Try again.");
                 }
@@ -121,8 +122,23 @@ namespace ClinicApp
             }
             else return false;
         }
-    
 
+
+        public static Fields AskField() {
+
+            Console.WriteLine("\nChose specialization by number:\n");
+            int i = 1;
+            foreach (string field in Enum.GetNames(typeof(Fields)))
+            {
+                Console.WriteLine($"{i}. {field}");
+                i++;
+            }
+            int choice = EnterNumberWithLimit(1, Enum.GetNames(typeof(Fields)).Length);
+            Fields specialization = (Fields)(choice - 1);
+            return specialization;
+
+
+        }
     public static string MaskPassword()
     {
         string password = "";
@@ -303,11 +319,14 @@ namespace ClinicApp
 
         private static User RegisterDoctor(string text)
         {
+            Fields field = AskField();            
+            text += "|" + field.ToString();
             return new Doctor(text);
         }
 
         private static User RegisterPatient(string text)
         {
+            text += "|Unblocked";
             return new Patient(text);
         }
 
@@ -350,6 +369,42 @@ namespace ClinicApp
                 }
             }
             Console.WriteLine();
+        }
+        public static DateTime GetGoodDate()
+        {
+            DateTime date;
+            do
+            {
+                date = OtherFunctions.AskForDate();
+                if (date.Date < DateTime.Now.Date)
+                {
+                    Console.WriteLine("You can't enter a date that's in the past");
+                }
+            } while (date.Date < DateTime.Now.Date);
+            return date;
+        }
+        public static bool CheckForRenovations(DateTime examinationTime, int roomId)
+        {
+            foreach(var renovation in RoomRenovationManager.RoomRenovationList)
+            {
+                if (roomId == renovation.RoomId && renovation.Duration.IsInRange(examinationTime))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool CheckForExaminations(DateRange dateRange, int roomId)
+        {
+            foreach (int examId in SystemFunctions.AllExamtinations.Keys )
+            {
+                Clinic.Examination exam = SystemFunctions.AllExamtinations[examId];
+                if(exam.Doctor.RoomId == roomId && dateRange.IsInRange(exam.DateTime))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
