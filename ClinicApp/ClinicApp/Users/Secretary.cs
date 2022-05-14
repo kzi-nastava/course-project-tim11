@@ -49,9 +49,10 @@ namespace ClinicApp.Users
             Console.WriteLine("4: Block or unbolck patient accounts");
             Console.WriteLine("5: Manage examination requests");
             Console.WriteLine("6: Create examinations based upon referrals.");
+            Console.WriteLine("7: Create an emergency examination.");
             Console.WriteLine("0: Exit");
 
-            return 6;
+            return 7;
         }
 
         //Executes the chosen command.
@@ -73,6 +74,9 @@ namespace ClinicApp.Users
                     break;
                 case 6:
                     CreateExaminationsFromReferrals();
+                    break;
+                case 7:
+                    CreateEmergencyExamination();
                     break;
             }
         }
@@ -371,11 +375,11 @@ namespace ClinicApp.Users
             Patient patient;
             while(option != 0)
             {
-                Console.WriteLine("\nWrite the username of tha patient:");
+                Console.WriteLine("\nEnter the patients username:");
                 userName = OtherFunctions.EnterString();
                 if (SystemFunctions.Patients.TryGetValue(userName, out patient))
                 {
-                    option = 0; //We found the patient. No need tosearch for him again.
+                    option = 0; //We found the patient. No need to search for him again.
                     if(patient.Referrals.Count() == 0)
                     {
                         Console.WriteLine("\nThis patient has no referrals.");
@@ -448,6 +452,44 @@ namespace ClinicApp.Users
                             }
                         }
                     }
+                }
+                else
+                {
+                    Console.WriteLine("\nThere is no such patient. Try again?");
+                    Console.WriteLine("1: Yes");
+                    Console.WriteLine("0: No");
+                    option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                }
+            }
+        }
+
+        //Creates emergency examinations
+        private static void CreateEmergencyExamination()
+        {
+            string userName;
+            Patient patient;
+            int option = 1;
+            while (option != 0)
+            {
+                Console.WriteLine("\nEnter the patients username:");
+                userName = OtherFunctions.EnterString();
+                if (SystemFunctions.Patients.TryGetValue(userName, out patient))
+                {
+                    option = 0; //We found the patient. No need to search for him again.
+                    int option2, numberOfOptions = 0;
+                    Console.WriteLine("Which specialty does the doctor need to possess?");
+                    List<Fields> fields = new List<Fields>();
+                    foreach(Fields field in (Fields[])Enum.GetValues(typeof(Fields)))
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": " + field);
+                        fields.Add(field);
+                    }
+                    option2 = OtherFunctions.EnterNumberWithLimit(1, numberOfOptions);
+                    Fields fieldOfDoctor = fields[option2 - 1]; //-1 because it starts from zero and options start from 1.
+
+                    //Continue here.
+
                 }
                 else
                 {
