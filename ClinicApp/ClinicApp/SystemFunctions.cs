@@ -83,16 +83,7 @@ namespace ClinicApp
 
                 }
             }
-            using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Prescription prescription = new Prescription(line);
-                    prescription.Patient.Prescriptions.Add(prescription);
 
-                }
-            }
 
             //Load medicine
 
@@ -103,6 +94,17 @@ namespace ClinicApp
                 {
                     Medicine medicine= new Medicine(line);
                     Medicine.Add(medicine.Name, medicine);
+
+                }
+            }
+
+            using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Prescription prescription = new Prescription(line);
+                    prescription.Patient.Prescriptions.Add(prescription);
 
                 }
             }

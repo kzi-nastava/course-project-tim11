@@ -31,6 +31,7 @@ namespace ClinicApp.Clinic
             Doctor = SystemFunctions.Doctors[data[1]];
             Date = DateTime.Parse(data[2]);
             Medicine = SystemFunctions.Medicine[data[3]];
+            Frequency = new int[3];
             Frequency[0] = Convert.ToInt32(data[4][0]);
             Frequency[1] = Convert.ToInt32(data[4][1]);
             Frequency[2] = Convert.ToInt32(data[4][2]);
@@ -40,8 +41,8 @@ namespace ClinicApp.Clinic
         }
 
         public void ShowPrescription() {
-            Console.WriteLine("\n Prescription details:");
-            Console.WriteLine($"Date : {Date}; Medicine: {Medicine.Name}");
+            Console.WriteLine("\nPrescription details:");
+            Console.WriteLine($"Date : {Date.Date}; Medicine: {Medicine.Name}");
             Console.WriteLine($"Patient full name: {Patient.Name} {Patient.LastName}");
             Console.WriteLine($"Doctor full name: {Doctor.Name}  {Doctor.LastName}");
             Console.WriteLine("Number of pills to take:");
@@ -52,7 +53,7 @@ namespace ClinicApp.Clinic
 
         public string Compress()
         {
-            return Patient.UserName + "|" + Doctor.UserName + "|" + Date + "|" + Medicine.Name + "|" + Frequency[0] + Frequency[1] + Frequency[2] + "|" + MedicineFoodIntake.ToString();
+            return Patient.UserName + "|" + Doctor.UserName + "|" + Date + "|" + Medicine.Name + "|" + Frequency[0] + Frequency[1] + Frequency[2] + "|" + MedicineFoodIntake;
         }
 
 
