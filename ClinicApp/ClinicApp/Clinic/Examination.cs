@@ -60,5 +60,26 @@ namespace ClinicApp.Clinic
             Console.WriteLine($"Patient last name: {Patient.LastName};");
             Console.WriteLine($"Date of birth {Patient.DateOfBirth.ToShortDateString()}");
         }
+
+        public DateTime NextAvailable()
+        {
+            DateTime nextAvailable = DateTime;
+
+            bool hasFoundTime = false;
+            while (hasFoundTime == false)
+            {
+                nextAvailable = nextAvailable.AddMinutes(1);
+                DateRange dateRange = new DateRange(nextAvailable, nextAvailable.AddMinutes(15));
+                if (Patient.CheckAppointment(nextAvailable) &&
+                    Doctor.CheckAppointment(nextAvailable) &&
+                    !OtherFunctions.CheckForRenovations(dateRange, Doctor.RoomId) &&
+                    !OtherFunctions.CheckForExaminations(dateRange, Doctor.RoomId))
+                {
+                    hasFoundTime = true;
+                }
+            }
+
+            return nextAvailable;
+        }
     }
 }

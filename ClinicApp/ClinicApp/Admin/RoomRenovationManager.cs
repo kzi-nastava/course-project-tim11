@@ -47,10 +47,12 @@ namespace ClinicApp.AdminFunctions
             foreach(var eq in equipmentInJoinedRoom)
             {
                 EquipmentMovement movement = new EquipmentMovement { Amount = eq.Amount, EquipmentId = eq.Id, NewRoomId = renovation.RoomId, MovementDate = DateTime.Today };
-                EquipmentMovementManager.CommitChanges(movement);
+                EquipmentMovementManager.Add(movement);
+                EquipmentMovementManager.CheckForMovements();
                 ClinicEquipmentManager.Delete(eq.Id);
             }
             renovation.Done = true;
+            ClinicRoomManager.Delete(renovation.JoinedRoomId);
             PersistChanges();
         }
 
