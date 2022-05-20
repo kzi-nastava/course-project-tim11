@@ -1,0 +1,5 @@
+danilo_babic|You have an emergency examination.;;;;;
+marko_markovic|You have an emergency examination.;Your examination has been delayed.;;;;;
+danilo_jevtic|Your examination has been delayed.;;;;;
+danilo_danilovic|You have an emergency examination.;
+danijela_rasevic|You have an emergency examination.;

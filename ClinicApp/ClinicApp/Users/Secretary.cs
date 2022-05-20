@@ -548,9 +548,12 @@ namespace ClinicApp.Users
 
                     //First, we make a list of all the examinations that can be delayed and by how much can they be delayed.
                     List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelaying = new List<KeyValuePair<Clinic.Examination, DateTime>>();
-                    foreach(KeyValuePair<int, Clinic.Examination> examinationForDelay in SystemFunctions.CurrentExamtinations)
-                        if(examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || patient.CheckAppointment(examinationForDelay.Value.DateTime)))
+                    foreach (KeyValuePair<int, Clinic.Examination> examinationForDelay in SystemFunctions.AllExamtinations)
+                        if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || patient.CheckAppointment(examinationForDelay.Value.DateTime)))
+                        {
                             examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>(examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
+                            Console.WriteLine(examinationForDelay.Key);
+                        }
                     if(examinationsForDelaying.Count == 0)
                     {
                         Console.WriteLine("\nThere are no examinations available for delaying.");
@@ -560,15 +563,15 @@ namespace ClinicApp.Users
                     //Then, we make a list of 5 options.
                     numberOfOptions = 0;
                     List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelayingOptions = new List<KeyValuePair<Clinic.Examination, DateTime>>();
-                    while(numberOfOptions < 5 && examinationsForDelayingOptions.Count() > 0)
+                    while(numberOfOptions < 5 && examinationsForDelaying.Count() > 0)
                     {
                         KeyValuePair<Clinic.Examination, DateTime> temp = examinationsForDelaying[0];
                         foreach (KeyValuePair<Clinic.Examination, DateTime> pair in examinationsForDelaying)
                             if (pair.Value < temp.Value)
                                 temp = pair;
                         numberOfOptions++;
-                        examinationsForDelaying.Remove(temp);
                         examinationsForDelayingOptions.Add(temp);
+                        examinationsForDelaying.Remove(temp);
                     }
 
                     //The secretary chooses which one will be delayed.
@@ -598,7 +601,7 @@ namespace ClinicApp.Users
                     id++;
 
                     //Creates the examination.
-                    Clinic.Examination examination2 = new Clinic.Examination(id, dateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
+                    Clinic.Examination examination2 = new Clinic.Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
                     examinationForDelaying.Key.Doctor.InsertExamination(examination2);
                     patient.InsertExamination(examination2);
                     SystemFunctions.AllExamtinations.Add(id, examination2);

@@ -2,4 +2,3 @@ jelena_mikovic|danilo_babic|jelena_mikovic|Cardiologist
 stefan_stefanovic|danilo_danilovic|danijela_rasevic|Pneumologist
 stefan_stefanovic|danilo_danilovic|null|Neurologist
 stefan_stefanovic|danilo_jevtic|luka_svetic|Pathologist
-marko_markovic|danilo_babic|null|Gastroenterologist
