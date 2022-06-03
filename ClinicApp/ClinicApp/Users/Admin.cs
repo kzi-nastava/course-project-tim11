@@ -40,7 +40,7 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            EquipmentMovementManager.LoadEquipmentMovement(); //load to check if there is any equipment to move today
+            EquipmentMovementService.LoadEquipmentMovement(); //load to check if there is any equipment to move today
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
@@ -107,7 +107,7 @@ namespace ClinicApp.Users
         public static void ListAllRooms()
         {
             Console.WriteLine("ID | NAME | TYPE");
-            foreach (ClinicRoom room in ClinicRoomManager.ClinicRooms)
+            foreach (Room room in RoomService.ClinicRooms)
             {
                 Console.WriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
@@ -152,12 +152,12 @@ namespace ClinicApp.Users
                 }
 
             }
-            ClinicRoom room = new ClinicRoom { Name = name, Type = roomType };
-            ClinicRoomManager.Add(room);
+            Room room = new Room { Name = name, Type = roomType };
+            RoomService.Add(room);
         }
         public static void EditRoom()
         {
-            ClinicRoom room;
+            Room room;
             string name;
             string type;
             RoomType roomType;
@@ -165,7 +165,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Edit");
                 int id = OtherFunctions.EnterNumber();
-                room = ClinicRoomManager.Get(id);
+                room = RoomService.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -220,17 +220,17 @@ namespace ClinicApp.Users
                     Console.WriteLine("Invalid option, try again");
                 }
             }
-            ClinicRoomManager.Update(room.Id, name, roomType);
+            RoomService.Update(room.Id, name, roomType);
         }
         public static void DeleteRoom()
         {
-            ClinicRoom room;
+            Room room;
             int id;
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Delete");
                 id = OtherFunctions.EnterNumber();
-                room = ClinicRoomManager.Get(id);
+                room = RoomService.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -241,7 +241,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("You cannot delete Storage!");
             }
-            else ClinicRoomManager.Delete(id);
+            else RoomService.Delete(id);
 
         }
         //------------------------------------------------------MANAGE EQUIPMENT------------------------------------------
@@ -249,7 +249,7 @@ namespace ClinicApp.Users
         {
             while (true)
             {
-                EquipmentMovementManager.CheckForMovements();
+                EquipmentMovementService.CheckForMovements();
                 Console.WriteLine("Manage Equipment");
                 Console.WriteLine("1. List all");
                 Console.WriteLine("2. Search");
@@ -278,16 +278,16 @@ namespace ClinicApp.Users
         public static void ListAllEquipment()
         {
             Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (ClinicEquipment eq in ClinicEquipmentManager.ClinicEquipmentList)
+            foreach (Equipment eq in EquipmentService.ClinicEquipmentList)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + ClinicRoomManager.Get(eq.RoomId).Name + " " + ClinicRoomManager.Get(eq.RoomId).Type + " " + eq.Type);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomService.Get(eq.RoomId).Name + " " + RoomService.Get(eq.RoomId).Type + " " + eq.Type);
             }
         }
         public static void SearchEquipment()
         {
             Console.WriteLine("Search");
             SearchTerms STerms = new SearchTerms();
-            List<ClinicEquipment> Results;
+            List<Equipment> Results;
             while (true)
             {
                 Console.Write("Enter search terms: ");
@@ -302,7 +302,7 @@ namespace ClinicApp.Users
                 }
             }
 
-            Results = ClinicEquipmentManager.Search(STerms.SearchTerm);
+            Results = EquipmentService.Search(STerms.SearchTerm);
 
             while (true)
             {
@@ -450,31 +450,31 @@ namespace ClinicApp.Users
             }
             if (STerms.FilterByEqTypeBool == true)
             {
-                Results = ClinicEquipmentManager.FilterByEqType(Results, STerms.FilterByEq);
+                Results = EquipmentService.FilterByEqType(Results, STerms.FilterByEq);
             }
             if (STerms.FilterByRoomTypeBool == true)
             {
-                Results = ClinicEquipmentManager.FilterByRoomType(Results, STerms.FilterByRoom);
+                Results = EquipmentService.FilterByRoomType(Results, STerms.FilterByRoom);
             }
             if (STerms.FilterByAmountBool == true)
             {
                 switch (STerms.STAmount)
                 {
                     case 1:
-                        Results = ClinicEquipmentManager.FilterByNumbers(Results, 0, 0);
+                        Results = EquipmentService.FilterByNumbers(Results, 0, 0);
                         break;
                     case 2:
-                        Results = ClinicEquipmentManager.FilterByNumbers(Results, 1, 10);
+                        Results = EquipmentService.FilterByNumbers(Results, 1, 10);
                         break;
                     case 3:
-                        Results = ClinicEquipmentManager.FilterByNumbers(Results, 11, 10000000);
+                        Results = EquipmentService.FilterByNumbers(Results, 11, 10000000);
                         break;
                 }
             }
             Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (ClinicEquipment eq in Results)
+            foreach (Equipment eq in Results)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + ClinicRoomManager.Get(eq.RoomId).Name + " " + ClinicRoomManager.Get(eq.RoomId).Type + " " + eq.Type);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomService.Get(eq.RoomId).Name + " " + RoomService.Get(eq.RoomId).Type + " " + eq.Type);
             }
 
         }
@@ -515,11 +515,11 @@ namespace ClinicApp.Users
                 if (answer.ToLower() == "y")
                 {
                     Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-                    foreach (ClinicEquipment item in ClinicEquipmentManager.ClinicEquipmentList)
+                    foreach (Equipment item in EquipmentService.ClinicEquipmentList)
                     {
                         if (item.RoomId == 0)
                         {
-                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + ClinicRoomManager.Get(item.RoomId).Name + " " + ClinicRoomManager.Get(item.RoomId).Type + " " + item.Type);
+                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + RoomService.Get(item.RoomId).Name + " " + RoomService.Get(item.RoomId).Type + " " + item.Type);
                         }
                     }
                     break;
@@ -540,7 +540,7 @@ namespace ClinicApp.Users
                     EquipmentType type;
                     int amount = OtherFunctions.EnterNumber();
                     List<string> exsistingNames = new List<string>();
-                    foreach(ClinicEquipment item in ClinicEquipmentManager.ClinicEquipmentList)
+                    foreach (Equipment item in EquipmentService.ClinicEquipmentList)
                     {
                         if (item.RoomId == 0)
                         {
@@ -573,7 +573,7 @@ namespace ClinicApp.Users
                         }
                         else if (answer == "2")
                         {
-                            type = EquipmentType.RoomFurniture; 
+                            type = EquipmentType.RoomFurniture;
                             break;
                         }
                         else if (answer == "3")
@@ -592,18 +592,18 @@ namespace ClinicApp.Users
                         }
 
                     }
-                    ClinicEquipment eq = new ClinicEquipment { Amount = amount, Name = name, RoomId = 0, Type = type };
-                    ClinicEquipmentManager.Add(eq);
+                    Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
+                    EquipmentService.Add(eq);
                     break;
                 }
                 else if (answer == "2")
                 {
-                    ClinicEquipment eq;
+                    Equipment eq;
                     while (true)
                     {
                         Console.WriteLine("Enter ID of equipment to change:");
                         int id = OtherFunctions.EnterNumber();
-                        eq = ClinicEquipmentManager.Get(id);
+                        eq = EquipmentService.Get(id);
                         if (eq is null)
                         {
                             Console.WriteLine("Invalid option, try again");
@@ -622,7 +622,7 @@ namespace ClinicApp.Users
                     {
                         Console.WriteLine("Enter new amount: ");
                         int amount = OtherFunctions.EnterNumberWithLimit(1, 99999999);
-                        ClinicEquipmentManager.Update(eq.Id, amount);
+                        EquipmentService.Update(eq.Id, amount);
                     }
 
                     break;
@@ -639,12 +639,12 @@ namespace ClinicApp.Users
         }
         public static void MoveEquipment() //menu for creating a new equipment movement 
         {
-            ClinicEquipment eq;
+            Equipment eq;
             while (true)
             {
                 Console.WriteLine("Enter ID of equipment to change:");
                 int id = OtherFunctions.EnterNumber();
-                eq = ClinicEquipmentManager.Get(id);
+                eq = EquipmentService.Get(id);
                 if (eq is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -656,12 +656,12 @@ namespace ClinicApp.Users
             }
             Console.WriteLine("Enter amount to move");
             int amount = OtherFunctions.EnterNumberWithLimit(1, eq.Amount);
-            ClinicRoom cr;
+            Room cr;
             while (true)
             {
                 Console.WriteLine("Enter the Id of the room where the equipment is going to");
                 int id = OtherFunctions.EnterNumber();
-                cr = ClinicRoomManager.Get(id);
+                cr = RoomService.Get(id);
                 if (cr is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -669,16 +669,16 @@ namespace ClinicApp.Users
                 else break;
             }
             Console.WriteLine("Enter date on which the equipment is being moved");
-            DateTime date = EnterDate();
+            DateTime date = OtherFunctions.EnterDate();
             EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = cr.Id, MovementDate = date, Done = false };
-            EquipmentMovementManager.Add(movement);
-            }
+            EquipmentMovementService.Add(movement);
+        }
         //-------------------------------------------------RENOVATIONS---------------------------------------------
         public static void RoomRenovationMenu()
         {
             while (true)
             {
-                RoomRenovationManager.CheckForRenovations();
+                RoomRenovationService.CheckForRenovations();
                 Console.WriteLine("Room Renovation Menu");
                 Console.WriteLine("1. Simple Renovation");
                 Console.WriteLine("2. Complex Renovation");
@@ -703,18 +703,18 @@ namespace ClinicApp.Users
                         break;
                 }
             }
-            
+
 
         }
         public static void SimpleRoomRenovationMenu()
         {
-            ClinicRoom room;
+            Room room;
             int id;
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 id = OtherFunctions.EnterNumber();
-                room = ClinicRoomManager.Get(id);
+                room = RoomService.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -735,19 +735,19 @@ namespace ClinicApp.Users
                 Type = RenovationType.Simple,
                 Done = false
             };
-            RoomRenovationManager.Add(renovation);
+            RoomRenovationService.Add(renovation);
 
         }
         public static void CreateComplexSplitRenovation()
         {
             //get renovated room id
-            ClinicRoom room;
+            Room room;
             int id;
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 id = OtherFunctions.EnterNumber();
-                room = ClinicRoomManager.Get(id);
+                room = RoomService.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -799,7 +799,7 @@ namespace ClinicApp.Users
                 }
 
             }
-            ClinicRoom newRoom = new ClinicRoom { Name = name, Type = roomType };
+            Room newRoom = new Room { Name = name, Type = roomType };
             RoomRenovation renovation = new RoomRenovation
             {
                 RoomId = room.Id,
@@ -808,19 +808,19 @@ namespace ClinicApp.Users
                 Done = false,
                 NewRoom = newRoom
             };
-            RoomRenovationManager.Add(renovation);
+            RoomRenovationService.Add(renovation);
         }
         public static void CreateComplexJoinRenovation()
         {
-            
+
             //get renovated room id
-            ClinicRoom room;
+            Room room;
             int id;
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 id = OtherFunctions.EnterNumber();
-                room = ClinicRoomManager.Get(id);
+                room = RoomService.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -835,13 +835,13 @@ namespace ClinicApp.Users
             DateRange duration = GetUninterruptedDateRange(room.Id);
 
             //get the joined room
-            ClinicRoom otherRoom;
+            Room otherRoom;
             int otherId;
             while (true)
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 otherId = OtherFunctions.EnterNumber();
-                otherRoom = ClinicRoomManager.Get(otherId);
+                otherRoom = RoomService.Get(otherId);
                 if (otherRoom is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -866,11 +866,11 @@ namespace ClinicApp.Users
                 Done = false,
                 JoinedRoomId = otherRoom.Id,
             };
-            RoomRenovationManager.Add(renovation);
+            RoomRenovationService.Add(renovation);
         }
         public static void ComplexRoomRenovationMenu()
         {
-            
+
             Console.WriteLine("1. Split room");
             Console.WriteLine("2. Join 2 rooms");
             Console.WriteLine("0. Return");
@@ -896,13 +896,13 @@ namespace ClinicApp.Users
         public static void ListAllRenovations()
         {
             string newLine;
-            foreach (RoomRenovation renovation in RoomRenovationManager.GetAll())
+            foreach (RoomRenovation renovation in RoomRenovationService.GetAll())
             {
                 switch (renovation.Type)
                 {
                     case RenovationType.Simple:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type);
-                        Console.WriteLine( newLine);
+                        Console.WriteLine(newLine);
                         break;
                     case RenovationType.ComplexJoin:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| ID of joined room: " + Convert.ToString(renovation.JoinedRoomId);
@@ -915,32 +915,74 @@ namespace ClinicApp.Users
                 }
             }
         }
-        public static DateTime EnterDate()
+        //MEDICINES MENU
+        public static void MedicinesMenu()
         {
-            DateTime date;
+            Console.WriteLine("1. Create medicine");
+            Console.WriteLine("2. CRUD ingrediants");
+            Console.WriteLine("0. Return");
+            int answer = OtherFunctions.EnterNumber();
             while (true)
             {
-                
-                string dateString = Console.ReadLine();
-                if (DateTime.TryParse(dateString, out date) == false)
+                switch (answer)
                 {
-                    Console.WriteLine("Invalid option, try again");
+                    case 0:
+                        return;
+                    case 1:
+                        CreateMedicine();
+                        return;
+                    case 2:
+                        CRUDIngrediants();
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option, try again");
+                        break;
                 }
-                else
-                {
-                    date = DateTime.Parse(dateString);
-                    return date.Date;
-                };
             }
         }
+        public static void CreateMedicine()
+        {
+            string name;
+            Console.WriteLine("Enter medicine name");
+            name = OtherFunctions.EnterString();
+            while (SystemFunctions.Medicine.ContainsKey(name))
+            {
+                Console.WriteLine("Name already taken, enter another name");
+                name = OtherFunctions.EnterString();
+            }
+            List<string> chosenIngrediants = new List<string>();
+            List<string> offeredIngrediants = IngrediantService.GetAll();
+            Console.WriteLine("Choose ingrediants");
+            while (true)
+            {
+                foreach(var ingrediant in offeredIngrediants)
+                {
+                    Console.WriteLine(offeredIngrediants.IndexOf(ingrediant)+1 + ". " + ingrediant);
+                }
+                var choice = OtherFunctions.EnterNumberWithLimit(-1,offeredIngrediants.Count+1);
+                if (choice == 0) 
+                { 
+                    break; 
+                }
+                chosenIngrediants.Add(offeredIngrediants[choice - 1]);
+            }
+            Clinic.Medicine medicine = new Clinic.Medicine(name,chosenIngrediants);
+            MedicineRequest mr = new MedicineRequest { Medicine = medicine, Comment = "" };
+            MedicineRequestService.Add(mr);
+        }
+        public static void CRUDIngrediants()
+        {
+
+        }
+        
         public static DateRange GetUninterruptedDateRange(int roomId)
         {
             while (true)
             {
                 Console.WriteLine("Enter the start date of the renovation");
-                DateTime start = EnterDate();
+                DateTime start = OtherFunctions.EnterDate();
                 Console.WriteLine("Enter the end date of the renovation");
-                DateTime end = EnterDate();
+                DateTime end = OtherFunctions.EnterDate();
                 DateRange duration = new DateRange { StartDate = start, EndDate = end };
                 duration.ValidateDates();
                 if (OtherFunctions.CheckForExaminations(duration, roomId) == false)

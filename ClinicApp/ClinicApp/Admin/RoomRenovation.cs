@@ -11,7 +11,7 @@ namespace ClinicApp.AdminFunctions
         public DateRange Duration {get; set;}
         public bool Done { get; set; }
         public RenovationType Type { get; set; }
-        public ClinicRoom NewRoom { get; set; }
+        public Room NewRoom { get; set; }
         public int JoinedRoomId { get; set; }
     }
     public enum RenovationType{

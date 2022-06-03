@@ -1,100 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class RoomRenovationManager
+    class RoomRenovationRepo
     {
-        static public List<RoomRenovation> RoomRenovationList { get; set; }
-
-        static RoomRenovationManager()
-        {
-            RoomRenovationList = LoadRoomRenovations();
-        }
-
-        public static List<RoomRenovation> GetAll() => RoomRenovationList;
-
-        public static RoomRenovation? Get(int id) => RoomRenovationList.FirstOrDefault(p => p.Id == id);
-
-        public static void Add(RoomRenovation item)
-        {
-            if (RoomRenovationList.Count == 0)
-            {
-                item.Id = 1;
-            }
-            else
-            {
-                item.Id = RoomRenovationList.Last().Id + 1;
-            }
-            RoomRenovationList.Add(item);
-            PersistChanges();
-        }
-        public static void Delete(int id)
-        {
-            var item = Get(id);
-            if (item is null)
-                return;
-            RoomRenovationList.Remove(item);
-            PersistChanges();
-        }
-
-        public static void CommitComplexJoinRenovation(RoomRenovation renovation) 
-        {
-            List<ClinicEquipment> equipmentInJoinedRoom = ClinicEquipmentManager.GetEquipmentFromRoom(renovation.JoinedRoomId);
-            foreach(var eq in equipmentInJoinedRoom)
-            {
-                EquipmentMovement movement = new EquipmentMovement { Amount = eq.Amount, EquipmentId = eq.Id, NewRoomId = renovation.RoomId, MovementDate = DateTime.Today };
-                EquipmentMovementManager.Add(movement);
-                EquipmentMovementManager.CheckForMovements();
-                ClinicEquipmentManager.Delete(eq.Id);
-            }
-            renovation.Done = true;
-            ClinicRoomManager.Delete(renovation.JoinedRoomId);
-            PersistChanges();
-        }
-
-        public static void CommitComplexSplitRenovation(RoomRenovation renovation) 
-        {
-            
-            ClinicRoomManager.Add(renovation.NewRoom);
-            renovation.Done = true;
-            PersistChanges();
-        }
-
-        public static void CheckForRenovations()
-        {
-            foreach (var renovation in RoomRenovationList)
-            {
-                if (!renovation.Done)
-                {
-                    if (renovation.Duration.EndDate <= DateTime.Today)
-                    {
-                        switch (renovation.Type)
-                        {
-                            case RenovationType.Simple:
-                                renovation.Done = true;
-                                break;
-                            case RenovationType.ComplexJoin:
-                                CommitComplexJoinRenovation(renovation);
-                                break;
-                            case RenovationType.ComplexSplit:
-                                CommitComplexSplitRenovation(renovation);
-                                break;
-                        }
-                    }
-                }
-            }
-            PersistChanges();
-        }
-        //==================== FILES STUFF =======================
-
-        public static List<RoomRenovation> LoadRoomRenovations()
+        static string Path { get; set; } = "../../../Admin/Data/roomRenovations.txt";
+        public static List<RoomRenovation> Load()
         {
             List<RoomRenovation> renovations = new List<RoomRenovation>();
-            using (StreamReader reader = new StreamReader("../../../Admin/Data/roomRenovations.txt"))
+            using (StreamReader reader = new StreamReader(Path))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -106,7 +23,7 @@ namespace ClinicApp.AdminFunctions
             return renovations;
         }
 
-        public static RoomRenovation ParseSimpleRenovation(string [] parameteres)
+        public static RoomRenovation ParseSimpleRenovation(string[] parameteres)
         {
             RoomRenovation renovation = new RoomRenovation
             {
@@ -170,7 +87,7 @@ namespace ClinicApp.AdminFunctions
                 },
                 Done = bool.Parse(parameteres[4]),
                 Type = RenovationType.ComplexSplit,
-                NewRoom = new ClinicRoom
+                NewRoom = new Room
                 {
                     Name = parameteres[6],
                     Type = roomType
@@ -198,17 +115,17 @@ namespace ClinicApp.AdminFunctions
 
         public static void PersistChanges()
         {
-            File.Delete("../../../Admin/Data/roomRenovations.txt");
-            foreach (RoomRenovation renovation in RoomRenovationList)
+            File.Delete(Path);
+            foreach (RoomRenovation renovation in RoomRenovationService.RoomRenovationList)
             {
                 string newLine;
-                if(renovation.Type == RenovationType.Simple)
+                if (renovation.Type == RenovationType.Simple)
                 {
 
                     newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type);
-                    
+
                 }
-                else if(renovation.Type == RenovationType.ComplexJoin)
+                else if (renovation.Type == RenovationType.ComplexJoin)
                 {
                     newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "|" + Convert.ToString(renovation.JoinedRoomId);
                 }
@@ -216,7 +133,7 @@ namespace ClinicApp.AdminFunctions
                 {
                     newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "|" + renovation.NewRoom.Name + "|" + Convert.ToString(renovation.NewRoom.Type);
                 }
-                using (StreamWriter sw = File.AppendText("../../../Admin/Data/roomRenovations.txt"))
+                using (StreamWriter sw = File.AppendText(Path))
                 {
                     sw.WriteLine(newLine);
                 }

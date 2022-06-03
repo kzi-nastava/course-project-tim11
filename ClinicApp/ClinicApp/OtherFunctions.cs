@@ -73,7 +73,24 @@ namespace ClinicApp
 
             return option;
         }
+        public static DateTime EnterDate()
+        {
+            DateTime date;
+            while (true)
+            {
 
+                string dateString = Console.ReadLine();
+                if (DateTime.TryParse(dateString, out date) == false)
+                {
+                    Console.WriteLine("Invalid option, try again");
+                }
+                else
+                {
+                    date = DateTime.Parse(dateString);
+                    return date.Date;
+                };
+            }
+        }
         public static DateTime AskForDate()
         {
             DateTime? date = null;
