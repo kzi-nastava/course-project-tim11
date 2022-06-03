@@ -12,7 +12,7 @@ namespace ClinicApp.AdminFunctions
 
         static EquipmentMovementService()
         {
-            EquipmentMovementList = LoadEquipmentMovement();
+            EquipmentMovementList = EquipmentMovementRepo.Load();
         }
         public static List<EquipmentMovement> GetAll() => EquipmentMovementList;
 
@@ -29,7 +29,7 @@ namespace ClinicApp.AdminFunctions
                 item.Id = EquipmentMovementList.Last().Id + 1;
             }
             EquipmentMovementList.Add(item);
-            PersistChanges();
+            EquipmentMovementRepo.PersistChanges();
         }
         public static void CommitChanges(EquipmentMovement item)   //actually moves the equipment
         {
@@ -70,7 +70,7 @@ namespace ClinicApp.AdminFunctions
             if (item is null)
                 return;
             EquipmentMovementList.Remove(item);
-            PersistChanges();
+            EquipmentMovementRepo.PersistChanges();
         }
         public static void CheckForMovements() 
         {
@@ -81,49 +81,7 @@ namespace ClinicApp.AdminFunctions
                     CommitChanges(item);
                 }
             }
-            PersistChanges();
-        }
-        
-//--------------FILES STUFF------------------------------------------------------------------------------------
-        public static List<EquipmentMovement> LoadEquipmentMovement()
-        {
-            List<EquipmentMovement> movements = new List<EquipmentMovement>();
-            using (StreamReader reader = new StreamReader("../../../Admin/Data/equipmentMovement.txt"))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    EquipmentMovement movement = ParseMovement(line); 
-                    movements.Add(movement);
-                }
-            }
-            return movements;
-        }
-        public static EquipmentMovement ParseMovement(string line)
-        {
-            string[] parameteres = line.Split("|");
-            EquipmentMovement movement = new EquipmentMovement
-            {
-                Id = Convert.ToInt32(parameteres[0]),
-                EquipmentId = Convert.ToInt32(parameteres[1]),
-                NewRoomId = Convert.ToInt32(parameteres[2]),
-                Amount = Convert.ToInt32(parameteres[3]),
-                MovementDate = DateTime.Parse(parameteres[4]),
-                Done = Boolean.Parse(parameteres[5])
-            };
-            return movement;
-        }
-        public static void PersistChanges()
-        {
-            File.Delete("../../../Admin/Data/equipmentMovement.txt");
-            foreach (EquipmentMovement movement in EquipmentMovementList)
-            {
-                string newLine = Convert.ToString(movement.Id) + "|" + Convert.ToString(movement.EquipmentId) + "|" + Convert.ToString(movement.NewRoomId) + "|" + Convert.ToString(movement.Amount) + "|" + movement.MovementDate.ToString("d") + "|" + movement.Done.ToString();
-                using (StreamWriter sw = File.AppendText("../../../Admin/Data/equipmentMovement.txt"))
-                {
-                    sw.WriteLine(newLine);
-                }
-            }
-        }
+            EquipmentMovementRepo.PersistChanges();
+        }       
     }
 }

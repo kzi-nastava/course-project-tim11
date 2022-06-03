@@ -1,7 +1,6 @@
 using ClinicApp.AdminFunctions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 public static class RoomService {
@@ -10,7 +9,7 @@ public static class RoomService {
 
     static RoomService()
     {
-        ClinicRooms = LoadRooms();        
+        ClinicRooms = RoomRepo.Load();        
     }
     public static List<Room> GetAll() => ClinicRooms;
 
@@ -20,7 +19,7 @@ public static class RoomService {
     {
         room.Id = ClinicRooms.Last().Id + 1;
         ClinicRooms.Add(room);
-        PersistRooms();
+        RoomRepo.PersistChanges();
     }
     public static void Delete(int id)
     {
@@ -32,7 +31,7 @@ public static class RoomService {
             return;
         }
         ClinicRooms.Remove(room);
-        PersistRooms();
+        RoomRepo.PersistChanges();
     }
     public static void Update(int id, string newName, RoomType newType)
     {
@@ -53,54 +52,6 @@ public static class RoomService {
         roomToUpdate.Id = id;
         roomToUpdate.Name = newName;
         roomToUpdate.Type = newType;
-        PersistRooms();
-    }
-    //-------------FILES STUFF----------------------------------------------
-    public static void PersistRooms()
-    {
-        File.Delete("../../../Admin/Data/rooms.txt");
-        foreach (Room room in ClinicRooms)
-        {
-            string newLine = Convert.ToString(room.Id) + "|" + room.Name + "|" + Convert.ToString(room.Type);
-            using (StreamWriter sw = File.AppendText("../../../Admin/Data/rooms.txt"))
-            {
-                sw.WriteLine(newLine);
-            }
-        }
-
-    }
-    public static List<Room> LoadRooms()
-    {
-        List<Room> rooms = new List<Room>();
-        using (StreamReader reader = new StreamReader("../../../Admin/Data/rooms.txt"))
-        {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                Room room = ParseRoom(line);
-                rooms.Add(room);
-            }
-        }
-        return rooms;
-    }
-    static Room ParseRoom(string line)
-    {
-        string[] parameteres = line.Split("|");
-        RoomType type = RoomType.STORAGE;
-        switch (parameteres[2])
-        {
-            case "Operations":
-                type = RoomType.Operations;
-                break;
-            case "Waiting":
-                type = RoomType.Waiting;
-                break;
-            case "Examinations":
-                type = RoomType.Examinations;
-                break;
-        }
-        Room room = new Room { Id = Convert.ToInt32(parameteres[0]), Name = parameteres[1], Type = type };
-
-        return room;
+        RoomRepo.PersistChanges();
     }
 }
