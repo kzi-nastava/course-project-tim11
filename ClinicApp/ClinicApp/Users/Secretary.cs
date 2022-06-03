@@ -552,7 +552,7 @@ namespace ClinicApp.Users
                         if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || patient.CheckAppointment(examinationForDelay.Value.DateTime)))
                         {
                             examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>(examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
-                            Console.WriteLine(examinationForDelay.Key);
+                            //Console.WriteLine(examinationForDelay.Key);
                         }
                     if(examinationsForDelaying.Count == 0)
                     {
