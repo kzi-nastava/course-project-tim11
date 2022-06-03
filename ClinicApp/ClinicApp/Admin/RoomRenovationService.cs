@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class RoomRenovationManager
+    public static class RoomRenovationService
     {
         static public List<RoomRenovation> RoomRenovationList { get; set; }
 
-        static RoomRenovationManager()
+        static RoomRenovationService()
         {
             RoomRenovationList = LoadRoomRenovations();
         }
@@ -43,23 +43,23 @@ namespace ClinicApp.AdminFunctions
 
         public static void CommitComplexJoinRenovation(RoomRenovation renovation) 
         {
-            List<ClinicEquipment> equipmentInJoinedRoom = ClinicEquipmentManager.GetEquipmentFromRoom(renovation.JoinedRoomId);
+            List<Equipment> equipmentInJoinedRoom = EquipmentService.GetEquipmentFromRoom(renovation.JoinedRoomId);
             foreach(var eq in equipmentInJoinedRoom)
             {
                 EquipmentMovement movement = new EquipmentMovement { Amount = eq.Amount, EquipmentId = eq.Id, NewRoomId = renovation.RoomId, MovementDate = DateTime.Today };
-                EquipmentMovementManager.Add(movement);
-                EquipmentMovementManager.CheckForMovements();
-                ClinicEquipmentManager.Delete(eq.Id);
+                EquipmentMovementService.Add(movement);
+                EquipmentMovementService.CheckForMovements();
+                EquipmentService.Delete(eq.Id);
             }
             renovation.Done = true;
-            ClinicRoomManager.Delete(renovation.JoinedRoomId);
+            RoomService.Delete(renovation.JoinedRoomId);
             PersistChanges();
         }
 
         public static void CommitComplexSplitRenovation(RoomRenovation renovation) 
         {
             
-            ClinicRoomManager.Add(renovation.NewRoom);
+            RoomService.Add(renovation.NewRoom);
             renovation.Done = true;
             PersistChanges();
         }
@@ -170,7 +170,7 @@ namespace ClinicApp.AdminFunctions
                 },
                 Done = bool.Parse(parameteres[4]),
                 Type = RenovationType.ComplexSplit,
-                NewRoom = new ClinicRoom
+                NewRoom = new Room
                 {
                     Name = parameteres[6],
                     Type = roomType

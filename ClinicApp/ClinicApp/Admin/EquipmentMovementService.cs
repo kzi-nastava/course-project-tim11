@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class EquipmentMovementManager
+    public static class EquipmentMovementService
     {
         static public List<EquipmentMovement> EquipmentMovementList { get; set; }
 
-        static EquipmentMovementManager()
+        static EquipmentMovementService()
         {
             EquipmentMovementList = LoadEquipmentMovement();
         }
@@ -34,33 +34,33 @@ namespace ClinicApp.AdminFunctions
         public static void CommitChanges(EquipmentMovement item)   //actually moves the equipment
         {
             Dictionary<string,int> newRoomEqNames = new Dictionary<string, int>();
-            foreach (ClinicEquipment eq in ClinicEquipmentManager.ClinicEquipmentList)
+            foreach (Equipment eq in EquipmentService.ClinicEquipmentList)
             {
                 if (eq.RoomId == item.NewRoomId)
                 {
                     newRoomEqNames.Add(eq.Name, eq.Id);
                 }
             }
-            if (newRoomEqNames.ContainsKey(ClinicEquipmentManager.Get(item.EquipmentId).Name)) 
+            if (newRoomEqNames.ContainsKey(EquipmentService.Get(item.EquipmentId).Name)) 
             {
 
-                int eqId = newRoomEqNames[ClinicEquipmentManager.Get(item.EquipmentId).Name];
-                ClinicEquipmentManager.Update(eqId, ClinicEquipmentManager.Get(eqId).Amount + item.Amount);
+                int eqId = newRoomEqNames[EquipmentService.Get(item.EquipmentId).Name];
+                EquipmentService.Update(eqId, EquipmentService.Get(eqId).Amount + item.Amount);
             }
             else
             {
-                ClinicEquipment newEq = new ClinicEquipment
+                Equipment newEq = new Equipment
                 {
-                    Name = ClinicEquipmentManager.Get(item.EquipmentId).Name,
+                    Name = EquipmentService.Get(item.EquipmentId).Name,
                     Amount = item.Amount,
                     RoomId = item.NewRoomId,
-                    Type = ClinicEquipmentManager.Get(item.EquipmentId).Type
+                    Type = EquipmentService.Get(item.EquipmentId).Type
                 };
                 
-                ClinicEquipmentManager.Add(newEq);
+                EquipmentService.Add(newEq);
             }
-            int remaining = ClinicEquipmentManager.Get(item.EquipmentId).Amount - item.Amount;
-            ClinicEquipmentManager.Update(item.EquipmentId, remaining);
+            int remaining = EquipmentService.Get(item.EquipmentId).Amount - item.Amount;
+            EquipmentService.Update(item.EquipmentId, remaining);
             item.Done = true;
 
         }

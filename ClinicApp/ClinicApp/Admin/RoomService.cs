@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public static class ClinicRoomManager {
+public static class RoomService {
 
-    public static List<ClinicRoom> ClinicRooms { get; set;}
+    public static List<Room> ClinicRooms { get; set;}
 
-    static ClinicRoomManager()
+    static RoomService()
     {
         ClinicRooms = LoadRooms();        
     }
-    public static List<ClinicRoom> GetAll() => ClinicRooms;
+    public static List<Room> GetAll() => ClinicRooms;
 
-    public static ClinicRoom? Get(int id) => ClinicRooms.FirstOrDefault(p => p.Id == id);
+    public static Room? Get(int id) => ClinicRooms.FirstOrDefault(p => p.Id == id);
 
-    public static void Add(ClinicRoom room)
+    public static void Add(Room room)
     {
         room.Id = ClinicRooms.Last().Id + 1;
         ClinicRooms.Add(room);
@@ -59,7 +59,7 @@ public static class ClinicRoomManager {
     public static void PersistRooms()
     {
         File.Delete("../../../Admin/Data/rooms.txt");
-        foreach (ClinicRoom room in ClinicRooms)
+        foreach (Room room in ClinicRooms)
         {
             string newLine = Convert.ToString(room.Id) + "|" + room.Name + "|" + Convert.ToString(room.Type);
             using (StreamWriter sw = File.AppendText("../../../Admin/Data/rooms.txt"))
@@ -69,21 +69,21 @@ public static class ClinicRoomManager {
         }
 
     }
-    public static List<ClinicRoom> LoadRooms()
+    public static List<Room> LoadRooms()
     {
-        List<ClinicRoom> rooms = new List<ClinicRoom>();
+        List<Room> rooms = new List<Room>();
         using (StreamReader reader = new StreamReader("../../../Admin/Data/rooms.txt"))
         {
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                ClinicRoom room = ParseRoom(line);
+                Room room = ParseRoom(line);
                 rooms.Add(room);
             }
         }
         return rooms;
     }
-    static ClinicRoom ParseRoom(string line)
+    static Room ParseRoom(string line)
     {
         string[] parameteres = line.Split("|");
         RoomType type = RoomType.STORAGE;
@@ -99,7 +99,7 @@ public static class ClinicRoomManager {
                 type = RoomType.Examinations;
                 break;
         }
-        ClinicRoom room = new ClinicRoom { Id = Convert.ToInt32(parameteres[0]), Name = parameteres[1], Type = type };
+        Room room = new Room { Id = Convert.ToInt32(parameteres[0]), Name = parameteres[1], Type = type };
 
         return room;
     }

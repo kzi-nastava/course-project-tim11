@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public static class ClinicEquipmentManager 
+public static class EquipmentService 
 {
-    static public List<ClinicEquipment> ClinicEquipmentList { get; set; }
+    static public List<Equipment> ClinicEquipmentList { get; set; }
 
-    static ClinicEquipmentManager()
+    static EquipmentService()
     {
         ClinicEquipmentList = LoadEquipment();
                 
     }
-    public static List<ClinicEquipment> GetAll() => ClinicEquipmentList;
+    public static List<Equipment> GetAll() => ClinicEquipmentList;
 
-    public static ClinicEquipment? Get(int id) => ClinicEquipmentList.FirstOrDefault(p => p.Id == id);
+    public static Equipment? Get(int id) => ClinicEquipmentList.FirstOrDefault(p => p.Id == id);
 
-    public static void Add(ClinicEquipment eq)
+    public static void Add(Equipment eq)
     {
         eq.Id = ClinicEquipmentList.Last().Id + 1; 
         ClinicEquipmentList.Add(eq);
@@ -49,13 +49,10 @@ public static class ClinicEquipmentManager
         eqToUpdate.Amount = newAmount;
         PersistEquipment();
     }
-    public static void CheckForZeroAmount() //eq with zero amount shouldn't exist so we have to go through all of them and remove it
+    
+    public static List<Equipment> GetEquipmentFromRoom(int id)
     {
-
-    }
-    public static List<ClinicEquipment> GetEquipmentFromRoom(int id)
-    {
-        List<ClinicEquipment> movements = new List<ClinicEquipment>();
+        List<Equipment> movements = new List<Equipment>();
         foreach (var eq in ClinicEquipmentList)
         {
             if (eq.RoomId == id)
@@ -66,22 +63,22 @@ public static class ClinicEquipmentManager
         return movements;
     }
     //---------------SEARCH AND FILTERING-------------------------------------------------------------
-    public static List<ClinicEquipment> Search(string searchTerm)
+    public static List<Equipment> Search(string searchTerm)
     {
         searchTerm = searchTerm.ToLower();
-        var results = new List<ClinicEquipment>();
+        var results = new List<Equipment>();
         foreach(var item in ClinicEquipmentList)
         {
-            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || ClinicRoomManager.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
+            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomService.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
             {
                 results.Add(item);
             }
         }
         return results;
     }
-    public static List<ClinicEquipment> FilterByEqType(List<ClinicEquipment> inputList, EquipmentType type)
+    public static List<Equipment> FilterByEqType(List<Equipment> inputList, EquipmentType type)
     {
-        var results = new List<ClinicEquipment>();
+        var results = new List<Equipment>();
         foreach(var item in inputList)
         {
             if(item.Type == type)
@@ -91,21 +88,21 @@ public static class ClinicEquipmentManager
         }
         return results;
     }
-    public static List<ClinicEquipment> FilterByRoomType(List<ClinicEquipment> inputList, RoomType type)
+    public static List<Equipment> FilterByRoomType(List<Equipment> inputList, RoomType type)
     {
-        var results = new List<ClinicEquipment>();
+        var results = new List<Equipment>();
         foreach(var item in inputList)
         {
-            if(ClinicRoomManager.Get(item.RoomId).Type == type)
+            if(RoomService.Get(item.RoomId).Type == type)
             {
                 results.Add(item);
             }
         }
         return results;
     }
-    public static List<ClinicEquipment> FilterByNumbers(List<ClinicEquipment> inputList, int lowerBound, int upperBound)
+    public static List<Equipment> FilterByNumbers(List<Equipment> inputList, int lowerBound, int upperBound)
     {
-        var results = new List<ClinicEquipment>();
+        var results = new List<Equipment>();
         foreach(var item in inputList)
         {
             if(item.Amount >= lowerBound && item.Amount <= upperBound)
@@ -119,7 +116,7 @@ public static class ClinicEquipmentManager
     public static void PersistEquipment()
     {
         File.Delete("../../../Admin/Data/equipment.txt");
-        foreach (ClinicEquipment eq in ClinicEquipmentList)
+        foreach (Equipment eq in ClinicEquipmentList)
         {
             string newLine = Convert.ToString(eq.Id) + "|" + eq.Name + "|" + Convert.ToString(eq.Amount) + "|" + Convert.ToString(eq.RoomId) + "|" + Convert.ToString(eq.Type);
             using (StreamWriter sw = File.AppendText("../../../Admin/Data/equipment.txt"))
@@ -129,21 +126,21 @@ public static class ClinicEquipmentManager
         }
 
     }
-    public static List<ClinicEquipment> LoadEquipment()
+    public static List<Equipment> LoadEquipment()
     {
-        List<ClinicEquipment> eqList = new List<ClinicEquipment>();
+        List<Equipment> eqList = new List<Equipment>();
         using (StreamReader reader = new StreamReader("../../../Admin/Data/equipment.txt"))
         {
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                ClinicEquipment eq = ParseEquipment(line);
+                Equipment eq = ParseEquipment(line);
                 eqList.Add(eq);
             }
         }
         return eqList;
     }
-    static ClinicEquipment ParseEquipment(string line)
+    static Equipment ParseEquipment(string line)
     {
         string[] parameteres = line.Split("|");
         EquipmentType type = EquipmentType.Examinations;
@@ -162,7 +159,7 @@ public static class ClinicEquipmentManager
                 type = EquipmentType.Examinations;
                 break;
         }
-        ClinicEquipment eq = new ClinicEquipment { 
+        Equipment eq = new Equipment { 
             Id = Convert.ToInt32(parameteres[0]), 
             Name = parameteres[1], 
             Amount = Convert.ToInt32(parameteres[2]), 
