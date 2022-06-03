@@ -15,7 +15,7 @@ namespace ClinicApp.Users
     public class Patient : User
     {
         public Blocked Blocked { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        public List<Examination> Examinations { get; set; }
         public List<Referral> Referrals { get; set; }
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
@@ -32,7 +32,7 @@ namespace ClinicApp.Users
             Role = Roles.Patient;
             MessageBox = new MessageBox(this);
             Blocked = blocked;
-            Appointments = new List<Appointment>();
+            Examinations = new List<Examination>();
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
@@ -61,7 +61,7 @@ namespace ClinicApp.Users
                 this.Blocked = Blocked.Unblocked;
             }
                 
-            Appointments = new List<Appointment>();
+            Examinations = new List<Examination>();
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             Prescriptions = new List<Prescription>();
