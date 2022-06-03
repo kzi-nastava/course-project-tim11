@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ClinicApp.Users.Doctors
+namespace ClinicApp.Users
 {
     public class Doctor : User
     {
@@ -328,7 +328,7 @@ namespace ClinicApp.Users.Doctors
                         this.Appointments.Remove(appointment);
                         appointment.Patient.Appointments.Remove(appointment);
                         var last = SystemFunctions.AllAppointments.Values.Last();
-                        Examination deletedExamination = new Examination(last.ID + 1, appointment.DateTime, this, appointment.Patient, appointment.Finished, appointment.ID, appointment.Edited);
+                        Examination deletedExamination = new Examination(last.ID + 1, appointment.DateTime, this, appointment.Patient, appointment.Finished, appointment.ID, examination.Edited);
                         SystemFunctions.AllAppointments.Add(deletedExamination.ID, deletedExamination);
                         SystemFunctions.CurrentAppointments.Remove(appointment.ID);
                     }
