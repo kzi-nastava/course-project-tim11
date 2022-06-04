@@ -72,7 +72,7 @@ namespace ClinicApp.AdminFunctions
             string[] parameters = line.Split("|");
             MedicineRequest medicineRequest = new MedicineRequest {
                 Id = Convert.ToInt32(parameters[0]),
-                Medicine = new Clinic.Medicine(parameters[1] + "|" + parameters[2]),
+                Medicine = new Clinic.Medicine(parameters[1], parameters[2].Split("/").ToList()),
                 Comment = parameters[3]
             };
             return medicineRequest;
@@ -84,7 +84,7 @@ namespace ClinicApp.AdminFunctions
             using (StreamReader reader = new StreamReader("../../../Admin/Data/medicineRequests.txt"))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null || (line = reader.ReadLine()) != "")
+                while ((line = reader.ReadLine()) != null)
                 {
                     MedicineRequest mr = ParseMedicineRequest(line);
                     lista.Add(mr);

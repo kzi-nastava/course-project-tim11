@@ -1,4 +1,4 @@
-﻿using ClinicApp.Clinic;
+using ClinicApp.Clinic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -632,17 +632,10 @@ namespace ClinicApp.Users
                     id = 1;
                 }
                 Examination examination = new Examination(id, initial_appointment, doctor, this, false, 0, 0);
-<<<<<<< Updated upstream
-                InsertExamination(examination);
-                doctor.InsertExamination(examination);
-                SystemFunctions.AllExamtinations.Add(id, examination);
-                SystemFunctions.CurrentExamtinations.Add(id, examination);
-=======
                 InsertAppointment(examination);
                 doctor.InsertAppointment(examination);
                 SystemFunctions.AllAppointments.Add(id, examination);
                 SystemFunctions.CurrentAppointments.Add(id, examination);
->>>>>>> Stashed changes
                 //Console.WriteLine("\nNew examination successfully created\n");
                 ActivityHistory.Add(DateTime.Now, "CREATE");
                 return;
@@ -762,15 +755,6 @@ namespace ClinicApp.Users
                 foreach (Doctor doctor in SystemFunctions.Doctors.Values)
                 {
                     bool check = doctor.CheckAppointment(preferredAppointment,duration);
-<<<<<<< Updated upstream
-            DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
-            while (preferredAppointment<lastAppointment)
-            {
-                foreach (Doctor doctor in SystemFunctions.Doctors.Values)
-                {
-                    bool check = doctor.CheckAppointment(preferredAppointment);
-=======
->>>>>>> Stashed changes
                     if (check)
                     {
                         Console.WriteLine("Your preferred appointment is available in your requested timespan.");
