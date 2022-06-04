@@ -11,7 +11,6 @@ public static class EquipmentService
     static EquipmentService()
     {
         ClinicEquipmentList = EquipmentRepo.Load();
-                
     }
     public static List<Equipment> GetAll() => ClinicEquipmentList;
 

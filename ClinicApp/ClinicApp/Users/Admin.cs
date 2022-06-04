@@ -40,7 +40,7 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            EquipmentMovementService.LoadEquipmentMovement(); //load to check if there is any equipment to move today
+            EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("1: Log out");
             Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");

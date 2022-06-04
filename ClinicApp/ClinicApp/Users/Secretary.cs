@@ -48,11 +48,13 @@ namespace ClinicApp.Users
             Console.WriteLine("3: Manage patient accounts");
             Console.WriteLine("4: Block or unbolck patient accounts");
             Console.WriteLine("5: Manage examination requests");
-            Console.WriteLine("6: Create examinations based upon referrals.");
-            Console.WriteLine("7: Create an emergency examination.");
+            Console.WriteLine("6: Create examinations based upon referrals");
+            Console.WriteLine("7: Create an emergency examination");
+            Console.WriteLine("8: Make an order of dynamic equipment");
+            Console.WriteLine("9: Redistribute dynamic equipment");
             Console.WriteLine("0: Exit");
 
-            return 7;
+            return 9;
         }
 
         //Executes the chosen command.
@@ -77,6 +79,12 @@ namespace ClinicApp.Users
                     break;
                 case 7:
                     CreateEmergencyExamination();
+                    break;
+                case 8:
+                    OrderDynamiicEquipment();
+                    break;
+                case 9:
+                    RedistributeDynamiicEquipment();
                     break;
             }
         }
@@ -114,7 +122,7 @@ namespace ClinicApp.Users
                         option2 = 1;
                         while (option2 != 0)
                         {
-                            Console.WriteLine("\nWrite the username of the patient who's account you want deleted:");
+                            Console.WriteLine("\nWrite the username of the patient who's account you want updated:");
                             string userName = OtherFunctions.EnterString();
                             if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
                             {
@@ -629,6 +637,110 @@ namespace ClinicApp.Users
                     option = OtherFunctions.EnterNumberWithLimit(0, 1);
                 }
             }
+        }
+
+        //Makes an order for dynamic equipment.
+        private static void OrderDynamiicEquipment()
+        {
+            bool gauzes = false, stiches = false, vaccines = false, bandages = false;
+            foreach (AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+            {
+                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Gauzes && equipment.RoomId == 0)
+                    gauzes = true;
+                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Stiches && equipment.RoomId == 0)
+                    stiches = true;
+                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Vaccines && equipment.RoomId == 0)
+                    vaccines = true;
+                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Bandages && equipment.RoomId == 0)
+                    bandages = true;
+            }
+            if (gauzes == true && stiches == true && vaccines == true && bandages == true)
+                Console.WriteLine("We don't lack any equipment at the moment.");
+            else
+            {
+                int numberOfOptions, option = 1;
+                while(option != 0)
+                {
+                    numberOfOptions = 0;
+                    Console.WriteLine("Which of the following equipment would you like to order?");
+                    if(gauzes == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Gauzes");
+                    }
+                    if(stiches == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Stiches");
+                    }
+                    if(vaccines == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Vaccines");
+                    }
+                    if(bandages == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Bandages");
+                    }
+                    Console.WriteLine("0: Back to menu");
+                    option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                    if(option != 0)
+                    {
+                        if (gauzes == false)
+                        {
+                            option--;
+                            if(option == 0)
+                            {
+                                Console.WriteLine("How many gauzes would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Gauzes, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        if (stiches == false)
+                        {
+                            option--;
+                            if (option == 0)
+                            {
+                                Console.WriteLine("How many stiches would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Stiches, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        if (vaccines == false)
+                        {
+                            option--;
+                            if (option == 0)
+                            {
+                                Console.WriteLine("How many vaccines would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Vaccines, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        if (bandages == false)
+                        {
+                            option--;
+                            if (option == 0)
+                            {
+                                Console.WriteLine("How many bandages would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Bandages, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        //In the end, option will still be greater than 0
+                    }
+                }
+            }
+        }
+
+        //Redistributes dynamic equipment
+        private static void RedistributeDynamiicEquipment()
+        {
+
         }
     }
 }

@@ -54,6 +54,18 @@ namespace ClinicApp.AdminFunctions
                 case "Examinations":
                     type = EquipmentType.Examinations;
                     break;
+                case "Gauzes":
+                    type = EquipmentType.Gauzes;
+                    break;
+                case "Stiches":
+                    type = EquipmentType.Stiches;
+                    break;
+                case "Vaccines":
+                    type = EquipmentType.Vaccines;
+                    break;
+                case "Bandages":
+                    type = EquipmentType.Bandages;
+                    break;
             }
             Equipment eq = new Equipment
             {

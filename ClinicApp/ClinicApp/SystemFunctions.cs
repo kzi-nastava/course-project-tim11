@@ -37,6 +37,7 @@ namespace ClinicApp
 
         public static Dictionary<string, Medicine> Medicine { get; set; } = new Dictionary<string, Medicine>();
         public static List<Referral> Referrals { get; set; } = new List<Referral>();
+        static public List<EquipmentRequest> EquipmentRequests { get; set; } = new List<EquipmentRequest>();
 
         // User file path may change in release mode, this is the file path in debug mode
 
@@ -48,6 +49,7 @@ namespace ClinicApp
         public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
         public static string MedicineFilePath = "../../../Data/medicine.txt";
         public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
+        public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
 
 
 
@@ -72,7 +74,10 @@ namespace ClinicApp
                     }
                 }
             }
+
+
             //Loads the health records.
+
             using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
             {
                 string line;
@@ -167,7 +172,10 @@ namespace ClinicApp
                     currentExamination.Patient.Examinations.Add(currentExamination);
                 }
             }
+
+
             //Loads the messages.
+
             using (StreamReader reader = new StreamReader(MessageBoxesFilePath))
             {
                 string line;
@@ -179,9 +187,21 @@ namespace ClinicApp
                         user.MessageBox.LoadMessages(data[1]);
                 }
             }
+
+
+            //Loads the equipment requests.
+
+            using (StreamReader reader = new StreamReader(EquipmentRequestsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    EquipmentRequest equipmentRequest = new EquipmentRequest(line);
+                    EquipmentRequests.Add(equipmentRequest);
+
+                }
+            }
         }
-
-
 
         private static User ParseUser(string line)
         {
@@ -196,6 +216,31 @@ namespace ClinicApp
                 return new Patient(line);
             return new Nobody();
         }
+
+
+        //Updates certain information that depends on date and time
+        public static void Update()
+        {
+            UpdateEquipmentRequests();
+        }
+
+        private static void UpdateEquipmentRequests()
+        {
+            List<EquipmentRequest> listForRemoving = new List<EquipmentRequest>();
+            foreach(EquipmentRequest equipmentRequest in EquipmentRequests)
+            {
+                if(equipmentRequest.DateCreated < DateTime.Now.Date)
+                {
+                    equipmentRequest.FulfillOrder();
+                    listForRemoving.Add(equipmentRequest);
+                }
+            }
+            foreach(EquipmentRequest equipmentRequest in listForRemoving)
+            {
+                EquipmentRequests.Remove(equipmentRequest);
+            }
+        }
+
 
         // Uploads the information from the objects into the database
         public static void UploadData()
@@ -255,6 +300,16 @@ namespace ClinicApp
                     newLine = pair.Value.MessageBox.Compress();
                     if(newLine != null)
                         sw.WriteLine(newLine);
+
+                }
+            }
+            //Uploads the equipment requests.
+            using (StreamWriter sw = File.CreateText(EquipmentRequestsFilePath))
+            {
+                foreach (EquipmentRequest equipmentRequest in EquipmentRequests)
+                {
+                    newLine = equipmentRequest.Compress();
+                    sw.WriteLine(newLine);
 
                 }
             }

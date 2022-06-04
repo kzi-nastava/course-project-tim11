@@ -16,6 +16,7 @@ namespace ClinicApp
             User currentUser = new Nobody();
             while(option != 0)
             {
+                SystemFunctions.Update();
                 numberOfOptions = currentUser.MenuWrite();
                 Console.Write(">> ");
                 option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
