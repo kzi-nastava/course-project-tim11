@@ -655,14 +655,14 @@ namespace ClinicApp.Users
                     bandages = true;
             }
             if (gauzes == true && stiches == true && vaccines == true && bandages == true)
-                Console.WriteLine("We don't lack any equipment at the moment.");
+                Console.WriteLine("\nWe don't lack any equipment at the moment.");
             else
             {
                 int numberOfOptions, option = 1;
                 while(option != 0)
                 {
                     numberOfOptions = 0;
-                    Console.WriteLine("Which of the following equipment would you like to order?");
+                    Console.WriteLine("\nWhich of the following equipment would you like to order?");
                     if(gauzes == false)
                     {
                         numberOfOptions++;
@@ -687,6 +687,7 @@ namespace ClinicApp.Users
                     option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
                     if(option != 0)
                     {
+                        Console.WriteLine("");
                         if (gauzes == false)
                         {
                             option--;
@@ -740,7 +741,117 @@ namespace ClinicApp.Users
         //Redistributes dynamic equipment
         private static void RedistributeDynamiicEquipment()
         {
+            foreach(AdminFunctions.Room room in RoomService.ClinicRooms)
+            {
+                int gauzes = 0, stiches = 0, vaccines = 0, bandages = 0;
+                foreach(AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+                {
+                    if (equipment.Type == AdminFunctions.EquipmentType.Gauzes && equipment.RoomId == room.Id)
+                        gauzes += equipment.Amount;
+                    if (equipment.Type == AdminFunctions.EquipmentType.Stiches && equipment.RoomId == room.Id)
+                        stiches += equipment.Amount;
+                    if (equipment.Type == AdminFunctions.EquipmentType.Vaccines && equipment.RoomId == room.Id)
+                        vaccines += equipment.Amount;
+                    if (equipment.Type == AdminFunctions.EquipmentType.Bandages && equipment.RoomId == room.Id)
+                        bandages += equipment.Amount;
+                }
+                if(gauzes < 5 || stiches < 5 || vaccines < 5 || bandages < 5)
+                {
+                    Console.WriteLine("\nRoom id: " + room.Id);
+                    Console.WriteLine("Room name: " + room.Name);
+                    if (gauzes == 0)
+                        Console.WriteLine("-Gauzes: " + gauzes);
+                    else if(gauzes < 5)
+                        Console.WriteLine(" Gauzes: " + gauzes);
+                    if (stiches == 0)
+                        Console.WriteLine("-Stiches: " + stiches);
+                    else if(stiches < 5)
+                        Console.WriteLine(" Stiches: " + stiches);
+                    if (vaccines == 0)
+                        Console.WriteLine("-Vaccines: " + vaccines);
+                    else if(vaccines < 5)
+                        Console.WriteLine(" Vaccines: " + vaccines);
+                    if (bandages == 0)
+                        Console.WriteLine("-Bandages: " + bandages);
+                    else if(bandages < 5)
+                        Console.WriteLine(" Bandages: " + bandages);
+                }
+            }
 
+            int option = 1;
+            while(option != 0)
+            {
+                Console.WriteLine("\nDo you want to move equipment?");
+                Console.WriteLine("1: Yes");
+                Console.WriteLine("0: No");
+                option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                if (option == 1)
+                {
+                    int idFrom, idTo, amount, totalEquipment = 0;
+                    AdminFunctions.EquipmentType type;
+                    AdminFunctions.Room roomFrom, roomTo;
+                    Console.WriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
+                    idFrom = OtherFunctions.EnterNumber();
+                    idTo = OtherFunctions.EnterNumber();
+                    amount = OtherFunctions.EnterNumber();
+                    Console.WriteLine("\nWhich of the following equipment would you like to move?");
+                    Console.WriteLine("1: Gauzes");
+                    Console.WriteLine("2: Stiches");
+                    Console.WriteLine("3: Vaccines");
+                    Console.WriteLine("4: Bandages");
+                    option = OtherFunctions.EnterNumberWithLimit(1, 4);
+                    switch (option)
+                    {
+                        case 1:
+                            type = AdminFunctions.EquipmentType.Gauzes;
+                            break;
+                        case 2:
+                            type = AdminFunctions.EquipmentType.Stiches;
+                            break;
+                        case 3:
+                            type = AdminFunctions.EquipmentType.Vaccines;
+                            break;
+                        default:
+                            type = AdminFunctions.EquipmentType.Bandages;
+                            break;
+                    }
+                    roomFrom = RoomService.Get(idFrom);
+                    if(roomFrom == default)
+                        roomFrom = RoomService.Get(0);
+                    roomTo = RoomService.Get(idTo);
+                    if (roomTo == default)
+                        roomTo = RoomService.Get(0);
+                    foreach (AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+                    {
+                        if (equipment.Type == type && equipment.RoomId == roomFrom.Id)
+                            totalEquipment += equipment.Amount;
+                    }
+                    if(amount > totalEquipment)
+                        amount = totalEquipment;
+                    AdminFunctions.Equipment equipmentNew = new AdminFunctions.Equipment
+                    {
+                        Id = 0,
+                        Name = type.ToString(),
+                        Amount = amount,
+                        RoomId = roomTo.Id,
+                        Type = type
+                    };
+                    EquipmentService.Add(equipmentNew);
+                    foreach (AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+                        if (equipment.Type == type && equipment.RoomId == roomTo.Id && amount > 0)
+                            if(amount < equipment.Amount)
+                            {
+                                equipment.Amount -= amount;
+                                amount = 0;
+                            }
+                            else
+                            {
+                                amount -= equipment.Amount;
+                                EquipmentService.ClinicEquipmentList.Remove(equipment);
+                            }
+                    AdminFunctions.EquipmentRepo.PersistChanges();
+                }
+            }
         }
     }
 }
