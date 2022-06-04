@@ -1,5 +1,4 @@
 ﻿using ClinicApp.Users;
-using ClinicApp.Users.Doctor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,18 +6,9 @@ using System.Text;
 
 namespace ClinicApp.Clinic
 {
-    public class Examination
+    public class Examination : Appointment
     {
-        public int ID { get; set; }
-        public DateTime DateTime { get; set; }
-        public Doctor Doctor { get; set; }
-        public Patient Patient { get; set; }
 
-        public bool Finished { get; set; }
-
-        public int Tombstone { get; set; }
-
-        public int Edited { get; set; }
         public Examination(int id, DateTime dateTime, Doctor doctor, Patient patient, bool finished, int tombstone, int edited)
         {
             this.ID = id;
@@ -28,6 +18,8 @@ namespace ClinicApp.Clinic
             this.Tombstone = tombstone;
             this.Finished = finished;
             this.Edited = edited;
+            this.Type = 'e';
+            this.Duration = 15;
         }
 
         public Examination(string text)
@@ -41,28 +33,31 @@ namespace ClinicApp.Clinic
             Finished = Convert.ToBoolean(data[4]);
             Tombstone = Convert.ToInt32(data[5]);
             Edited = Convert.ToInt32(data[6]);
+            Type = 'e';
+            this.Duration = 15;
+
         }
 
-        public string Compress()
+        public override string Compress()
         {
-            return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Finished + "|" + Tombstone + "|" + Edited;
+            return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Finished + "|" + Tombstone + "|" + Edited + "|e|" + Duration;
         }
 
-        public void ToFile() {
+        public override void ToFile() {
             string line = this.Compress();
-            using (StreamWriter sw = File.AppendText(SystemFunctions.ExaminationsFilePath))
+            using (StreamWriter sw = File.AppendText(SystemFunctions.AppointmentsFilePath))
             {
                 sw.WriteLine(line);
             };
         }
 
-        public void ViewExamination() {
-            Console.WriteLine($"Examination ID: {ID}\nDate and time:{DateTime}\nPatient name: {Patient.Name}; ");
+        public override void View() {
+            Console.WriteLine($"EXAMINATION ID: {ID}\nDate and time:{DateTime}\nDuration: 15min\nPatient name: {Patient.Name}; ");
             Console.WriteLine($"Patient last name: {Patient.LastName};");
             Console.WriteLine($"Date of birth {Patient.DateOfBirth.ToShortDateString()}");
         }
 
-        public DateTime NextAvailable()
+        public override DateTime NextAvailable()
         {
             DateTime nextAvailable = DateTime;
 
@@ -71,8 +66,8 @@ namespace ClinicApp.Clinic
             {
                 nextAvailable = nextAvailable.AddMinutes(1);
                 DateRange dateRange = new DateRange(nextAvailable, nextAvailable.AddMinutes(15));
-                if (Patient.CheckAppointment(nextAvailable) &&
-                    Doctor.CheckAppointment(nextAvailable) &&
+                if (Patient.CheckAppointment(nextAvailable, 15) &&
+                    Doctor.CheckAppointment(nextAvailable, 15) &&
                     !OtherFunctions.CheckForRenovations(dateRange, Doctor.RoomId) &&
                     !OtherFunctions.CheckForExaminations(dateRange, Doctor.RoomId))
                 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace ClinicApp.AdminFunctions
@@ -9,38 +8,6 @@ namespace ClinicApp.AdminFunctions
     class RoomRenovationRepo
     {
         static string Path { get; set; } = "../../../Admin/Data/roomRenovations.txt";
-        static public List<RoomRenovation> RoomRenovationList { get; set; }
-
-        static RoomRenovationRepo()
-        {
-            RoomRenovationList = Load();
-        }
-
-        public static List<RoomRenovation> GetAll() => RoomRenovationList;
-
-        public static RoomRenovation? Get(int id) => RoomRenovationList.FirstOrDefault(p => p.Id == id);
-
-        public static void Add(RoomRenovation item)
-        {
-            if (RoomRenovationList.Count == 0)
-            {
-                item.Id = 1;
-            }
-            else
-            {
-                item.Id = RoomRenovationList.Last().Id + 1;
-            }
-            RoomRenovationList.Add(item);
-            PersistChanges();
-        }
-        public static void Delete(int id)
-        {
-            var item = Get(id);
-            if (item is null)
-                return;
-            RoomRenovationList.Remove(item);
-            PersistChanges();
-        }
         public static List<RoomRenovation> Load()
         {
             List<RoomRenovation> renovations = new List<RoomRenovation>();
@@ -149,7 +116,7 @@ namespace ClinicApp.AdminFunctions
         public static void PersistChanges()
         {
             File.Delete(Path);
-            foreach (RoomRenovation renovation in RoomRenovationList)
+            foreach (RoomRenovation renovation in RoomRenovationService.RoomRenovationList)
             {
                 string newLine;
                 if (renovation.Type == RenovationType.Simple)

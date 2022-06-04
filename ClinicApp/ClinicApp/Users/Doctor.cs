@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ClinicApp.Users.Doctor
+namespace ClinicApp.Users
 {
     public class Doctor : User
     {
@@ -84,7 +84,7 @@ namespace ClinicApp.Users.Doctor
         }
         private void ManageAppointments()
         {
-            Console.WriteLine("Chose how you wish to manage your appointments: ");
+            Console.WriteLine("Chose how you wish to manage your examinations: ");
             string options = "\n1. Create\n2. View\n3. Edit(by ID)\n4. Delete(by ID)\n";
             Console.Write($"{options}Write the number of your choice\n>> ");
             int choice = OtherFunctions.EnterNumberWithLimit(1, 4);
@@ -100,7 +100,7 @@ namespace ClinicApp.Users.Doctor
                     EditAppointment();
                     break;
                 case 4:
-                    DeleteAppointment();
+                    DeleteExamination();
                     break;
             }
         }
@@ -109,50 +109,17 @@ namespace ClinicApp.Users.Doctor
         // CREATE
         private void CreateAppointment()
         {
-            int type = 0;
-            int duration = 0;
-            Console.Write("\nDo you want to create an (1)EXAMINATION or an (2)OPERATION?\n>> ");
-            type = OtherFunctions.EnterNumberWithLimit(0, 3);
-            if (type == 2)
-            {
-                Console.Write("\nEnter the duration of your Operation in minutes (e.g. 60)\n>> ");
-                duration = OtherFunctions.EnterNumberWithLimit(15, 1000);
-            }
-            else duration = 15;
-
-            DateTime dateTime = AskDateTime(duration);
-            Patient patient = AskUsernamePatient();
-            if (patient == null) return;
-            int id = Appointment.GetLastID();
-
-            Appointment appointment;
-            if (type == 1)
-            {
-                appointment = new Examination(id, dateTime, this, patient, false, 0, 0);
-            }
-            else {
-                appointment = new Operation(id, dateTime, this, patient, false, 0, 0, duration);
-            };
-
-            InsertAppointment(appointment);
-            //patient.InsertAppointment(appointment);
-            SystemFunctions.AllAppointments.Add(id, appointment);
-            SystemFunctions.CurrentAppointments.Add(id, appointment);
-            Console.WriteLine("\nNew appointment successfully created\n");
-
-        }
-
-        private DateTime AskDateTime(int duration) {
             DateTime dateTime = DateTime.Now;
 
             Console.Write("\nEnter the date of your Appointment (e.g. 22/10/1987)\n>> ");
 
             DateTime date = OtherFunctions.GetGoodDate();
-
+            
             Console.Write("\nEnter the time of your Appointment (e.g. 14:30)\n>> ");
 
             DateTime time;
-            
+            int type = 0;
+            int duration = 0;
             do
             {
                 time = OtherFunctions.AskForTime();
@@ -163,18 +130,20 @@ namespace ClinicApp.Users.Doctor
                 }
                 else
                 {
+                    Console.Write("\nDo you want to create an (1)EXAMINATION or an (2)OPERATION?\n>> ");
+                    type = OtherFunctions.EnterNumberWithLimit(0, 3);
+                    
+                    if (type == 2)
+                    {
+                        Console.Write("\nEnter the duration of your Operation in minutes (e.g. 60)\n>> ");
+                        duration = OtherFunctions.EnterNumberWithLimit(15, 1000);
+                    }
+                    else duration = 15;
                     if (CheckAppointment(time, duration)) dateTime = time;
-                    else { Console.WriteLine("You are not availible at that time."); };
+                    else { Console.WriteLine("You are not availible at that time."); return; };
                 }
-            } while (time < DateTime.Now && CheckAppointment(time, duration));
+            } while (time < DateTime.Now);
 
-            return dateTime;
-
-        }
-
-
-        private Patient AskUsernamePatient()
-        {
             Console.WriteLine("Enter the username of the patient. Do you want to view the list of all patients first (y/n)");
             Console.Write(">> ");
             string choice = Console.ReadLine();
@@ -188,11 +157,31 @@ namespace ClinicApp.Users.Doctor
             if (!SystemFunctions.Patients.TryGetValue(userName, out patient))
             {
                 Console.WriteLine("Patient with that username does not exist.");
+                return;
             }
-            return patient;
-        }
+            int id = 0;
+            foreach (int appointmentID in SystemFunctions.AllAppointments.Keys) {
+                if (appointmentID > id) {
+                    id = appointmentID;
+                }
+            }
+            id++;
+            Appointment appointment;
+            if (type == 1)
+            {
+                appointment = new Examination(id, dateTime, this, patient, false, 0, 0);
+            }
+            else {
+                appointment = new Operation(id, dateTime, this, patient, false, 0, 0, duration);
+            };
 
-         
+            InsertAppointment(appointment);
+            patient.InsertAppointment(appointment);
+            SystemFunctions.AllAppointments.Add(id, appointment);
+            SystemFunctions.CurrentAppointments.Add(id, appointment);
+            Console.WriteLine("\nNew appointment successfully created\n");
+
+        }
         //=======================================================================================================================================================================
         // READ
 
@@ -222,26 +211,6 @@ namespace ClinicApp.Users.Doctor
         // UPDATE
         private void EditAppointment()
         {
-
-            Appointment appointment = GetAppointmentByID();
-            Console.WriteLine("Do you want to edit the date or the time? (d/t)");
-            string choice = Console.ReadLine();
-            if (choice.ToUpper() == "D")
-            {
-                EditDate(appointment);
-                
-            }
-            else if (choice.ToUpper() == "T")
-            {
-                EditTime(appointment);
-            }
-            else
-            {
-                Console.WriteLine("Not a valid choice");
-            }
-        }
-
-        private Appointment GetAppointmentByID() {
             bool quit = false;
             Appointment appointment = null;
             while (appointment == null)
@@ -260,86 +229,90 @@ namespace ClinicApp.Users.Doctor
                 {
                     Console.WriteLine($"No appointment matches ID: {id}");
                     quit = OtherFunctions.AskQuit();
-                    if (quit) return null;
+                    if (quit) return;
                 }
 
             }
-            return appointment;
 
-        }
 
-        private void EditDate(Appointment appointment) {
-            Console.WriteLine("Enter the new date of your Examination (e.g. 22/10/1987)");
-            DateTime newDate;
-            do
+            Console.WriteLine("Do you want to edit the date or the time? (d/t)");
+            string choice = Console.ReadLine();
+            if (choice.ToUpper() == "D")
             {
-                newDate = OtherFunctions.AskForDate();
-                if (newDate.Date < DateTime.Now.Date)
-                {
-                    Console.WriteLine("You can't enter a date that's in the past");
-                }
-                else
-                {
-                    newDate += appointment.DateTime.TimeOfDay;
-                    if (CheckAppointment(newDate, appointment.Duration))
+                Console.WriteLine("Enter the new date of your Examination (e.g. 22/10/1987)");
+                DateTime newDate;
+                do{
+                    newDate = OtherFunctions.AskForDate();
+                    if (newDate.Date < DateTime.Now.Date)
                     {
-
-                        this.Appointments.Remove(appointment);
-                        appointment.Patient.Appointments.Remove(appointment);
-                        var last = SystemFunctions.AllAppointments.Values.Last();
-                        Examination editedExamination = new Examination(last.ID + 1, newDate, this, appointment.Patient, appointment.Finished, 0, appointment.ID); ;
-                        SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
-                        SystemFunctions.CurrentAppointments.Remove(appointment.ID);
-                        SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
-                        this.Appointments.Add(editedExamination);
-                        editedExamination.Patient.Appointments.Add(editedExamination);
+                        Console.WriteLine("You can't enter a date that's in the past");
                     }
                     else
                     {
-                        Console.WriteLine("You are not availible at that time.");
-                        return;
+                        newDate += appointment.DateTime.TimeOfDay;
+                        if (CheckAppointment(newDate, appointment.Duration)) {
+                            
+                            this.Appointments.Remove(appointment);
+                            appointment.Patient.Appointments.Remove(appointment);
+                            var last = SystemFunctions.AllAppointments.Values.Last();
+                            Examination editedExamination = new Examination(last.ID + 1, newDate, this, appointment.Patient, appointment.Finished, 0, appointment.ID); ;
+                            SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
+                            SystemFunctions.CurrentAppointments.Remove(appointment.ID);
+                            SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
+                            this.Appointments.Add(editedExamination);
+                            editedExamination.Patient.Appointments.Add(editedExamination);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You are not availible at that time.");
+                            return;
+                        }
                     }
-                }
-            } while (newDate.Date < DateTime.Now.Date);
-
-        }
-        private void EditTime(Appointment appointment) {
-            Console.WriteLine("Enter the new time of your Examination (e.g. 12:00)");
-            DateTime newTime;
-            do
+                } while (newDate.Date < DateTime.Now.Date);
+                
+            }
+            else if (choice.ToUpper() == "T")
             {
-                newTime = OtherFunctions.AskForTime();
-                newTime = appointment.DateTime.Date + newTime.TimeOfDay;
-                if (newTime < DateTime.Now)
+                Console.WriteLine("Enter the new time of your Examination (e.g. 12:00)");
+                DateTime newTime;
+                do
                 {
-                    Console.WriteLine("You can't enter that time, its in the past");
-                }
-                else
-                {
-                    if (CheckAppointment(newTime, appointment.Duration))
+                    newTime = OtherFunctions.AskForTime();
+                    newTime = appointment.DateTime.Date + newTime.TimeOfDay;
+                    if (newTime < DateTime.Now)
                     {
-                        this.Appointments.Remove(appointment);
-                        var last = SystemFunctions.AllAppointments.Values.Last();
-                        appointment.Patient.Appointments.Remove(appointment);
-                        Examination editedExamination = new Examination(last.ID + 1, newTime, this, appointment.Patient, appointment.Finished, 0, appointment.ID);
-                        SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
-                        SystemFunctions.AllAppointments.Remove(appointment.ID);
-                        SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
-                        this.Appointments.Add(editedExamination);
-                        editedExamination.Patient.Appointments.Add(editedExamination);
+                        Console.WriteLine("You can't enter that time, its in the past");
                     }
                     else
                     {
-                        Console.WriteLine("You are not availible at that time.");
-                        return;
+                        if (CheckAppointment(newTime, appointment.Duration)) { 
+                            this.Appointments.Remove(appointment);
+                            var last = SystemFunctions.AllAppointments.Values.Last();
+                            appointment.Patient.Appointments.Remove(appointment);
+                            Examination editedExamination = new Examination(last.ID + 1, newTime, this, appointment.Patient, appointment.Finished, 0, appointment.ID);
+                            SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
+                            SystemFunctions.AllAppointments.Remove(appointment.ID);
+                            SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
+                            this.Appointments.Add(editedExamination);
+                            editedExamination.Patient.Appointments.Add(editedExamination);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You are not availible at that time.");
+                            return;
+                        }
                     }
-                }
-            } while (newTime < DateTime.Now);
-
+                } while (newTime < DateTime.Now);
+                               
+            }
+            else
+            {
+                Console.WriteLine("Not a valid choice");
+            }
         }
         //=======================================================================================================================================================================
         // DELETE
-        private void DeleteAppointment()
+        private void DeleteExamination()
         {
             Console.WriteLine("Enter the ID of the appointment you wish to delete.");
             int id = OtherFunctions.EnterNumber();
@@ -373,15 +346,6 @@ namespace ClinicApp.Users.Doctor
             DateTime date = OtherFunctions.GetGoodDate();
             Console.WriteLine($"Appointments on date: {date.ToShortDateString()} and the next three days: \n");
 
-            ShowAppointmentsByDate(date);
-
-            ViewAppointmentInfo();
-
-            AskPerform();
-
-    }
-        private void ShowAppointmentsByDate(DateTime date)
-        {
             foreach (Appointment appointment in this.Appointments)
             {
                 if (date.Date <= appointment.DateTime.Date && appointment.DateTime.Date <= date.Date.AddDays(3))
@@ -392,9 +356,6 @@ namespace ClinicApp.Users.Doctor
                 }
 
             }
-        }
-
-        private void ViewAppointmentInfo() {
             string choice = "Y";
             while (choice.ToUpper() == "Y")
             {
@@ -423,14 +384,6 @@ namespace ClinicApp.Users.Doctor
                     healthRecord.ShowHealthRecord();
                 }
             }
-
-
-
-        }
-
-        private void AskPerform()
-        {
-            string choice = "Y";
             Console.WriteLine("Do you wish to perform an examination/operation(y/n)?");
             choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
@@ -447,7 +400,9 @@ namespace ClinicApp.Users.Doctor
                 Perform(chosenAppointment);
 
             }
-        }
+        
+
+    }
 
         //=======================================================================================================================================================================
         // PERFORM EXAMINATION
@@ -456,12 +411,20 @@ namespace ClinicApp.Users.Doctor
             string type;
             if (appointment.Type == 'e') type = "Examination";
             else type = "Operation";
-
             Console.WriteLine($"{type} starting. Searching for medical record");
-
-            HealthRecord healthRecord = FetchHealthRecord(appointment);
-            WriteAnamnesis(ref healthRecord);
-            Console.WriteLine("\nDo you want to change medical record? (y/n)");
+            HealthRecord healthRecord;
+            if (!SystemFunctions.HealthRecords.TryGetValue(appointment.Patient.UserName, out healthRecord))
+            {
+                Console.WriteLine("No health record found, creating a new record");
+                healthRecord = new HealthRecord(appointment.Patient);
+                SystemFunctions.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
+            }
+            healthRecord.ShowHealthRecord();
+            Console.WriteLine("\nWrite you Anamnesis: ");
+            string anamnesisText = Console.ReadLine();
+            Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
+            healthRecord.Anamneses.Add(anamnesis);
+            Console.WriteLine("Anamnesis added\nDo you want to change medical record? (y/n)");
             string choice = Console.ReadLine().ToUpper();
             if (choice == "Y")
             {
@@ -483,7 +446,7 @@ namespace ClinicApp.Users.Doctor
                 choice = Console.ReadLine().ToUpper(); 
                 if(choice.ToUpper() == "Y")
                 {
-                    Prescription prescription = WritePrescription(healthRecord.Patient);
+                    Prescription prescription = WritePrecription(healthRecord.Patient);
                     if (prescription != null) {
                         healthRecord.Patient.Prescriptions.Add(prescription);
                         using (StreamWriter sw = File.AppendText(SystemFunctions.PrescriptionsFilePath))
@@ -502,29 +465,9 @@ namespace ClinicApp.Users.Doctor
             this.Appointments.Remove(appointment);
 
             appointment.Patient.Appointments.Remove(appointment);
-            Console.WriteLine($"{type} ended.");
+            Console.WriteLine("Examination ended");
         }
 
-        private HealthRecord FetchHealthRecord(Appointment appointment) {
-
-            HealthRecord healthRecord;
-            if (!SystemFunctions.HealthRecords.TryGetValue(appointment.Patient.UserName, out healthRecord))
-            {
-                Console.WriteLine("No health record found, creating a new record");
-                healthRecord = new HealthRecord(appointment.Patient);
-                SystemFunctions.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
-            }
-            healthRecord.ShowHealthRecord();
-            return healthRecord;
-        }
-
-        private void WriteAnamnesis(ref HealthRecord healthRecord) {
-            Console.WriteLine("\nWrite you Anamnesis: ");
-            string anamnesisText = Console.ReadLine();
-            Anamnesis anamnesis = new Anamnesis(anamnesisText, this);
-            healthRecord.Anamneses.Add(anamnesis);
-            Console.WriteLine("Anamnesis added");
-        }
 
         //=======================================================================================================================================================================
         // CHANGE PATIENT HEALTH RECORD
@@ -572,8 +515,16 @@ namespace ClinicApp.Users.Doctor
             int i = OtherFunctions.EnterNumberWithLimit(0, 3);
             if (i == 1)
             {
-                Doctor doctor = AskUsernameDoctor();
-                if (doctor == null) return;
+                Patient.ViewAllDoctors();
+                Console.WriteLine("\n Enter doctor username: ");
+                Console.Write(">> ");
+                string userName = Console.ReadLine();
+                Doctor doctor = null;
+                if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+                {
+                    Console.WriteLine("Doctor with that username does not exist.");
+                    return;
+                }
                 Referral referral = new Referral(this, patient, doctor, doctor.Field);
                 patient.Referrals.Add(referral);
                 SystemFunctions.Referrals.Add(referral);
@@ -588,24 +539,10 @@ namespace ClinicApp.Users.Doctor
             Console.WriteLine("Referral created successfully!");
             
         }
-
-        private Doctor AskUsernameDoctor() {
-            Patient.ViewAllDoctors();
-            Console.WriteLine("\n Enter doctor username: ");
-            Console.Write(">> ");
-            string userName = Console.ReadLine();
-            Doctor doctor = null;
-            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
-            {
-                Console.WriteLine("Doctor with that username does not exist.");
-            }
-            return doctor;
-        }
-
         //=======================================================================================================================================================================
         // WRITE UP A PRESCRIPTION FOR A PATIENT
 
-        private Prescription WritePrescription(Patient patient) {
+        private Prescription WritePrecription(Patient patient) {
             Console.Write("Insert the name of Medicine: ");
             string medicineName = Console.ReadLine();
             Console.WriteLine();
@@ -636,31 +573,8 @@ namespace ClinicApp.Users.Doctor
 
         }
 
-        //=======================================================================================================================================================================
-        // UPDATING EQUIPMENT AFTER AN APPOINTMENT
 
-        public void UpdateEquipment() {
-            Console.WriteLine($"The state of equipment in room {this.RoomId} before the appointment: ");
-            Console.WriteLine();
-            List<AdminFunctions.Equipment> equipmentList = EquipmentService.GetEquipmentFromRoom(this.RoomId); 
-            foreach(AdminFunctions.Equipment equipment in equipmentList){
-                Console.WriteLine($"{equipment.Name} : {equipment.Amount}");
-            }
-            Console.WriteLine($"Please enter the quantity of the equipment that was used during the appointment: ");
-            Console.WriteLine();
-            foreach (AdminFunctions.Equipment equipment in equipmentList)
-            {
-                
-                var clinicEquipment = EquipmentService.Get(equipment.Id);
-                Console.Write($"{equipment.Name} : ");
-                int quantity = OtherFunctions.EnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
-                int newQuantity = clinicEquipment.Amount - quantity;
-                EquipmentService.Update(equipment.Id, newQuantity);
-                Console.WriteLine();
-            }
-            Console.WriteLine("Succesfully updated equipment.");
 
-        }
 
 
         //=======================================================================================================================================================================
