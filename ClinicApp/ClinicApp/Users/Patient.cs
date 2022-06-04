@@ -62,7 +62,7 @@ namespace ClinicApp.Users
             }
 
 
-            Appointments = new List<Appointment>()
+            Appointments = new List<Appointment>();
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             Prescriptions = new List<Prescription>();
@@ -532,7 +532,6 @@ namespace ClinicApp.Users
 
         private void SuggestAppointment()
         {
-            int duration = 15;
             //todo take user input for doctor and time for examination, also time period for appoinment to be done and priority(doctor or time of examination)
             Console.WriteLine("You are currently using the appointment suggestion system.");
             Console.WriteLine("System will suggest your appointment by priority, your priority can be doctor or time of appointment.");
@@ -584,10 +583,6 @@ namespace ClinicApp.Users
             Console.WriteLine("Please enter the priority for your search. Enter 'd' if doctor is your priority, enter 'a' if appointment is your priority.");
             string priority = Console.ReadLine();
             //first check preferred doctor and preferred time
-            if (priority.ToUpper() == "D")
-            {
-                //todo doctor priority
-                //SuggestDoctorPriority(ref doctor,lastAppointment);
             DateTime initial_appointment = DateTime.Today + preferredTime.TimeOfDay;
             bool available = doctor.CheckAppointment(initial_appointment);
             if (available)
@@ -596,7 +591,7 @@ namespace ClinicApp.Users
                 int id;
                 try
                 {
-                    id = SystemFunctions.AllExamtinations.Values.Last().ID + 1;
+                    id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
                 }
                 catch
                 {
@@ -604,9 +599,9 @@ namespace ClinicApp.Users
                 }
                 Examination examination = new Examination(id, initial_appointment, doctor, this, false, 0, 0);
                 InsertExamination(examination);
-                doctor.InsertExamination(examination);
-                SystemFunctions.AllExamtinations.Add(id, examination);
-                SystemFunctions.CurrentExamtinations.Add(id, examination);
+                doctor.InsertAppointment(examination);
+                SystemFunctions.AllAppointments.Add(id, examination);
+                SystemFunctions.CurrentAppointments.Add(id, examination);
                 //Console.WriteLine("\nNew examination successfully created\n");
                 ActivityHistory.Add(DateTime.Now, "CREATE");
                 return;
@@ -614,7 +609,7 @@ namespace ClinicApp.Users
             if (priority.ToUpper() == "D")
             {
                 //todo doctor priority
-                bool availableDoctor = SuggestDoctorPriority(ref doctor,lastAppointment,preferredTime);
+                bool availableDoctor = SuggestDoctorPriority(ref doctor, lastAppointment, preferredTime);
                 if (!availableDoctor)
                 {
                     Console.WriteLine("Sorry your doctor is not available in this period of time.");
@@ -640,20 +635,13 @@ namespace ClinicApp.Users
 
 
         //suggest appointment doctor priority
-        private void SuggestDoctorPriority(ref Doctor doctor, DateTime lastAppointment)
         private bool SuggestDoctorPriority(ref Doctor doctor, DateTime lastAppointment, DateTime preferredTime)
         {
-            int duration = 15;
             bool appointmentFound = false;
-           
-        }
-
-        //suggest appointment appointment priority
-        private void SuggestAppointmentPriority(DateTime preferredTime,DateTime lastAppointment)
             DateTime today = DateTime.Today + preferredTime.TimeOfDay;
             while (today < lastAppointment)
             {
-                bool available = doctor.CheckAppointment(today,duration);
+                bool available = doctor.CheckAppointment(today);
                 today = today + TimeSpan.FromMinutes(15);
                 if (available)
                 {
@@ -683,50 +671,10 @@ namespace ClinicApp.Users
 
         //suggest appointment appointment priority
         private bool SuggestAppointmentPriority(DateTime preferredTime, DateTime lastAppointment)
-            DateTime today = DateTime.Today+ preferredTime.TimeOfDay;
-            while (today<lastAppointment)
-            {
-                bool available = doctor.CheckAppointment(today);
-                today = today + TimeSpan.FromMinutes(15);
-                if (available)
-                {
-                    Console.WriteLine("Your doctor is available. You just made appointment.");
-                    Console.WriteLine("Date of your appointment is:"+today.ToString()+".");
-                    int id;
-                    try
-                    {
-                        id = SystemFunctions.AllExamtinations.Values.Last().ID + 1;
-                    }
-                    catch
-                    {
-                        id = 1;
-                    }
-                    Examination examination = new Examination(id, today, doctor, this, false, 0, 0);
-                    InsertExamination(examination);
-                    doctor.InsertExamination(examination);
-                    SystemFunctions.AllExamtinations.Add(id, examination);
-                    SystemFunctions.CurrentExamtinations.Add(id, examination);
-                    //Console.WriteLine("\nNew examination successfully created\n");
-                    ActivityHistory.Add(DateTime.Now, "CREATE");
-                    return true;
-                }
-            }
-            return appointmentFound;
-        }
-
-        //suggest appointment appointment priority
-        private bool SuggestAppointmentPriority(DateTime preferredTime,DateTime lastAppointment)
         {
             bool appoinmentFound = false;
             DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
-            int duration = 15;
             while (preferredAppointment < lastAppointment)
-            {
-                foreach (Doctor doctor in SystemFunctions.Doctors.Values)
-                {
-                    bool check = doctor.CheckAppointment(preferredAppointment,duration);
-            DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
-            while (preferredAppointment<lastAppointment)
             {
                 foreach (Doctor doctor in SystemFunctions.Doctors.Values)
                 {
