@@ -15,7 +15,7 @@ namespace ClinicApp
 
     public enum MedicineFoodIntake
     {
-       Before, After, During, Irrelevant
+        Before, After, During, Irrelevant
     };
 
     public enum Fields
@@ -37,6 +37,7 @@ namespace ClinicApp
 
         public static Dictionary<string, Medicine> Medicine { get; set; } = new Dictionary<string, Medicine>();
         public static List<Referral> Referrals { get; set; } = new List<Referral>();
+        static public List<EquipmentRequest> EquipmentRequests { get; set; } = new List<EquipmentRequest>();
 
         // User file path may change in release mode, this is the file path in debug mode
 
@@ -48,6 +49,7 @@ namespace ClinicApp
         public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
         public static string MedicineFilePath = "../../../Data/medicine.txt";
         public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
+        public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
 
 
 
@@ -78,7 +80,7 @@ namespace ClinicApp
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    HealthRecord healthRecord = new HealthRecord(line );
+                    HealthRecord healthRecord = new HealthRecord(line);
                     HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
 
                 }
@@ -92,7 +94,7 @@ namespace ClinicApp
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    Medicine medicine= new Medicine(line);
+                    Medicine medicine = new Medicine(line);
                     Medicine.Add(medicine.Name, medicine);
 
                 }
@@ -149,17 +151,18 @@ namespace ClinicApp
                         else if (appointment.Edited != 0)
                         {
                             CurrentAppointments.Remove(appointment.Edited);
-                           if (!appointment.Finished)
+                            if (!appointment.Finished)
                             {
                                 CurrentAppointments.Add(appointment.ID, appointment);
                             }
-                            
+
                         }
-                        else if (!appointment.Finished) {
+                        else if (!appointment.Finished)
+                        {
                             CurrentAppointments.Add(appointment.ID, appointment);
                         }
                     }
-                    
+
                 }
                 foreach (int ID in CurrentAppointments.Keys)
                 {
@@ -180,9 +183,21 @@ namespace ClinicApp
                         user.MessageBox.LoadMessages(data[1]);
                 }
             }
+
+
+            //Loads the equipment requests.
+
+            using (StreamReader reader = new StreamReader(EquipmentRequestsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    EquipmentRequest equipmentRequest = new EquipmentRequest(line);
+                    EquipmentRequests.Add(equipmentRequest);
+
+                }
+            }
         }
-
-
 
         private static User ParseUser(string line)
         {
@@ -198,7 +213,6 @@ namespace ClinicApp
             return new Nobody();
         }
 
-
         private static Appointment ParseAppointment(string line)
         {
             string[] data = line.Split('|');
@@ -211,6 +225,31 @@ namespace ClinicApp
                 return new Examination(line);
             }
         }
+
+
+        //Updates certain information that depends on date and time
+        public static void Update()
+        {
+            UpdateEquipmentRequests();
+        }
+
+        private static void UpdateEquipmentRequests()
+        {
+            List<EquipmentRequest> listForRemoving = new List<EquipmentRequest>();
+            foreach(EquipmentRequest equipmentRequest in EquipmentRequests)
+            {
+                if(equipmentRequest.DateCreated < DateTime.Now.Date)
+                {
+                    equipmentRequest.FulfillOrder();
+                    listForRemoving.Add(equipmentRequest);
+                }
+            }
+            foreach(EquipmentRequest equipmentRequest in listForRemoving)
+            {
+                EquipmentRequests.Remove(equipmentRequest);
+            }
+        }
+
 
         // Uploads the information from the objects into the database
         public static void UploadData()
@@ -247,7 +286,7 @@ namespace ClinicApp
             //Uploads the examinations.
             using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
             {
-                foreach(KeyValuePair<int, Appointment> pair in AllAppointments)
+                foreach (KeyValuePair<int, Appointment> pair in AllAppointments)
                 {
                     newLine = pair.Value.Compress();
                     sw.WriteLine(newLine);
@@ -268,9 +307,17 @@ namespace ClinicApp
                 foreach (KeyValuePair<string, User> pair in Users)
                 {
                     newLine = pair.Value.MessageBox.Compress();
-                    if(newLine != null)
+                    if (newLine != null)
                         sw.WriteLine(newLine);
-
+                }
+            }
+            //Uploads the equipment requests.
+            using (StreamWriter sw = File.CreateText(EquipmentRequestsFilePath))
+            {
+                foreach (EquipmentRequest equipmentRequest in EquipmentRequests)
+                {
+                    newLine = equipmentRequest.Compress();
+                    sw.WriteLine(newLine);
                 }
             }
             using (StreamWriter sw = File.CreateText(MedicineFilePath))
@@ -280,7 +327,6 @@ namespace ClinicApp
                     newLine = pair.Value.Compress();
                     if (newLine != null)
                         sw.WriteLine(newLine);
-
                 }
             }
         }

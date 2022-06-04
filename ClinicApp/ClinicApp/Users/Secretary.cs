@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClinicApp.AdminFunctions;
 
 namespace ClinicApp.Users
 {
@@ -48,11 +49,13 @@ namespace ClinicApp.Users
             Console.WriteLine("3: Manage patient accounts");
             Console.WriteLine("4: Block or unbolck patient accounts");
             Console.WriteLine("5: Manage examination requests");
-            Console.WriteLine("6: Create examinations based upon referrals.");
-            Console.WriteLine("7: Create an emergency examination.");
+            Console.WriteLine("6: Create examinations based upon referrals");
+            Console.WriteLine("7: Create an emergency examination");
+            Console.WriteLine("8: Make an order of dynamic equipment");
+            Console.WriteLine("9: Redistribute dynamic equipment");
             Console.WriteLine("0: Exit");
 
-            return 7;
+            return 9;
         }
 
         //Executes the chosen command.
@@ -77,6 +80,12 @@ namespace ClinicApp.Users
                     break;
                 case 7:
                     CreateEmergencyExamination();
+                    break;
+                case 8:
+                    OrderDynamiicEquipment();
+                    break;
+                case 9:
+                    RedistributeDynamiicEquipment();
                     break;
             }
         }
@@ -114,7 +123,7 @@ namespace ClinicApp.Users
                         option2 = 1;
                         while (option2 != 0)
                         {
-                            Console.WriteLine("\nWrite the username of the patient who's account you want deleted:");
+                            Console.WriteLine("\nWrite the username of the patient who's account you want updated:");
                             string userName = OtherFunctions.EnterString();
                             if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
                             {
@@ -357,7 +366,7 @@ namespace ClinicApp.Users
                                 SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
                                 SystemFunctions.CurrentAppointments.Remove(appointment.ID);
                                 SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
-                                appointment.Patient.InsertExamination(editedExamination);
+                                appointment.Patient.InsertAppointment(editedExamination);
                                 editedExamination.Doctor.InsertAppointment(editedExamination);
                             }
                         }
@@ -443,7 +452,7 @@ namespace ClinicApp.Users
                                     //Creates the examination.
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor, patient, false, 0, 0);
                                     doctor.InsertAppointment(examination);
-                                    patient.InsertExamination(examination);
+                                    patient.InsertAppointment(examination);
                                     SystemFunctions.AllAppointments.Add(id, examination);
                                     SystemFunctions.CurrentAppointments.Add(id, examination);
                                     patient.Referrals.RemoveAt(0);
@@ -531,7 +540,7 @@ namespace ClinicApp.Users
                                     id++;
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor.Value, patient, false, 0, 0);
                                     doctor.Value.InsertAppointment(examination);
-                                    patient.InsertExamination(examination);
+                                    patient.InsertAppointment(examination);
                                     SystemFunctions.AllAppointments.Add(id, examination);
                                     SystemFunctions.CurrentAppointments.Add(id, examination);
                                     doctor.Value.MessageBox.AddMessage("You have an emergency examination.");
@@ -603,7 +612,7 @@ namespace ClinicApp.Users
                     //Creates the examination.
                     Clinic.Examination examination2 = new Clinic.Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
                     examinationForDelaying.Key.Doctor.InsertAppointment(examination2);
-                    patient.InsertExamination(examination2);
+                    patient.InsertAppointment(examination2);
                     SystemFunctions.AllAppointments.Add(id, examination2);
                     SystemFunctions.CurrentAppointments.Add(id, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("You have an emergency examination.");
@@ -616,7 +625,7 @@ namespace ClinicApp.Users
                     examinationForDelaying.Key.DateTime = examinationForDelaying.Value;
                     examinationForDelaying.Key.Edited++;
                     examinationForDelaying.Key.Doctor.InsertAppointment(examination2);
-                    examinationForDelaying.Key.Patient.InsertExamination(examination2);
+                    examinationForDelaying.Key.Patient.InsertAppointment(examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("Your examination has been delayed.");
                     examinationForDelaying.Key.Patient.MessageBox.AddMessage("Your examination has been delayed.");
                     Console.WriteLine("The other examination has been delayed successfully.");
@@ -627,6 +636,221 @@ namespace ClinicApp.Users
                     Console.WriteLine("1: Yes");
                     Console.WriteLine("0: No");
                     option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                }
+            }
+        }
+
+        //Makes an order for dynamic equipment.
+        private static void OrderDynamiicEquipment()
+        {
+            bool gauzes = false, stiches = false, vaccines = false, bandages = false;
+            foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+            {
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Gauzes && equipment.RoomId == 0)
+                    gauzes = true;
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Stiches && equipment.RoomId == 0)
+                    stiches = true;
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Vaccines && equipment.RoomId == 0)
+                    vaccines = true;
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Bandages && equipment.RoomId == 0)
+                    bandages = true;
+            }
+            if (gauzes == true && stiches == true && vaccines == true && bandages == true)
+                Console.WriteLine("\nWe don't lack any equipment at the moment.");
+            else
+            {
+                int numberOfOptions, option = 1;
+                while(option != 0)
+                {
+                    numberOfOptions = 0;
+                    Console.WriteLine("\nWhich of the following equipment would you like to order?");
+                    if(gauzes == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Gauzes");
+                    }
+                    if(stiches == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Stiches");
+                    }
+                    if(vaccines == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Vaccines");
+                    }
+                    if(bandages == false)
+                    {
+                        numberOfOptions++;
+                        Console.WriteLine(numberOfOptions + ": Bandages");
+                    }
+                    Console.WriteLine("0: Back to menu");
+                    option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                    if(option != 0)
+                    {
+                        Console.WriteLine("");
+                        if (gauzes == false)
+                        {
+                            option--;
+                            if(option == 0)
+                            {
+                                Console.WriteLine("How many gauzes would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Gauzes, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        if (stiches == false)
+                        {
+                            option--;
+                            if (option == 0)
+                            {
+                                Console.WriteLine("How many stiches would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Stiches, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        if (vaccines == false)
+                        {
+                            option--;
+                            if (option == 0)
+                            {
+                                Console.WriteLine("How many vaccines would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Vaccines, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        if (bandages == false)
+                        {
+                            option--;
+                            if (option == 0)
+                            {
+                                Console.WriteLine("How many bandages would you like to order?");
+                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Bandages, option, DateTime.Now.Date);
+                                SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                            }
+                        }
+                        //In the end, option will still be greater than 0
+                    }
+                }
+            }
+        }
+
+        //Redistributes dynamic equipment
+        private static void RedistributeDynamiicEquipment()
+        {
+            foreach(Room room in RoomRepo.ClinicRooms)
+            {
+                int gauzes = 0, stiches = 0, vaccines = 0, bandages = 0;
+                foreach(Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+                {
+                    if (equipment.Type == EquipmentType.Gauzes && equipment.RoomId == room.Id)
+                        gauzes += equipment.Amount;
+                    if (equipment.Type == EquipmentType.Stiches && equipment.RoomId == room.Id)
+                        stiches += equipment.Amount;
+                    if (equipment.Type == EquipmentType.Vaccines && equipment.RoomId == room.Id)
+                        vaccines += equipment.Amount;
+                    if (equipment.Type == EquipmentType.Bandages && equipment.RoomId == room.Id)
+                        bandages += equipment.Amount;
+                }
+                if(gauzes < 5 || stiches < 5 || vaccines < 5 || bandages < 5)
+                {
+                    Console.WriteLine("\nRoom id: " + room.Id);
+                    Console.WriteLine("Room name: " + room.Name);
+                    if (gauzes == 0)
+                        Console.WriteLine("-Gauzes: " + gauzes);
+                    else if(gauzes < 5)
+                        Console.WriteLine(" Gauzes: " + gauzes);
+                    if (stiches == 0)
+                        Console.WriteLine("-Stiches: " + stiches);
+                    else if(stiches < 5)
+                        Console.WriteLine(" Stiches: " + stiches);
+                    if (vaccines == 0)
+                        Console.WriteLine("-Vaccines: " + vaccines);
+                    else if(vaccines < 5)
+                        Console.WriteLine(" Vaccines: " + vaccines);
+                    if (bandages == 0)
+                        Console.WriteLine("-Bandages: " + bandages);
+                    else if(bandages < 5)
+                        Console.WriteLine(" Bandages: " + bandages);
+                }
+            }
+
+            int option = 1;
+            while(option != 0)
+            {
+                Console.WriteLine("\nDo you want to move equipment?");
+                Console.WriteLine("1: Yes");
+                Console.WriteLine("0: No");
+                option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                if (option == 1)
+                {
+                    int idFrom, idTo, amount, totalEquipment = 0;
+                    EquipmentType type;
+                    Room roomFrom, roomTo;
+                    Console.WriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
+                    idFrom = OtherFunctions.EnterNumber();
+                    idTo = OtherFunctions.EnterNumber();
+                    amount = OtherFunctions.EnterNumber();
+                    Console.WriteLine("\nWhich of the following equipment would you like to move?");
+                    Console.WriteLine("1: Gauzes");
+                    Console.WriteLine("2: Stiches");
+                    Console.WriteLine("3: Vaccines");
+                    Console.WriteLine("4: Bandages");
+                    option = OtherFunctions.EnterNumberWithLimit(1, 4);
+                    switch (option)
+                    {
+                        case 1:
+                            type = EquipmentType.Gauzes;
+                            break;
+                        case 2:
+                            type = EquipmentType.Stiches;
+                            break;
+                        case 3:
+                            type = EquipmentType.Vaccines;
+                            break;
+                        default:
+                            type = EquipmentType.Bandages;
+                            break;
+                    }
+                    roomFrom = RoomRepo.Get(idFrom);
+                    if(roomFrom == default)
+                        roomFrom = RoomRepo.Get(0);
+                    roomTo = RoomRepo.Get(idTo);
+                    if (roomTo == default)
+                        roomTo = RoomRepo.Get(0);
+                    foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+                    {
+                        if (equipment.Type == type && equipment.RoomId == roomFrom.Id)
+                            totalEquipment += equipment.Amount;
+                    }
+                    if(amount > totalEquipment)
+                        amount = totalEquipment;
+                    Equipment equipmentNew = new Equipment
+                    {
+                        Id = 0,
+                        Name = type.ToString(),
+                        Amount = amount,
+                        RoomId = roomTo.Id,
+                        Type = type
+                    };
+                    EquipmentRepo.Add(equipmentNew);
+                    foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+                        if (equipment.Type == type && equipment.RoomId == roomTo.Id && amount > 0)
+                            if(amount < equipment.Amount)
+                            {
+                                equipment.Amount -= amount;
+                                amount = 0;
+                            }
+                            else
+                            {
+                                amount -= equipment.Amount;
+                                EquipmentRepo.ClinicEquipmentList.Remove(equipment);
+                            }
+                    EquipmentRepo.PersistChanges();
                 }
             }
         }

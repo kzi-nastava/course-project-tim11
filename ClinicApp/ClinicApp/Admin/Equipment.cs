@@ -8,5 +8,5 @@ namespace ClinicApp.AdminFunctions {
         public EquipmentType Type {get;set;}
         
     }
-    public enum EquipmentType {Operations, RoomFurniture, Hallway, Examinations}
+    public enum EquipmentType {Operations, RoomFurniture, Hallway, Examinations, Gauzes, Stiches, Vaccines, Bandages}
 }
