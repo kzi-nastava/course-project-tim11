@@ -561,6 +561,7 @@ namespace ClinicApp.Users
 
         private void SuggestAppointment()
         {
+            int duration = 15;
             //todo take user input for doctor and time for examination, also time period for appoinment to be done and priority(doctor or time of examination)
             Console.WriteLine("You are currently using the appointment suggestion system.");
             Console.WriteLine("System will suggest your appointment by priority, your priority can be doctor or time of appointment.");
@@ -716,7 +717,7 @@ namespace ClinicApp.Users
                         int id;
                         try
                         {
-                            id = SystemFunctions.AllAppointment.Values.Last().ID + 1;
+                            id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
                         }
                         catch
                         {
