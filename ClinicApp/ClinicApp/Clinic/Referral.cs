@@ -25,7 +25,8 @@ namespace ClinicApp.Clinic
             string[] data = text.Split('|');
             DoctorExaminated = SystemFunctions.Doctors[data[0]];
             this.Patient = SystemFunctions.Patients[data[1]];
-            DoctorSpecialist = SystemFunctions.Doctors[data[2]];
+            if (data[2] == "null") DoctorSpecialist = null;
+            else DoctorSpecialist = SystemFunctions.Doctors[data[2]];
             Fields field;
             Enum.TryParse(data[3], out field);
             Field = field;
@@ -34,7 +35,10 @@ namespace ClinicApp.Clinic
 
         public string Compress()
         {
-            return DoctorExaminated.UserName + "|" + this.Patient.UserName + "|" + DoctorSpecialist.UserName + "|" + Field.ToString();
+            string drSpecialist;
+            if (DoctorSpecialist == null) drSpecialist = "null";
+            else drSpecialist = DoctorSpecialist.UserName;
+            return DoctorExaminated.UserName + "|" + this.Patient.UserName + "|" + drSpecialist + "|" + Field.ToString();
         }
 
 

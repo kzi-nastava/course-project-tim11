@@ -13,6 +13,11 @@ namespace ClinicApp
         Nobody, Admin, Secretary, Doctor, Patient
     };
 
+    public enum MedicineFoodIntake
+    {
+       Before, After, During, Irrelevant
+    };
+
     public enum Fields
     {
         Cardiologist, Pneumologist, Gynecologist, Neurologist, Psychiatrist, Anesthesiologist, Pediatrician, Dermatologist, Endocrinologist, Gastroenterologist,
@@ -27,18 +32,22 @@ namespace ClinicApp
         public static Dictionary<string, Doctor> Doctors { get; set; } = new Dictionary<string, Doctor>();
         public static Dictionary<string, Patient> Patients { get; set; } = new Dictionary<string, Patient>();
         public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
-        public static Dictionary<int, Examination> AllExamtinations { get; set; } = new Dictionary<int, Examination>();
-        public static Dictionary<int, Examination> CurrentExamtinations { get; set; } = new Dictionary<int, Examination>();
+        public static Dictionary<int, Appointment> AllAppointments { get; set; } = new Dictionary<int, Appointment>();
+        public static Dictionary<int, Appointment> CurrentAppointments { get; set; } = new Dictionary<int, Appointment>();
+
+        public static Dictionary<string, Medicine> Medicine { get; set; } = new Dictionary<string, Medicine>();
         public static List<Referral> Referrals { get; set; } = new List<Referral>();
 
         // User file path may change in release mode, this is the file path in debug mode
 
         public static string UsersFilePath = "../../../Data/users.txt";
-        public static string ExaminationsFilePath = "../../../Data/examinations.txt";
+        public static string AppointmentsFilePath = "../../../Data/appointments.txt";
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         public static string ReferralsFilePath = "../../../Data/referrals.txt";
         public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
+        public static string MedicineFilePath = "../../../Data/medicine.txt";
+        public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
 
 
 
@@ -74,6 +83,36 @@ namespace ClinicApp
 
                 }
             }
+
+
+            //Load medicine
+
+            using (StreamReader reader = new StreamReader(MedicineFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Medicine medicine= new Medicine(line);
+                    Medicine.Add(medicine.Name, medicine);
+
+                }
+            }
+
+            using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Prescription prescription = new Prescription(line);
+                    prescription.Patient.Prescriptions.Add(prescription);
+
+                }
+            }
+
+
+
+            // Load referrals
+
             using (StreamReader reader = new StreamReader(ReferralsFilePath))
             {
                 string line;
@@ -90,42 +129,44 @@ namespace ClinicApp
 
             //Loads the examinations.
 
-            using (StreamReader reader = new StreamReader(ExaminationsFilePath))
+            using (StreamReader reader = new StreamReader(AppointmentsFilePath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    Examination examination = new Examination(line);
-                    if (!AllExamtinations.TryAdd(examination.ID, examination))
+
+                    Appointment appointment = ParseAppointment(line); 
+                    if (!AllAppointments.TryAdd(appointment.ID, appointment))
                     {
-                        AllExamtinations[examination.ID] = examination;
+                        AllAppointments[appointment.ID] = appointment;
                     }
-                    if (examination.DateTime.AddMinutes(15) > DateTime.Now)
+                    if (appointment.DateTime.AddMinutes(15) > DateTime.Now)
                     {
-                        if (examination.Tombstone != 0)
+                        if (appointment.Tombstone != 0)
                         {
-                            CurrentExamtinations.Remove(examination.Tombstone);
+                            CurrentAppointments.Remove(appointment.Tombstone);
                         }
-                        else if (examination.Edited != 0)
+                        else if (appointment.Edited != 0)
                         {
-                            CurrentExamtinations.Remove(examination.Edited);
-                           if (!examination.Finished)
+                            CurrentAppointments.Remove(appointment.Edited);
+                           if (!appointment.Finished)
+
                             {
-                                CurrentExamtinations.Add(examination.ID, examination);
+                                CurrentAppointments.Add(appointment.ID, appointment);
                             }
                             
                         }
-                        else if (!examination.Finished) {
-                            CurrentExamtinations.Add(examination.ID, examination);
+                        else if (!appointment.Finished) {
+                            CurrentAppointments.Add(appointment.ID, appointment);
                         }
                     }
                     
                 }
-                foreach (int ID in CurrentExamtinations.Keys)
+                foreach (int ID in CurrentAppointments.Keys)
                 {
-                    Examination currentExamination = CurrentExamtinations[ID];
-                    currentExamination.Doctor.Examinations.Add(currentExamination);
-                    currentExamination.Patient.Examinations.Add(currentExamination);
+                    Appointment currentAppointment = CurrentAppointments[ID];
+                    currentAppointment.Doctor.Appointments.Add(currentAppointment);
+                    currentAppointment.Patient.Appointments.Add(currentAppointment);
                 }
             }
             //Loads the messages.
@@ -158,6 +199,17 @@ namespace ClinicApp
             return new Nobody();
         }
 
+        private static Appointment ParseAppointment(string line) {
+            string[] data = line.Split('|');
+            if (data[8] == "o")
+            {
+                return new Operation(line);
+            }
+            else {
+                return new Examination(line);
+            }
+        }
+
         // Uploads the information from the objects into the database
         public static void UploadData()
         {
@@ -173,9 +225,9 @@ namespace ClinicApp
                 }
             }
             //Uploads the examinations.
-            using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
+            using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
             {
-                foreach (KeyValuePair<int, Examination> pair in AllExamtinations)
+                foreach (KeyValuePair<int, Appointment> pair in AllAppointments)
                 {
                     newLine = pair.Value.Compress();
                     sw.WriteLine(newLine);
@@ -185,15 +237,6 @@ namespace ClinicApp
             using (StreamWriter sw = File.CreateText(HealthRecordsFilePath))
             {
                 foreach (KeyValuePair<string, HealthRecord> pair in HealthRecords)
-                {
-                    newLine = pair.Value.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
-            //Uploads the examinations.
-            using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
-            {
-                foreach(KeyValuePair<int, Examination> pair in AllExamtinations)
                 {
                     newLine = pair.Value.Compress();
                     sw.WriteLine(newLine);
@@ -215,6 +258,16 @@ namespace ClinicApp
                 {
                     newLine = pair.Value.MessageBox.Compress();
                     if(newLine != null)
+                        sw.WriteLine(newLine);
+
+                }
+            }
+            using (StreamWriter sw = File.CreateText(MedicineFilePath))
+            {
+                foreach (KeyValuePair<string, Medicine> pair in Medicine)
+                {
+                    newLine = pair.Value.Compress();
+                    if (newLine != null)
                         sw.WriteLine(newLine);
 
                 }
