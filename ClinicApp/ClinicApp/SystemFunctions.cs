@@ -105,6 +105,7 @@ namespace ClinicApp
                 {
                     Prescription prescription = new Prescription(line);
                     prescription.Patient.Prescriptions.Add(prescription);
+                    prescription.Patient.MessageBox.AddMessage(prescription.PresrciptionToMessage());
 
                 }
             }

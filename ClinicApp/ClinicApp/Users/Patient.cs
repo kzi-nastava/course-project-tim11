@@ -87,9 +87,10 @@ namespace ClinicApp.Users
             Console.WriteLine("6: View appointments");
             Console.WriteLine("7: Appointment suggestion");
             Console.WriteLine("8: View health record history");
+            Console.WriteLine("9: Search doctors");
             Console.WriteLine("0: Exit");
 
-            return 8;
+            return 9;
 
         }
 
@@ -179,7 +180,7 @@ namespace ClinicApp.Users
             }
         }
 
-        public void InsertExamination(Examination newExamination)
+        public void InsertAppointment(Appointment newExamination)
         {
             if (this.Appointments.Count() == 0) {
                 this.Appointments.Add(newExamination);
@@ -198,7 +199,7 @@ namespace ClinicApp.Users
         }
 
 
-        private void CreateExamination()
+        private void CreateExamination(Doctor doctor = null)
         {
             DateTime dateTime = DateTime.Now;
 
@@ -220,8 +221,36 @@ namespace ClinicApp.Users
             } while (time < DateTime.Now);
 
             dateTime = time;
+            if(doctor == null)
+            {
+                Console.WriteLine("Enter the username of doctor. Do you want to view the list of doctors? (y/n)");
+                Console.Write(">>");
+                string choice = Console.ReadLine();
+                Console.WriteLine();
+                if (choice.ToUpper() == "Y")
+                {
+                    ViewAllDoctors();
+                }
+                Console.WriteLine("\nEnter the username:");
+                string userName = Console.ReadLine();
+                Doctor doctorDict = null;
+                if (!SystemFunctions.Doctors.TryGetValue(userName, out doctorDict))
+                {
+                    Console.WriteLine("Doctor with that username does not exist");
+                    return;
+                }
+                doctor = SystemFunctions.Doctors[userName];
+                //TODO : types of appointment -> duration
+                int duration = 15;
+                bool validateAppointment = doctor.CheckAppointment(dateTime, duration);
+                if (validateAppointment == false)
+                {
+                    Console.WriteLine("Your doctor is unavailable at that time.");
+                    return;
+                }
+            }
 
-            Console.WriteLine("Enter the username of doctor. Do you want to view the list of doctors? (y/n)");
+            /*Console.WriteLine("Enter the username of doctor. Do you want to view the list of doctors? (y/n)");
             Console.Write(">>");
             string choice = Console.ReadLine();
             Console.WriteLine();
@@ -231,8 +260,8 @@ namespace ClinicApp.Users
             }
             Console.WriteLine("\nEnter the username:");
             string userName = Console.ReadLine();
-            Doctor doctor = null;
-            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+            Doctor doctorDict = null;
+            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctorDict))
             {
                 Console.WriteLine("Doctor with that username does not exist");
                 return;
@@ -245,7 +274,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Your doctor is unavailable at that time.");
                 return;
-            }
+            }*/
             int id;
             try
             {
@@ -256,7 +285,7 @@ namespace ClinicApp.Users
                 id = 1;
             }
             Examination examination = new Examination(id, dateTime, doctor, this, false, 0, 0);
-            InsertExamination(examination);
+            InsertAppointment(examination);
             doctor.InsertAppointment(examination);
             SystemFunctions.AllAppointments.Add(id, examination);
             SystemFunctions.CurrentAppointments.Add(id, examination);
@@ -589,7 +618,7 @@ namespace ClinicApp.Users
                 //todo doctor priority
                 //SuggestDoctorPriority(ref doctor,lastAppointment);
             DateTime initial_appointment = DateTime.Today + preferredTime.TimeOfDay;
-            bool available = doctor.CheckAppointment(initial_appointment);
+            bool available = doctor.CheckAppointment(initial_appointment,duration);
             if (available)
             {
                 Console.WriteLine("Your doctor is available, congrats you made appointment.");
@@ -603,10 +632,17 @@ namespace ClinicApp.Users
                     id = 1;
                 }
                 Examination examination = new Examination(id, initial_appointment, doctor, this, false, 0, 0);
+<<<<<<< Updated upstream
                 InsertExamination(examination);
                 doctor.InsertExamination(examination);
                 SystemFunctions.AllExamtinations.Add(id, examination);
                 SystemFunctions.CurrentExamtinations.Add(id, examination);
+=======
+                InsertAppointment(examination);
+                doctor.InsertAppointment(examination);
+                SystemFunctions.AllAppointments.Add(id, examination);
+                SystemFunctions.CurrentAppointments.Add(id, examination);
+>>>>>>> Stashed changes
                 //Console.WriteLine("\nNew examination successfully created\n");
                 ActivityHistory.Add(DateTime.Now, "CREATE");
                 return;
@@ -669,7 +705,7 @@ namespace ClinicApp.Users
                         id = 1;
                     }
                     Examination examination = new Examination(id, today, doctor, this, false, 0, 0);
-                    InsertExamination(examination);
+                    InsertAppointment(examination);
                     doctor.InsertAppointment(examination);
                     SystemFunctions.AllAppointments.Add(id, examination);
                     SystemFunctions.CurrentAppointments.Add(id, examination);
@@ -717,6 +753,7 @@ namespace ClinicApp.Users
         //suggest appointment appointment priority
         private bool SuggestAppointmentPriority(DateTime preferredTime,DateTime lastAppointment)
         {
+            int duration = 15;
             bool appoinmentFound = false;
             DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
             int duration = 15;
@@ -725,12 +762,15 @@ namespace ClinicApp.Users
                 foreach (Doctor doctor in SystemFunctions.Doctors.Values)
                 {
                     bool check = doctor.CheckAppointment(preferredAppointment,duration);
+<<<<<<< Updated upstream
             DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
             while (preferredAppointment<lastAppointment)
             {
                 foreach (Doctor doctor in SystemFunctions.Doctors.Values)
                 {
                     bool check = doctor.CheckAppointment(preferredAppointment);
+=======
+>>>>>>> Stashed changes
                     if (check)
                     {
                         Console.WriteLine("Your preferred appointment is available in your requested timespan.");
@@ -744,7 +784,7 @@ namespace ClinicApp.Users
                             id = 1;
                         }
                         Examination examination = new Examination(id, preferredAppointment, doctor, this, false, 0, 0);
-                        InsertExamination(examination);
+                        InsertAppointment(examination);
                         doctor.InsertAppointment(examination);
                         SystemFunctions.AllAppointments.Add(id, examination);
                         SystemFunctions.CurrentAppointments.Add(id, examination);
@@ -816,27 +856,158 @@ namespace ClinicApp.Users
             Console.WriteLine(">>");
             string userInput = Console.ReadLine();
             string[] parametersOfSearch = userInput.Split(',');
+            if(parametersOfSearch.Length == 1)
+            {
+                SearchDoctorsOneParameter(parametersOfSearch);
+            }
+            else if(parametersOfSearch.Length == 2)
+            {
+                SearchDoctorTwoParameters(parametersOfSearch);
+            }
+            else if(parametersOfSearch.Length == 3)
+            {
+                //SearchDoctorAllParameters(parametersOfSearch);
+                Console.WriteLine("Method is implemented.");
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Invalid number of search parameters.");
+                return;
+            }
 
         }
 
         private void SearchDoctorsOneParameter(string[] parameters)
         {
             //validate parameters
+            if(parameters[0] == "first name")
+            {
+                SearchDoctorByFirstName();
+            }
+            else if(parameters[0] == "last name")
+            {
+                SearchDoctorByLastName();
+            }
+            else if(parameters[0] == "field")
+            {
+                SearchDoctorByField();
+            }
         }
 
-        private void SearchDoctorTwoParameters()
+        private void SearchDoctorByFirstName()
         {
-            //validate parameters 
+            Console.WriteLine("Please enter the first name of your doctor.");
+            Console.WriteLine(">>");
+            string name = Console.ReadLine();
+            //todo find doctors by name
         }
 
-        private void SearchDoctorAllParameters()
+        private void SearchDoctorByLastName()
         {
-            //validate parameters
+            Console.WriteLine("Please enter the last name of your doctor.");
+            Console.WriteLine(">>");
+            string lastName = Console.ReadLine();
+            //todo find doctors by last name
         }
 
-        private bool ValidateParameters(string[] parameters)
+        private void SearchDoctorByField()
         {
-            return false;
+            Console.WriteLine("Please enter your doctors field of work.");
+            Console.WriteLine(">>");
+            string field = Console.ReadLine();
+            //todo find doctors by field of work
+        }
+
+        private void SearchDoctorTwoParameters(string[] parameters)
+        {
+            string firstName="";
+            string lastName="";
+            string field="";
+            bool parameter0 = false;
+            bool parameter1 = false;
+            bool parameter2 = false;
+            if (ValidateParameter(parameters[0]) && ValidateParameter(parameters[1]))
+            {
+                if(parameters.Contains<string>("first name"))
+                {
+                    Console.WriteLine("Input the first name you want to search.");
+                    Console.WriteLine(">>");
+                    firstName = Console.ReadLine();
+                    parameter0 = true;
+                }
+                if(parameters.Contains<string>("last name"))
+                {
+                    Console.WriteLine("Input the last name you want to search.");
+                    Console.WriteLine(">>");
+                    lastName = Console.ReadLine();
+                    parameter1 = true;
+                }
+                if (parameters.Contains<string>("field"))
+                {
+                    Console.WriteLine("Enter the field you want to search.");
+                    Console.WriteLine(">>");
+                    field = Console.ReadLine();
+                    parameter2 = true;
+                }
+            }
+            Console.WriteLine("Invalid search parameters.");
+            return;
+        }
+
+        /*private void SearchDoctorAllParameters(string[] parameters)
+        {
+            //RAZMISLI DA LI CES OVO DA IMPLEMENTIRAS
+            if (ValidateParameter(parameters[0]) && ValidateParameter(parameters[1]) && ValidateParameter(parameters[2]))
+            {
+                //TODO search by all parameters
+                Console.WriteLine("Please input first name you want to search.");
+                Console.WriteLine(">>");
+                string firstName = Console.ReadLine();
+                Console.WriteLine("Please input last name you want to search");
+
+                
+            }
+            Console.WriteLine("Invalid parameters.");
+            return;
+        }*/
+
+        private bool ValidateParameter(string parameter)
+        {
+            //TODO validate parameters
+            if (parameter=="first name" || parameter=="last name" || parameter == "field")
+            {
+                return true;
+            }
+                return false;
+        }
+
+
+        private List<Doctor> SortDoctorsByFirstName(List<Doctor> doctorsUnsorted)
+        {
+            doctorsUnsorted.Sort(delegate(Doctor d1, Doctor d2)
+            {
+                return d1.Name.CompareTo(d2.Name);
+	        });
+            return doctorsUnsorted;
+        }
+
+        private List<Doctor> SortDoctorsByLastName(List<Doctor> doctorsUnsorted)
+        {
+            doctorsUnsorted.Sort(delegate (Doctor d1, Doctor d2)
+            {
+                return d1.LastName.CompareTo(d2.LastName);
+            });
+            return doctorsUnsorted;
+        }
+
+        private List<Doctor> SortDoctorsByField(List<Doctor> doctorsUnsorted)
+        {
+            doctorsUnsorted.Sort(delegate (Doctor d1, Doctor d2)
+            {
+                return d1.LastName.CompareTo(d2.LastName);
+            });
+            return doctorsUnsorted;
         }
 
     }
