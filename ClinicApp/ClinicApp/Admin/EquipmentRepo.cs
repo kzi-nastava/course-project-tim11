@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ClinicApp.AdminFunctions
@@ -9,10 +10,45 @@ namespace ClinicApp.AdminFunctions
     {
         static string Path { get; set; } = "../../../Admin/Data/equipment.txt";
 
+        static public List<Equipment> ClinicEquipmentList { get; set; }
+
+        static EquipmentRepo()
+        {
+            ClinicEquipmentList = EquipmentRepo.Load();
+
+        }
+        public static List<Equipment> GetAll() => ClinicEquipmentList;
+
+        public static Equipment? Get(int id) => ClinicEquipmentList.FirstOrDefault(p => p.Id == id);
+
+        public static void Add(Equipment eq)
+        {
+            eq.Id = ClinicEquipmentList.Last().Id + 1;
+            ClinicEquipmentList.Add(eq);
+            EquipmentRepo.PersistChanges();
+        }
+        public static void Delete(int id)
+        {
+            var heq = Get(id);
+            if (heq is null)
+                return;
+            ClinicEquipmentList.Remove(heq);
+            EquipmentRepo.PersistChanges();
+        }
+        public static void Update(int id, int newAmount)
+        {
+            var eqToUpdate = Get(id);
+            if (eqToUpdate == null)
+            {
+                return;
+            }
+            eqToUpdate.Amount = newAmount;
+            PersistChanges();
+        }
         public static void PersistChanges()
         {
             File.Delete(Path);
-            foreach (Equipment eq in EquipmentService.ClinicEquipmentList)
+            foreach (Equipment eq in ClinicEquipmentList)
             {
                 string newLine = Convert.ToString(eq.Id) + "|" + eq.Name + "|" + Convert.ToString(eq.Amount) + "|" + Convert.ToString(eq.RoomId) + "|" + Convert.ToString(eq.Type);
                 using (StreamWriter sw = File.AppendText(Path))

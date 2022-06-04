@@ -46,8 +46,9 @@ namespace ClinicApp.Clinic
         {
             return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Finished + "|" + Tombstone + "|" + Edited;
         }
-
-        public void ToFile() {
+        
+        public override void ToFile()
+        {
             string line = this.Compress();
             using (StreamWriter sw = File.AppendText(SystemFunctions.ExaminationsFilePath))
             {
@@ -55,8 +56,9 @@ namespace ClinicApp.Clinic
             };
         }
 
-        public void ViewExamination() {
-            Console.WriteLine($"Examination ID: {ID}\nDate and time:{DateTime}\nPatient name: {Patient.Name}; ");
+        public override void View()
+        {
+            Console.WriteLine($"EXAMINATION ID: {ID}\nDate and time:{DateTime}\nDuration: 15min\nPatient name: {Patient.Name}; ");
             Console.WriteLine($"Patient last name: {Patient.LastName};");
             Console.WriteLine($"Date of birth {Patient.DateOfBirth.ToShortDateString()}");
         }

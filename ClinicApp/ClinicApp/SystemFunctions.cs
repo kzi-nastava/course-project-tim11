@@ -110,6 +110,7 @@ namespace ClinicApp
                 {
                     Prescription prescription = new Prescription(line);
                     prescription.Patient.Prescriptions.Add(prescription);
+                    prescription.Patient.MessageBox.AddMessage(prescription.PresrciptionToMessage());
 
                 }
             }
@@ -126,8 +127,6 @@ namespace ClinicApp
                     Referral referral = new Referral(line);
                     referral.Patient.Referrals.Add(referral);
                     Referrals.Add(referral);
-                    ;
-
                 }
             }
 
@@ -139,8 +138,8 @@ namespace ClinicApp
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    Examination examination = new Examination(line);
-                    if (!AllExamtinations.TryAdd(examination.ID, examination))
+                    Appointment appointment = ParseAppointment(line);
+                    if (!AllAppointments.TryAdd(appointment.ID, appointment))
                     {
                         AllExamtinations[examination.ID] = examination;
                     }
@@ -152,8 +151,8 @@ namespace ClinicApp
                         }
                         else if (examination.Edited != 0)
                         {
-                            CurrentExamtinations.Remove(examination.Edited);
-                           if (!examination.Finished)
+                            CurrentAppointments.Remove(appointment.Edited);
+                           if (!appointment.Finished)
                             {
                                 CurrentExamtinations.Add(examination.ID, examination);
                             }
@@ -241,6 +240,19 @@ namespace ClinicApp
             }
         }
 
+        private static Appointment ParseAppointment(string line)
+        {
+            string[] data = line.Split('|');
+            if (data[8] == "o")
+            {
+                return new Operation(line);
+            }
+            else
+            {
+                return new Examination(line);
+            }
+        }
+
 
         // Uploads the information from the objects into the database
         public static void UploadData()
@@ -275,9 +287,9 @@ namespace ClinicApp
                 }
             }
             //Uploads the examinations.
-            using (StreamWriter sw = File.CreateText(ExaminationsFilePath))
+            using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
             {
-                foreach(KeyValuePair<int, Examination> pair in AllExamtinations)
+                foreach(KeyValuePair<int, Appointment> pair in AllAppointments)
                 {
                     newLine = pair.Value.Compress();
                     sw.WriteLine(newLine);
@@ -320,7 +332,6 @@ namespace ClinicApp
                     newLine = pair.Value.Compress();
                     if (newLine != null)
                         sw.WriteLine(newLine);
-
                 }
             }
         }
