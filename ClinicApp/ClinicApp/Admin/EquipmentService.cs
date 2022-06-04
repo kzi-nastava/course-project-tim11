@@ -33,7 +33,7 @@ public static class EquipmentService
         var results = new List<Equipment>();
         foreach(var item in EquipmentRepo.ClinicEquipmentList)
         {
-            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomService.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
+            if(item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomRepo.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
             {
                 results.Add(item);
             }

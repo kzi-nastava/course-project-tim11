@@ -114,44 +114,10 @@ namespace ClinicApp.Users
         }
         public static void AddNewRoom()
         {
-            string name;
-            string type;
-            RoomType roomType;
-            while (true)
-            {
-                Console.Write("Name: ");
-                name = Console.ReadLine();
-                if (name.Contains("|"))
-                {
-                    Console.WriteLine("Invalid option, name cannot contain |, try again");
-                }
-                else { break; }
-            }
-            while (true)
-            {
-                Console.Write("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
-                type = Console.ReadLine();
-                if (type == "1")
-                {
-                    roomType = RoomType.Operations;
-                    break;
-                }
-                else if (type == "2")
-                {
-                    roomType = RoomType.Examinations; break;
-                }
-                else if (type == "3")
-                {
-                    roomType = RoomType.Waiting;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option, try again");
-                    type = Console.ReadLine();
-                }
-
-            }
+            Console.WriteLine("Enter name: ");
+            string name = OtherFunctions.EnterStringWithoutDelimiter("|");
+            Console.WriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+            RoomType roomType = OtherFunctions.ChooseRoomType();
             Room room = new Room { Name = name, Type = roomType };
             RoomRepo.Add(room);
         }
@@ -159,90 +125,41 @@ namespace ClinicApp.Users
         {
             Room room;
             string name;
-            string type;
             RoomType roomType;
-            while (true)
-            {
-                Console.WriteLine("Enter ID of the room you want to Edit");
-                int id = OtherFunctions.EnterNumber();
-                room = RoomRepo.Get(id);
-                if (room is null)
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-                else break;
-            }
+            int id = OtherFunctions.GetValidRoomId();
+            room = RoomRepo.Get(id);
             if (room.Id == 0)
             {
                 Console.WriteLine("You cannot edit Storage!");
                 return;
             }
-            while (true)
+            Console.WriteLine("Do you wish to edit this rooms' name? Y/N");
+            string answer = OtherFunctions.EnterString();
+            if (answer.ToLower() == "y")
             {
-                Console.WriteLine("Enter new name, leave empty for old");
-                name = Console.ReadLine();
-                if (name.Contains("|"))
-                {
-                    Console.WriteLine("Invalid option, name cannot contain |, try again");
-                }
-                else { break; }
+                Console.WriteLine("Enter new name: ");
+                name = OtherFunctions.EnterStringWithoutDelimiter("|");
             }
-            if (name == "")
+            else name = room.Name;
+            Console.WriteLine("Do you wish to edit this rooms' type? Y/N");
+            answer = OtherFunctions.EnterString();
+            if (answer.ToLower() == "y")
             {
-                name = room.Name;
+                Console.WriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+                roomType = OtherFunctions.ChooseRoomType();
             }
-            while (true)
-            {
-                Console.Write("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting), leave empty for old: ");
-                type = Console.ReadLine();
-                if (type == "1")
-                {
-                    roomType = RoomType.Operations;
-                    break;
-                }
-                else if (type == "2")
-                {
-                    roomType = RoomType.Examinations;
-                    break;
-                }
-                else if (type == "3")
-                {
-                    roomType = RoomType.Waiting;
-                    break;
-                }
-                else if (type == "")
-                {
-                    roomType = room.Type;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-            }
+            else roomType = room.Type;
             RoomRepo.Update(room.Id, name, roomType);
         }
         public static void DeleteRoom()
         {
-            Room room;
-            int id;
-            while (true)
-            {
-                Console.WriteLine("Enter ID of the room you want to Delete");
-                id = OtherFunctions.EnterNumber();
-                room = RoomRepo.Get(id);
-                if (room is null)
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-                else break;
-            }
+            Console.WriteLine("Enter ID of the room you want to Delete");
+            int id = OtherFunctions.GetValidRoomId();
             if (id == 0)
             {
                 Console.WriteLine("You cannot delete Storage!");
             }
             else RoomRepo.Delete(id);
-
         }
         //------------------------------------------------------MANAGE EQUIPMENT------------------------------------------
         public static void EquipmentManagmentMenu()
@@ -311,37 +228,8 @@ namespace ClinicApp.Users
                 if (eq.ToLower() == "y")
                 {
                     STerms.FilterByEqTypeBool = true;
-                    while (true)
-                    {
-                        Console.WriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-                        string eqType = Console.ReadLine();
-                        if (eqType == "1")
-                        {
-                            STerms.FilterByEq = EquipmentType.Operations;
-                            break;
-                        }
-                        else if (eqType == "2")
-                        {
-                            STerms.FilterByEq = EquipmentType.RoomFurniture;
-                            break;
-                        }
-                        else if (eqType == "3")
-                        {
-                            STerms.FilterByEq = EquipmentType.Hallway;
-                            break;
-                        }
-                        else if (eqType == "4")
-                        {
-                            STerms.FilterByEq = EquipmentType.Examinations;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid option, try again");
-                        }
-
-                    }
-
+                    Console.WriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
+                    STerms.FilterByEq = OtherFunctions.ChooseEquipmentType();
                     break;
                 }
                 else if (eq.ToLower() == "n")
@@ -354,56 +242,22 @@ namespace ClinicApp.Users
                     Console.WriteLine("Invalid option, try again");
                 }
             }
-            while (true)
-            {
-                Console.WriteLine("Filter by room type?(y/n): ");
+
+            Console.WriteLine("Filter by room type? (y/n): ");
                 string room = Console.ReadLine();
                 if (room.ToLower() == "y")
                 {
                     STerms.FilterByRoomTypeBool = true;
-                    while (true)
-                    {
-                        Console.WriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
-                        string roomType = Console.ReadLine();
-                        if (roomType == "1")
-                        {
-                            STerms.FilterByRoom = RoomType.Operations;
-                            break;
-                        }
-                        else if (roomType == "2")
-                        {
-                            STerms.FilterByRoom = RoomType.Waiting;
-                            break;
-                        }
-                        else if (roomType == "3")
-                        {
-                            STerms.FilterByRoom = RoomType.STORAGE;
-                            break;
-                        }
-                        else if (roomType == "4")
-                        {
-                            STerms.FilterByRoom = RoomType.Examinations;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid option, try again");
-                        }
-
-                    }
-                    break;
-                }
-                else if (room.ToLower() == "n")
-                {
-                    STerms.FilterByRoomTypeBool = false;
-                    break;
+                    Console.WriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
+                    STerms.FilterByRoom = OtherFunctions.ChooseRoomType();
                 }
                 else
                 {
-                    Console.WriteLine("Invalid option, try again");
+                    STerms.FilterByRoomTypeBool = false;
                 }
 
-            }
+
+            
             while (true)
             {
                 Console.WriteLine("Filter by amount?(y/n): ");

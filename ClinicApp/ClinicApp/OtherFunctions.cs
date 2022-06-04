@@ -21,6 +21,19 @@ namespace ClinicApp
             }
             return input;
         }
+        public static string EnterStringWithoutDelimiter(string delimiter)
+        {
+            string input = Console.ReadLine();
+            input = input.Trim();
+            while (input == "" || input.Contains(delimiter))
+            {
+                Console.WriteLine("Invalid option, cannot contain " + delimiter +", try again");
+                input = Console.ReadLine();
+                input = input.Trim();
+            }
+            return input;
+        }
+        
 
         public static int EnterNumber()
         {
@@ -220,7 +233,64 @@ namespace ClinicApp
 
             return user;
         }
-
+        public static RoomType ChooseRoomType()
+        {
+            RoomType type;
+            int input = EnterNumberWithLimit(1, 3);
+            switch (input)
+            {
+                case 1:
+                    type = RoomType.Operations;
+                    break;
+                case 2:
+                    type = RoomType.Examinations;
+                    break;
+                case 3:
+                    type = RoomType.Waiting;
+                    break;
+                default:
+                    type = RoomType.STORAGE;
+                    break;
+            }
+            return type;
+        }
+        public static EquipmentType ChooseEquipmentType()
+        {
+            EquipmentType type;
+            int input = EnterNumberWithLimit(1, 4);
+            switch (input)
+            {
+                case 1:
+                    type = EquipmentType.Operations;
+                    break;
+                case 2:
+                    type = EquipmentType.RoomFurniture;
+                    break;
+                case 3:
+                    type = EquipmentType.Hallway;
+                    break;
+                case 4:
+                    type = EquipmentType.Examinations;
+                    break;
+                default:
+                    type = EquipmentType.Examinations;
+                    break;
+            }
+            return type;
+        }
+        public static int GetValidRoomId()
+        {
+            Room room;
+            int id = EnterNumber();
+            room = RoomRepo.Get(id);
+            while(room is null)
+            {
+                Console.WriteLine("Invalid ID");
+                id = EnterNumber();
+                room = RoomRepo.Get(id);
+            }
+            return id;
+        }
         public static User Register(Roles role = Roles.Nobody)
         {
             string text = "", password, passwordCheck, temp;
@@ -402,7 +472,7 @@ namespace ClinicApp
         }
         public static bool CheckForRenovations(DateRange examinationTime, int roomId)
         {
-            foreach(var renovation in RoomRenovationService.RoomRenovationList)
+            foreach(var renovation in RoomRenovationRepo.RoomRenovationList)
             {
                 if (roomId == renovation.RoomId && renovation.Duration.IsOverlaping(examinationTime))
                 {
