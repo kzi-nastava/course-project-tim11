@@ -496,9 +496,9 @@ namespace ClinicApp
         }
         public static bool CheckForExaminations(DateRange dateRange, int roomId)
         {
-            foreach (int examId in SystemFunctions.AllExamtinations.Keys )
+            foreach (int examId in SystemFunctions.AllAppointments.Keys )
             {
-                Clinic.Examination exam = SystemFunctions.AllExamtinations[examId];
+                Clinic.Appointment exam = SystemFunctions.AllAppointments[examId];
                 if(exam.Doctor.RoomId == roomId && dateRange.IsOverlaping(new DateRange(exam.DateTime, exam.DateTime.AddMinutes(15))))
                 {
                     return true;
