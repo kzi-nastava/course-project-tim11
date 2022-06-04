@@ -523,7 +523,7 @@ namespace ClinicApp.Users
             }
             DateRange duration = GetUninterruptedDateRange(room.Id);
             //create new room
-            Console.Write("Name: ");
+            Console.Write("Name of new room: ");
             string name = OtherFunctions.EnterStringWithoutDelimiter("|");
             Console.Write("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
             RoomType roomType = OtherFunctions.ChooseRoomType();
@@ -657,7 +657,7 @@ namespace ClinicApp.Users
         {
             string name;
             Console.WriteLine("Enter medicine name");
-            name = OtherFunctions.EnterString();
+            name = OtherFunctions.EnterStringWithoutDelimiter("|");
             while (SystemFunctions.Medicine.ContainsKey(name))
             {
                 Console.WriteLine("Name already taken, enter another name");
@@ -665,19 +665,20 @@ namespace ClinicApp.Users
             }
             List<string> chosenIngrediants = new List<string>();
             List<string> offeredIngrediants = IngrediantService.GetAll();
-            Console.WriteLine("Choose ingrediants");
+            Console.WriteLine("Choose ingrediants, 0 to finish choosing");
             while (true)
             {
                 foreach(var ingrediant in offeredIngrediants)
                 {
                     Console.WriteLine(offeredIngrediants.IndexOf(ingrediant)+1 + ". " + ingrediant);
                 }
-                var choice = OtherFunctions.EnterNumberWithLimit(-1,offeredIngrediants.Count+1);
+                var choice = OtherFunctions.EnterNumberWithLimit(0,offeredIngrediants.Count);
                 if (choice == 0) 
                 { 
                     break; 
                 }
                 chosenIngrediants.Add(offeredIngrediants[choice - 1]);
+                offeredIngrediants.Remove(offeredIngrediants[choice - 1]);
             }
             Clinic.Medicine medicine = new Clinic.Medicine(name,chosenIngrediants);
             MedicineRequest mr = new MedicineRequest { Medicine = medicine, Comment = "" };
@@ -685,9 +686,70 @@ namespace ClinicApp.Users
         }
         public static void CRUDIngrediants()
         {
-
+            Console.WriteLine("Ingrediants Menu");
+            Console.WriteLine("1. Add new Ingrediant");
+            Console.WriteLine("2. Update Ingrediant");
+            Console.WriteLine("3. Delete Ingrediant");
+            Console.WriteLine("0. to return");
+            int answer = OtherFunctions.EnterNumberWithLimit(0,3);
+            switch (answer)
+            {
+                case 1:
+                    CreateIngrediant();
+                    break;
+                case 2:
+                    UpdateIngrediant();
+                    break;
+                case 3:
+                    DeleteIngrediant();
+                    break;
+                case 0:
+                    return;
+                default:
+                    Console.WriteLine("Invalid Option");
+                    break;
+            }
         }
-        
+        public static void CreateIngrediant()
+        {
+            Console.WriteLine("Enter the new ingrediant");
+            string ingrediant = OtherFunctions.EnterStringWithoutDelimiter("|");
+            IngrediantService.Add(ingrediant);
+        }
+        public static void UpdateIngrediant()
+        {
+            Console.WriteLine("Select the ingrediant to update");
+            List<string> offeredIngrediants = IngrediantService.GetAll();
+            foreach (var ingrediant in offeredIngrediants)
+            {
+                Console.WriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+            }
+            int indexOfSelected = OtherFunctions.EnterNumberWithLimit(1, offeredIngrediants.Count);
+            if (indexOfSelected == 0)
+            {
+                return;
+            }
+            string selected = offeredIngrediants[indexOfSelected - 1];
+            Console.WriteLine("Enter the new ingrediant");
+            string newIngr = OtherFunctions.EnterStringWithoutDelimiter("|");
+            IngrediantService.Update(selected, newIngr);
+        }
+        public static void DeleteIngrediant()
+        {
+            Console.WriteLine("Select the ingrediant to delete");
+            List<string> offeredIngrediants = IngrediantService.GetAll();
+            foreach (var ingrediant in offeredIngrediants)
+            {
+                Console.WriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+            }
+            int indexOfSelected = OtherFunctions.EnterNumberWithLimit(1, offeredIngrediants.Count);
+            if(indexOfSelected == 0)
+            {
+                return;
+            }
+            string selected = offeredIngrediants[indexOfSelected - 1];
+            IngrediantService.Delete(selected);
+        }
         public static DateRange GetUninterruptedDateRange(int roomId)
         {
             while (true)

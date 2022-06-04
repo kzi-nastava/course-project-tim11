@@ -84,7 +84,7 @@ namespace ClinicApp.AdminFunctions
             using (StreamReader reader = new StreamReader("../../../Admin/Data/medicineRequests.txt"))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null || (line = reader.ReadLine()) != "")
+                while ((line = reader.ReadLine()) != null)
                 {
                     MedicineRequest mr = ParseMedicineRequest(line);
                     lista.Add(mr);
