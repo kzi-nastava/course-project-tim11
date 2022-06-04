@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ClinicApp.AdminFunctions;
 
 namespace ClinicApp.Users
 {
@@ -655,11 +656,11 @@ namespace ClinicApp.Users
             foreach (AdminFunctions.Equipment equipment in equipmentList)
             {
                 
-                var clinicEquipment = EquipmentService.Get(equipment.Id);
+                var clinicEquipment = EquipmentRepo.Get(equipment.Id);
                 Console.Write($"{equipment.Name} : ");
                 int quantity = OtherFunctions.EnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
                 int newQuantity = clinicEquipment.Amount - quantity;
-                EquipmentService.Update(equipment.Id, newQuantity);
+                EquipmentRepo.Update(equipment.Id, newQuantity);
                 Console.WriteLine();
             }
             Console.WriteLine("Succesfully updated equipment.");
