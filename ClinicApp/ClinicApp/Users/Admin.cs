@@ -107,7 +107,7 @@ namespace ClinicApp.Users
         public static void ListAllRooms()
         {
             Console.WriteLine("ID | NAME | TYPE");
-            foreach (Room room in RoomService.ClinicRooms)
+            foreach (Room room in RoomRepo.ClinicRooms)
             {
                 Console.WriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
@@ -153,7 +153,7 @@ namespace ClinicApp.Users
 
             }
             Room room = new Room { Name = name, Type = roomType };
-            RoomService.Add(room);
+            RoomRepo.Add(room);
         }
         public static void EditRoom()
         {
@@ -165,7 +165,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Edit");
                 int id = OtherFunctions.EnterNumber();
-                room = RoomService.Get(id);
+                room = RoomRepo.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -220,7 +220,7 @@ namespace ClinicApp.Users
                     Console.WriteLine("Invalid option, try again");
                 }
             }
-            RoomService.Update(room.Id, name, roomType);
+            RoomRepo.Update(room.Id, name, roomType);
         }
         public static void DeleteRoom()
         {
@@ -230,7 +230,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Delete");
                 id = OtherFunctions.EnterNumber();
-                room = RoomService.Get(id);
+                room = RoomRepo.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -241,7 +241,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("You cannot delete Storage!");
             }
-            else RoomService.Delete(id);
+            else RoomRepo.Delete(id);
 
         }
         //------------------------------------------------------MANAGE EQUIPMENT------------------------------------------
@@ -278,9 +278,9 @@ namespace ClinicApp.Users
         public static void ListAllEquipment()
         {
             Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (Equipment eq in EquipmentService.ClinicEquipmentList)
+            foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomService.Get(eq.RoomId).Name + " " + RoomService.Get(eq.RoomId).Type + " " + eq.Type);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
             }
         }
         public static void SearchEquipment()
@@ -474,7 +474,7 @@ namespace ClinicApp.Users
             Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
             foreach (Equipment eq in Results)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomService.Get(eq.RoomId).Name + " " + RoomService.Get(eq.RoomId).Type + " " + eq.Type);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
             }
 
         }
@@ -515,11 +515,11 @@ namespace ClinicApp.Users
                 if (answer.ToLower() == "y")
                 {
                     Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-                    foreach (Equipment item in EquipmentService.ClinicEquipmentList)
+                    foreach (Equipment item in EquipmentRepo.ClinicEquipmentList)
                     {
                         if (item.RoomId == 0)
                         {
-                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + RoomService.Get(item.RoomId).Name + " " + RoomService.Get(item.RoomId).Type + " " + item.Type);
+                            Console.WriteLine(item.Id + " " + item.Name + " " + item.Amount + " " + RoomRepo.Get(item.RoomId).Name + " " + RoomRepo.Get(item.RoomId).Type + " " + item.Type);
                         }
                     }
                     break;
@@ -540,7 +540,7 @@ namespace ClinicApp.Users
                     EquipmentType type;
                     int amount = OtherFunctions.EnterNumber();
                     List<string> exsistingNames = new List<string>();
-                    foreach (Equipment item in EquipmentService.ClinicEquipmentList)
+                    foreach (Equipment item in EquipmentRepo.ClinicEquipmentList)
                     {
                         if (item.RoomId == 0)
                         {
@@ -593,7 +593,7 @@ namespace ClinicApp.Users
 
                     }
                     Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
-                    EquipmentService.Add(eq);
+                    EquipmentRepo.Add(eq);
                     break;
                 }
                 else if (answer == "2")
@@ -603,7 +603,7 @@ namespace ClinicApp.Users
                     {
                         Console.WriteLine("Enter ID of equipment to change:");
                         int id = OtherFunctions.EnterNumber();
-                        eq = EquipmentService.Get(id);
+                        eq = EquipmentRepo.Get(id);
                         if (eq is null)
                         {
                             Console.WriteLine("Invalid option, try again");
@@ -622,7 +622,7 @@ namespace ClinicApp.Users
                     {
                         Console.WriteLine("Enter new amount: ");
                         int amount = OtherFunctions.EnterNumberWithLimit(1, 99999999);
-                        EquipmentService.Update(eq.Id, amount);
+                        EquipmentRepo.Update(eq.Id, amount);
                     }
 
                     break;
@@ -644,7 +644,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of equipment to change:");
                 int id = OtherFunctions.EnterNumber();
-                eq = EquipmentService.Get(id);
+                eq = EquipmentRepo.Get(id);
                 if (eq is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -661,7 +661,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter the Id of the room where the equipment is going to");
                 int id = OtherFunctions.EnterNumber();
-                cr = RoomService.Get(id);
+                cr = RoomRepo.Get(id);
                 if (cr is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -671,7 +671,7 @@ namespace ClinicApp.Users
             Console.WriteLine("Enter date on which the equipment is being moved");
             DateTime date = OtherFunctions.EnterDate();
             EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = cr.Id, MovementDate = date, Done = false };
-            EquipmentMovementService.Add(movement);
+            EquipmentMovementRepo.Add(movement);
         }
         //-------------------------------------------------RENOVATIONS---------------------------------------------
         public static void RoomRenovationMenu()
@@ -714,7 +714,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 id = OtherFunctions.EnterNumber();
-                room = RoomService.Get(id);
+                room = RoomRepo.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -735,7 +735,7 @@ namespace ClinicApp.Users
                 Type = RenovationType.Simple,
                 Done = false
             };
-            RoomRenovationService.Add(renovation);
+            RoomRenovationRepo.Add(renovation);
 
         }
         public static void CreateComplexSplitRenovation()
@@ -747,7 +747,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 id = OtherFunctions.EnterNumber();
-                room = RoomService.Get(id);
+                room = RoomRepo.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -808,7 +808,7 @@ namespace ClinicApp.Users
                 Done = false,
                 NewRoom = newRoom
             };
-            RoomRenovationService.Add(renovation);
+            RoomRenovationRepo.Add(renovation);
         }
         public static void CreateComplexJoinRenovation()
         {
@@ -820,7 +820,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 id = OtherFunctions.EnterNumber();
-                room = RoomService.Get(id);
+                room = RoomRepo.Get(id);
                 if (room is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -841,7 +841,7 @@ namespace ClinicApp.Users
             {
                 Console.WriteLine("Enter ID of the room you want to Renovate");
                 otherId = OtherFunctions.EnterNumber();
-                otherRoom = RoomService.Get(otherId);
+                otherRoom = RoomRepo.Get(otherId);
                 if (otherRoom is null)
                 {
                     Console.WriteLine("Invalid option, try again");
@@ -866,7 +866,7 @@ namespace ClinicApp.Users
                 Done = false,
                 JoinedRoomId = otherRoom.Id,
             };
-            RoomRenovationService.Add(renovation);
+            RoomRenovationRepo.Add(renovation);
         }
         public static void ComplexRoomRenovationMenu()
         {
@@ -896,7 +896,7 @@ namespace ClinicApp.Users
         public static void ListAllRenovations()
         {
             string newLine;
-            foreach (RoomRenovation renovation in RoomRenovationService.GetAll())
+            foreach (RoomRenovation renovation in RoomRenovationRepo.GetAll())
             {
                 switch (renovation.Type)
                 {
