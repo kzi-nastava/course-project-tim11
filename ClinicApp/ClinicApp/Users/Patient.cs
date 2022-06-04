@@ -539,13 +539,13 @@ namespace ClinicApp.Users
             Console.WriteLine($"Patient {Name} {LastName};\nDate of birth {DateOfBirth.ToShortDateString()}; Gender:\n{Gender}");
         }
 
-        public bool CheckAppointment(DateTime dateTime)
+        public bool CheckAppointment(DateTime dateTime, int duration)
         {
             foreach (Examination examination in this.Appointments)
             {
                 if (examination.DateTime.Date == dateTime.Date)
                 {
-                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime) || (dateTime <= examination.DateTime && dateTime.AddMinutes(15) > examination.DateTime))
+                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(duration) > dateTime) || (dateTime <= examination.DateTime && dateTime.AddMinutes(duration) > examination.DateTime))
                     {
                         return false;
                     }
@@ -754,6 +754,7 @@ namespace ClinicApp.Users
             {
                 foreach (Doctor doctor in SystemFunctions.Doctors.Values)
                 {
+
                     bool check = doctor.CheckAppointment(preferredAppointment,duration);
                     if (check)
                     {
