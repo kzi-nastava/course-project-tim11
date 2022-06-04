@@ -57,8 +57,13 @@ namespace ClinicApp.Users
             catch {
                 this.Blocked = Blocked.Unblocked;
             }
+<<<<<<< Updated upstream
                 
             Examinations = new List<Examination>();
+=======
+
+            Appointments = new List<Appointment>();
+>>>>>>> Stashed changes
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
@@ -113,7 +118,7 @@ namespace ClinicApp.Users
                     ViewAnamnesis();
                     break;
             }
-            
+
         }
 
 
@@ -131,14 +136,14 @@ namespace ClinicApp.Users
         private void ViewExaminations()
         {
 
-            if (this.Examinations.Count == 0)
+            if (this.Appointments.Count == 0)
             {
                 Console.WriteLine("\nNo future examinations\n");
                 return;
             }
 
             int i = 1;
-            foreach (Examination examination in this.Examinations)
+            foreach (Examination examination in this.Appointments)
             {
                 Console.WriteLine($"\n\n{i}. Examination\n\nId: {examination.ID}; \nTime and Date: {examination.DateTime};\nDoctor last name: {examination.Doctor.LastName}; Doctor name: {examination.Doctor.Name}\n");
 
@@ -175,19 +180,19 @@ namespace ClinicApp.Users
 
         public void InsertExamination(Examination newExamination)
         {
-            if (this.Examinations.Count() == 0) {
-                this.Examinations.Add(newExamination);
+            if (this.Appointments.Count() == 0) {
+                this.Appointments.Add(newExamination);
                 return;
             }
-            for (int i = 0; i < this.Examinations.Count(); i++)
+            for (int i = 0; i < this.Appointments.Count(); i++)
             {
-                if (this.Examinations[i].DateTime < newExamination.DateTime)
+                if (this.Appointments[i].DateTime < newExamination.DateTime)
                 {
-                    Examinations.Insert(i, newExamination);
+                    Appointments.Insert(i, newExamination);
                     return;
                 }
             }
-            this.Examinations.Add(newExamination);
+            this.Appointments.Add(newExamination);
 
         }
 
@@ -232,7 +237,9 @@ namespace ClinicApp.Users
                 return;
             }
             doctor = SystemFunctions.Doctors[userName];
-            bool validateAppointment = doctor.CheckAppointment(dateTime);
+            //TODO : types of appointment -> duration
+            int duration = 15;
+            bool validateAppointment = doctor.CheckAppointment(dateTime, duration);
             if (validateAppointment == false)
             {
                 Console.WriteLine("Your doctor is unavailable at that time.");
@@ -241,17 +248,17 @@ namespace ClinicApp.Users
             int id;
             try
             {
-                id = SystemFunctions.AllExamtinations.Values.Last().ID + 1;
+                id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
             }
-            catch 
+            catch
             {
                 id = 1;
             }
             Examination examination = new Examination(id, dateTime, doctor, this, false, 0, 0);
             InsertExamination(examination);
-            doctor.InsertExamination(examination);
-            SystemFunctions.AllExamtinations.Add(id, examination);
-            SystemFunctions.CurrentExamtinations.Add(id, examination);
+            doctor.InsertAppointment(examination);
+            SystemFunctions.AllAppointments.Add(id, examination);
+            SystemFunctions.CurrentAppointments.Add(id, examination);
             Console.WriteLine("\nNew examination successfully created\n");
             ActivityHistory.Add(DateTime.Now, "CREATE");
         }
@@ -261,7 +268,7 @@ namespace ClinicApp.Users
             Console.WriteLine("Enter the ID of the examination you want to delete?");
             int id = OtherFunctions.EnterNumber();
             Examination examination = null;
-            foreach (Examination tmp in this.Examinations)
+            foreach (Examination tmp in this.Appointments)
             {
                 if (tmp.ID == id)
                 {
@@ -290,12 +297,12 @@ namespace ClinicApp.Users
                             ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                             return;
                         }
-                        this.Examinations.Remove(examination);
-                        var last = SystemFunctions.AllExamtinations.Values.Last();
+                        this.Appointments.Remove(examination);
+                        var last = SystemFunctions.AllAppointments.Values.Last();
                         Examination deletedExamination = new Examination(last.ID + 1, examination.DateTime, examination.Doctor, this, examination.Finished, examination.ID, examination.Edited);
-                        SystemFunctions.AllExamtinations.Add(deletedExamination.ID, deletedExamination);
-                        SystemFunctions.CurrentExamtinations.Remove(examination.ID);
-                        examination.Doctor.Examinations.Remove(examination);
+                        SystemFunctions.AllAppointments.Add(deletedExamination.ID, deletedExamination);
+                        SystemFunctions.CurrentAppointments.Remove(examination.ID);
+                        examination.Doctor.Appointments.Remove(examination);
                         ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     }
                     break;
@@ -309,10 +316,11 @@ namespace ClinicApp.Users
             Console.WriteLine("Enter the ID of the examination you want to edit:");
             int id = OtherFunctions.EnterNumber();
             Examination examination = null;
+            int duration = 15;
 
             while (examination == null)
             {
-                foreach (Examination tmp in this.Examinations)
+                foreach (Examination tmp in this.Appointments)
                 {
                     if (tmp.ID == id)
                     {
@@ -345,13 +353,14 @@ namespace ClinicApp.Users
                 Console.WriteLine("Enter the new date of your Examination (e.g 22/10/2022):");
                 DateTime newDate = OtherFunctions.AskForDate();
                 newDate += examination.DateTime.TimeOfDay;
-                bool validation = examination.Doctor.CheckAppointment(newDate);
+                //TODO : type of appointment -> duration
+                bool validation = examination.Doctor.CheckAppointment(newDate, duration);
                 if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available");
                     return;
                 }
-                //dodaje secretary request
+                //secretary request
                 if (!(requestValidation < 0))
                 {
                     Console.WriteLine("You can not perform this activity. Your request will be sent to secretary.");
@@ -360,19 +369,19 @@ namespace ClinicApp.Users
                     {
                         sw.WriteLine(line);
                     }
-                    
+
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
-                this.Examinations.Remove(examination);
-                examination.Doctor.Examinations.Remove(examination);
-                var last = SystemFunctions.AllExamtinations.Values.Last();
+                this.Appointments.Remove(examination);
+                examination.Doctor.Appointments.Remove(examination);
+                var last = SystemFunctions.AllAppointments.Values.Last();
                 Examination editedExamination = new Examination(last.ID + 1, newDate, examination.Doctor, this, examination.Finished, 0, examination.ID);
-                SystemFunctions.AllExamtinations.Add(editedExamination.ID, editedExamination);
-                SystemFunctions.CurrentExamtinations.Remove(examination.ID);
-                SystemFunctions.CurrentExamtinations.Add(editedExamination.ID, editedExamination);
-                this.Examinations.Add(editedExamination);
-                editedExamination.Doctor.Examinations.Add(editedExamination);
+                SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
+                SystemFunctions.CurrentAppointments.Remove(examination.ID);
+                SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
+                this.Appointments.Add(editedExamination);
+                editedExamination.Doctor.Appointments.Add(editedExamination);
 
             }
             else if (choice.ToUpper() == "T")
@@ -381,7 +390,7 @@ namespace ClinicApp.Users
                 DateTime newTime = OtherFunctions.AskForTime();
                 DateTime oldTime = examination.DateTime;
                 examination.DateTime.Date.Add(newTime.TimeOfDay);
-                bool validation = examination.Doctor.CheckAppointment(examination.DateTime);
+                bool validation = examination.Doctor.CheckAppointment(examination.DateTime,duration);
                 if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available.");
@@ -400,15 +409,15 @@ namespace ClinicApp.Users
                     ActivityHistory.Add(DateTime.Now, "DELETE/UPDATE");
                     return;
                 }
-                this.Examinations.Remove(examination);
-                examination.Doctor.Examinations.Remove(examination);
-                var last = SystemFunctions.AllExamtinations.Values.Last();
+                this.Appointments.Remove(examination);
+                examination.Doctor.Appointments.Remove(examination);
+                var last = SystemFunctions.AllAppointments.Values.Last();
                 Examination editedExamination = new Examination(last.ID + 1, newTime, examination.Doctor, this, examination.Finished, 0, examination.ID);
-                SystemFunctions.AllExamtinations.Add(editedExamination.ID, editedExamination);
-                SystemFunctions.CurrentExamtinations.Remove(examination.ID);
-                SystemFunctions.CurrentExamtinations.Add(editedExamination.ID, editedExamination);
-                this.Examinations.Add(editedExamination);
-                editedExamination.Doctor.Examinations.Add(editedExamination);
+                SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
+                SystemFunctions.CurrentAppointments.Remove(examination.ID);
+                SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
+                this.Appointments.Add(editedExamination);
+                editedExamination.Doctor.Appointments.Add(editedExamination);
 
             }
             else if (choice.ToUpper() == "DR")
@@ -428,7 +437,7 @@ namespace ClinicApp.Users
                     Console.WriteLine("Doctor with that user name does not eixst.");
                     return;
                 }
-                bool validate = doctor.CheckAppointment(examination.DateTime);
+                bool validate = doctor.CheckAppointment(examination.DateTime,duration);
                 if (validate == false)
                 {
                     Console.WriteLine("Doctor is not available");
@@ -447,15 +456,15 @@ namespace ClinicApp.Users
                 }
                 //proveri kada se radi izmena
 
-                this.Examinations.Remove(examination);
-                examination.Doctor.Examinations.Remove(examination);
-                var last = SystemFunctions.AllExamtinations.Values.Last();
+                this.Appointments.Remove(examination);
+                examination.Doctor.Appointments.Remove(examination);
+                var last = SystemFunctions.AllAppointments.Values.Last();
                 Examination editedExamination = new Examination(last.ID + 1, examination.DateTime, doctor, this, examination.Finished, 0, examination.ID);
-                SystemFunctions.AllExamtinations.Add(editedExamination.ID, editedExamination);
-                SystemFunctions.CurrentExamtinations.Remove(examination.ID);
-                SystemFunctions.CurrentExamtinations.Add(editedExamination.ID, editedExamination);
-                this.Examinations.Add(editedExamination);
-                editedExamination.Doctor.Examinations.Add(editedExamination);
+                SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
+                SystemFunctions.CurrentAppointments.Remove(examination.ID);
+                SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
+                this.Appointments.Add(editedExamination);
+                editedExamination.Doctor.Appointments.Add(editedExamination);
             }
             else
             {
@@ -502,7 +511,7 @@ namespace ClinicApp.Users
 
         public bool CheckAppointment(DateTime dateTime)
         {
-            foreach (Examination examination in this.Examinations)
+            foreach (Examination examination in this.Appointments)
             {
                 if (examination.DateTime.Date == dateTime.Date)
                 {
@@ -522,6 +531,7 @@ namespace ClinicApp.Users
 
         private void SuggestAppointment()
         {
+            int duration = 15;
             //todo take user input for doctor and time for examination, also time period for appoinment to be done and priority(doctor or time of examination)
             Console.WriteLine("You are currently using the appointment suggestion system.");
             Console.WriteLine("System will suggest your appointment by priority, your priority can be doctor or time of appointment.");
@@ -572,12 +582,47 @@ namespace ClinicApp.Users
             Console.WriteLine("Please enter the priority for your search. Enter 'd' if doctor is your priority, enter 'a' if appointment is your priority.");
             string priority = Console.ReadLine();
             //first check preferred doctor and preferred time
+<<<<<<< Updated upstream
             if (priority.ToUpper() == "D")
             {
                 //todo doctor priority
                 //SuggestDoctorPriority(ref doctor,lastAppointment);
+=======
+            DateTime initial_appointment = DateTime.Today + preferredTime.TimeOfDay;
+            bool available = doctor.CheckAppointment(initial_appointment,duration);
+            if (available)
+            {
+                Console.WriteLine("Your doctor is available, congrats you made appointment.");
+                int id;
+                try
+                {
+                    id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
+                }
+                catch
+                {
+                    id = 1;
+                }
+                Examination examination = new Examination(id, initial_appointment, doctor, this, false, 0, 0);
+                InsertExamination(examination);
+                doctor.InsertAppointment(examination);
+                SystemFunctions.AllAppointments.Add(id, examination);
+                SystemFunctions.CurrentAppointments.Add(id, examination);
+                //Console.WriteLine("\nNew examination successfully created\n");
+                ActivityHistory.Add(DateTime.Now, "CREATE");
+                return;
             }
-            else if(priority.ToUpper() == "A")
+            if (priority.ToUpper() == "D")
+            {
+                //todo doctor priority
+                bool availableDoctor = SuggestDoctorPriority(ref doctor, lastAppointment, preferredTime);
+                if (!availableDoctor)
+                {
+                    Console.WriteLine("Sorry your doctor is not available in this period of time.");
+                    //todo give three appointments for patient
+                }
+>>>>>>> Stashed changes
+            }
+            else if (priority.ToUpper() == "A")
             {
                 //todo appointment priority
             }
@@ -590,17 +635,92 @@ namespace ClinicApp.Users
 
 
         //suggest appointment doctor priority
+<<<<<<< Updated upstream
         private void SuggestDoctorPriority(ref Doctor doctor, DateTime lastAppointment)
+=======
+        private bool SuggestDoctorPriority(ref Doctor doctor, DateTime lastAppointment, DateTime preferredTime)
+>>>>>>> Stashed changes
         {
+            int duration = 15;
             bool appointmentFound = false;
+<<<<<<< Updated upstream
             
         }
 
         //suggest appointment appointment priority
         private void SuggestAppointmentPriority(DateTime preferredTime,DateTime lastAppointment)
+=======
+            DateTime today = DateTime.Today + preferredTime.TimeOfDay;
+            while (today < lastAppointment)
+            {
+                bool available = doctor.CheckAppointment(today,duration);
+                today = today + TimeSpan.FromMinutes(15);
+                if (available)
+                {
+                    Console.WriteLine("Your doctor is available. You just made appointment.");
+                    Console.WriteLine("Date of your appointment is:" + today.ToString() + ".");
+                    int id;
+                    try
+                    {
+                        id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
+                    }
+                    catch
+                    {
+                        id = 1;
+                    }
+                    Examination examination = new Examination(id, today, doctor, this, false, 0, 0);
+                    InsertExamination(examination);
+                    doctor.InsertAppointment(examination);
+                    SystemFunctions.AllAppointments.Add(id, examination);
+                    SystemFunctions.CurrentAppointments.Add(id, examination);
+                    //Console.WriteLine("\nNew examination successfully created\n");
+                    ActivityHistory.Add(DateTime.Now, "CREATE");
+                    return true;
+                }
+            }
+            return appointmentFound;
+        }
+
+        //suggest appointment appointment priority
+        private bool SuggestAppointmentPriority(DateTime preferredTime, DateTime lastAppointment)
+>>>>>>> Stashed changes
         {
             //todo appointment priority
             bool appoinmentFound = false;
+<<<<<<< Updated upstream
+=======
+            DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
+            int duration = 15;
+            while (preferredAppointment < lastAppointment)
+            {
+                foreach (Doctor doctor in SystemFunctions.Doctors.Values)
+                {
+                    bool check = doctor.CheckAppointment(preferredAppointment,duration);
+                    if (check)
+                    {
+                        Console.WriteLine("Your preferred appointment is available in your requested timespan.");
+                        int id;
+                        try
+                        {
+                            id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
+                        }
+                        catch
+                        {
+                            id = 1;
+                        }
+                        Examination examination = new Examination(id, preferredAppointment, doctor, this, false, 0, 0);
+                        InsertExamination(examination);
+                        doctor.InsertAppointment(examination);
+                        SystemFunctions.AllAppointments.Add(id, examination);
+                        SystemFunctions.CurrentAppointments.Add(id, examination);
+                        //Console.WriteLine("\nNew examination successfully created\n");
+                        ActivityHistory.Add(DateTime.Now, "CREATE");
+                        return true;
+                    }
+                }
+            }
+            return appoinmentFound;
+>>>>>>> Stashed changes
         }
 
         private void ViewAnamnesis()
@@ -613,7 +733,7 @@ namespace ClinicApp.Users
                 return;
             }
             healthRecord = SystemFunctions.HealthRecords[this.UserName];
-       
+
             Console.WriteLine("Patient health record.");
             healthRecord.ShowHealthRecord();
             Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -638,7 +758,7 @@ namespace ClinicApp.Users
                 string specific_word = Console.ReadLine();
                 healthRecord.SearchAnamnesis(specific_word);
             }
-            else if(user_input == "4")
+            else if (user_input == "4")
             {
                 return;
             }
@@ -648,5 +768,40 @@ namespace ClinicApp.Users
                 return;
             }
         }
+
+
+        //TODO kontrolna tacka broj tri
+        private void SearchDoctors()
+        {
+            //pretrazi po imenu ili prezimenu ili uzoj oblasti
+            //sortiraj po oceni ili po parametrima pretrage
+            Console.WriteLine("You can search doctors by first name, last name and their field of work.");
+            Console.WriteLine("Please enter the criteria for doctor search, seperate parameters of search with ',':");
+            Console.WriteLine(">>");
+            string userInput = Console.ReadLine();
+            string[] parametersOfSearch = userInput.Split(',');
+
+        }
+
+        private void SearchDoctorsOneParameter(string[] parameters)
+        {
+            //validate parameters
+        }
+
+        private void SearchDoctorTwoParameters()
+        {
+            //validate parameters 
+        }
+
+        private void SearchDoctorAllParameters()
+        {
+            //validate parameters
+        }
+
+        private bool ValidateParameters(string[] parameters)
+        {
+            return false;
+        }
+
     }
 }
