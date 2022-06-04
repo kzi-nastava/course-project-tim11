@@ -291,6 +291,19 @@ namespace ClinicApp
             }
             return id;
         }
+        public static int GetValidEquipmentId()
+        {
+            Equipment eq;
+            int id = EnterNumber();
+            eq = EquipmentRepo.Get(id);
+            while (eq is null)
+            {
+                Console.WriteLine("Invalid ID");
+                id = EnterNumber();
+                eq = EquipmentRepo.Get(id);
+            }
+            return id;
+        }
         public static User Register(Roles role = Roles.Nobody)
         {
             string text = "", password, passwordCheck, temp;

@@ -72,7 +72,7 @@ namespace ClinicApp.AdminFunctions
             string[] parameters = line.Split("|");
             MedicineRequest medicineRequest = new MedicineRequest {
                 Id = Convert.ToInt32(parameters[0]),
-                Medicine = new Clinic.Medicine(parameters[1] + "|" + parameters[2]),
+                Medicine = new Clinic.Medicine(parameters[1], parameters[2].Split("/").ToList()),
                 Comment = parameters[3]
             };
             return medicineRequest;
