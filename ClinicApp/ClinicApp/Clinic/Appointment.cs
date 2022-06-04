@@ -1,4 +1,5 @@
 ﻿using ClinicApp.Users;
+using ClinicApp.Users.Doctor;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,5 +25,20 @@ namespace ClinicApp.Clinic
         public abstract void ToFile();
         public abstract void View();
         public abstract DateTime NextAvailable();
+
+        public static int GetLastID()
+        {
+            int id = 0;
+            foreach (int appointmentID in SystemFunctions.AllAppointments.Keys)
+            {
+                if (appointmentID > id)
+                {
+                    id = appointmentID;
+                }
+            }
+            id++;
+
+            return id;
+        }
     }
 }
