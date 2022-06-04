@@ -50,6 +50,11 @@ namespace ClinicApp.Clinic
             Console.WriteLine($"Take before/during/after food: {MedicineFoodIntake}");
         }
 
+        public string PresrciptionToMessage()
+        {
+            return "\nPrescription details:\nDate : "+Date.Date+"; Medicine: "+Medicine.Name+"\nNumber of pills to take:\nMorning:"+Frequency[0]+",Noon"+Frequency[1]+",Afternoon:"+Frequency[2]+"\nTake before/during/after food:"+MedicineFoodIntake;
+        }
+
 
         public string Compress()
         {
