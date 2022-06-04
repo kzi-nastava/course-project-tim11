@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ClinicApp.Users.Doctor
+namespace ClinicApp.Users
 {
     public class Doctor : User
     {
@@ -60,9 +60,10 @@ namespace ClinicApp.Users.Doctor
             Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
             Console.WriteLine("3: Manage examinations");
             Console.WriteLine("4: View schedule");
+            Console.WriteLine("5: Manage medicine");
             Console.WriteLine("0: Exit");
 
-            return 4;
+            return 5;
         }
 
         public override void MenuDo(int option)
@@ -77,6 +78,9 @@ namespace ClinicApp.Users.Doctor
                     break;
                 case 4:
                     ViewSchedule();
+                    break;
+                case 5:
+                    ManageMedicine();
                     break;
                 default:
                     break;
@@ -355,7 +359,7 @@ namespace ClinicApp.Users.Doctor
                         this.Appointments.Remove(appointment);
                         appointment.Patient.Appointments.Remove(appointment);
                         var last = SystemFunctions.AllAppointments.Values.Last();
-                        Examination deletedExamination = new Examination(last.ID + 1, appointment.DateTime, this, appointment.Patient, appointment.Finished, appointment.ID, examination.Edited);
+                        Examination deletedExamination = new Examination(last.ID + 1, appointment.DateTime, this, appointment.Patient, appointment.Finished, appointment.ID, appointment.Edited);
                         SystemFunctions.AllAppointments.Add(deletedExamination.ID, deletedExamination);
                         SystemFunctions.CurrentAppointments.Remove(appointment.ID);
                     }
@@ -661,7 +665,37 @@ namespace ClinicApp.Users.Doctor
             Console.WriteLine("Succesfully updated equipment.");
 
         }
+        //=======================================================================================================================================================================
+        // MANAGING MEDICINE 
 
+        public void ManageMedicine() {
+            Console.WriteLine("Medicine requests: ");
+            List<AdminFunctions.MedicineRequest> listRequests = AdminFunctions.MedicineRequestService.GetAll();
+            foreach (AdminFunctions.MedicineRequest request in listRequests) {
+                Console.WriteLine($"ID: {request.Id}");
+                Console.WriteLine($"Name: {request.Medicine.Name}");
+                Console.Write("Ingredients: ");
+                foreach (string ingredient in request.Medicine.Ingredients) {
+                    Console.Write(ingredient + ", ");
+                }
+                Console.WriteLine();
+
+                Console.WriteLine("Do you want to approve this medicine(y/n)");
+                string choice = Console.ReadLine();
+                if (choice.ToUpper() == "Y")
+                {
+                    AdminFunctions.MedicineRequestService.Approve(request.Id);
+                }
+                else {
+                    Console.WriteLine("Why do you want to reject this medicine? Write a short comment.");
+                    string comment = Console.ReadLine();
+                    AdminFunctions.MedicineRequestService.Reject(request.Id, comment);
+                }
+            
+            }
+
+
+        }
 
         //=======================================================================================================================================================================
         // OTHER FUNCTIONALITIES

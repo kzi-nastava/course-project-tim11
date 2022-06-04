@@ -510,13 +510,13 @@ namespace ClinicApp.Users
             Console.WriteLine($"Patient {Name} {LastName};\nDate of birth {DateOfBirth.ToShortDateString()}; Gender:\n{Gender}");
         }
 
-        public bool CheckAppointment(DateTime dateTime)
+        public bool CheckAppointment(DateTime dateTime, int duration)
         {
             foreach (Examination examination in this.Appointments)
             {
                 if (examination.DateTime.Date == dateTime.Date)
                 {
-                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(15) > dateTime) || (dateTime <= examination.DateTime && dateTime.AddMinutes(15) > examination.DateTime))
+                    if ((examination.DateTime <= dateTime && examination.DateTime.AddMinutes(duration) > dateTime) || (dateTime <= examination.DateTime && dateTime.AddMinutes(duration) > examination.DateTime))
                     {
                         return false;
                     }
@@ -584,7 +584,7 @@ namespace ClinicApp.Users
             string priority = Console.ReadLine();
             //first check preferred doctor and preferred time
             DateTime initial_appointment = DateTime.Today + preferredTime.TimeOfDay;
-            bool available = doctor.CheckAppointment(initial_appointment);
+            bool available = doctor.CheckAppointment(initial_appointment, 15);
             if (available)
             {
                 Console.WriteLine("Your doctor is available, congrats you made appointment.");
@@ -641,7 +641,7 @@ namespace ClinicApp.Users
             DateTime today = DateTime.Today + preferredTime.TimeOfDay;
             while (today < lastAppointment)
             {
-                bool available = doctor.CheckAppointment(today);
+                bool available = doctor.CheckAppointment(today, 15);
                 today = today + TimeSpan.FromMinutes(15);
                 if (available)
                 {
@@ -678,7 +678,7 @@ namespace ClinicApp.Users
             {
                 foreach (Doctor doctor in SystemFunctions.Doctors.Values)
                 {
-                    bool check = doctor.CheckAppointment(preferredAppointment);
+                    bool check = doctor.CheckAppointment(preferredAppointment, 15);
                     if (check)
                     {
                         Console.WriteLine("Your preferred appointment is available in your requested timespan.");
