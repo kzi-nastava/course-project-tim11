@@ -633,6 +633,7 @@ namespace ClinicApp.Users
         {
             Console.WriteLine("1. Create medicine");
             Console.WriteLine("2. CRUD ingrediants");
+            Console.WriteLine("3. Reviewed medicine requests");
             Console.WriteLine("0. Return");
             int answer = OtherFunctions.EnterNumber();
             while (true)
@@ -646,6 +647,9 @@ namespace ClinicApp.Users
                         return;
                     case 2:
                         CRUDIngrediants();
+                        return;
+                    case 3:
+                        ReviewedMedsMenu();
                         return;
                     default:
                         Console.WriteLine("Invalid option, try again");
@@ -661,7 +665,7 @@ namespace ClinicApp.Users
             while (SystemFunctions.Medicine.ContainsKey(name))
             {
                 Console.WriteLine("Name already taken, enter another name");
-                name = OtherFunctions.EnterString();
+                name = OtherFunctions.EnterStringWithoutDelimiter("|");
             }
             List<string> chosenIngrediants = new List<string>();
             List<string> offeredIngrediants = IngrediantService.GetAll();
@@ -749,6 +753,53 @@ namespace ClinicApp.Users
             }
             string selected = offeredIngrediants[indexOfSelected - 1];
             IngrediantService.Delete(selected);
+        }
+        public static void ReviewedMedsMenu()
+        {
+            Console.WriteLine("These requests have been reviewed by a doctor and should be fixed up");
+            foreach(var request in MedicineRequestService.GetAll())
+            {
+                Console.WriteLine("----------------------------------------------------------");
+                if (request.Comment != "")
+                {
+                    Console.WriteLine("Request ID: " + request.Id + 
+                        "\nMedicine name: " + request.Medicine.Name + 
+                        "\nMedicine ingrediants: " + request.Medicine.Ingredients + 
+                        "\nDoctor's comment: " + request.Comment);
+                    Console.WriteLine("----------------------------------------------------------");
+                }
+            }
+            int id = OtherFunctions.EnterNumber();
+            MedicineRequest selected = MedicineRequestService.Get(id);
+            string name;
+            Console.WriteLine("Enter medicine name");
+            name = OtherFunctions.EnterStringWithoutDelimiter("|");
+            while (SystemFunctions.Medicine.ContainsKey(name))
+            {
+                Console.WriteLine("Name already taken, enter another name");
+                name = OtherFunctions.EnterStringWithoutDelimiter("|");
+            }
+            List<string> chosenIngrediants = new List<string>();
+            List<string> offeredIngrediants = IngrediantService.GetAll();
+            Console.WriteLine("Choose ingrediants, 0 to finish choosing");
+            while (true)
+            {
+                foreach (var ingrediant in offeredIngrediants)
+                {
+                    Console.WriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                }
+                var choice = OtherFunctions.EnterNumberWithLimit(0, offeredIngrediants.Count);
+                if (choice == 0)
+                {
+                    break;
+                }
+                chosenIngrediants.Add(offeredIngrediants[choice - 1]);
+                offeredIngrediants.Remove(offeredIngrediants[choice - 1]);
+            }
+            Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
+            MedicineRequest newRequest = new MedicineRequest{  Medicine = medicine, Comment = ""};
+            MedicineRequestService.Update(id, newRequest);
+
         }
         public static DateRange GetUninterruptedDateRange(int roomId)
         {
