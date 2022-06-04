@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClinicApp.Users.Doctor
 {
-    class DoctorMenu
+    public class DoctorMenu
     {
     }
 }
