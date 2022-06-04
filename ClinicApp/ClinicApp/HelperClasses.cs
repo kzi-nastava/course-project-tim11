@@ -144,7 +144,7 @@ namespace ClinicApp
                 RoomId = 0,
                 Type = Type
             };
-            EquipmentService.Add(equipment);
+            EquipmentRepo.Add(equipment);
         }
     }
 }

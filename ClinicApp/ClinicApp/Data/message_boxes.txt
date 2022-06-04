@@ -1,5 +1,35 @@
-danilo_babic|You have an emergency examination.;;;;;;
-marko_markovic|You have an emergency examination.;Your examination has been delayed.;;;;;;
-danilo_jevtic|Your examination has been delayed.;;;;;;
-danilo_danilovic|You have an emergency examination.;;
-danijela_rasevic|You have an emergency examination.;;
+danilo_babic|
+Prescription details:
+Date : 14.05.2022. 0:00:00; Medicine: Vicodin
+Number of pills to take:
+Morning:49,Noon50,Afternoon:49
+Take before/during/after food:During;
+Prescription details:
+Date : 20.05.2022. 0:00:00; Medicine: Albuterol
+Number of pills to take:
+Morning:50,Noon49,Afternoon:48
+Take before/during/after food:During;You have an emergency examination.;;;;;;;
+marko_markovic|You have an emergency examination.;Your examination has been delayed.;;;;;;;
+danilo_jevtic|
+Prescription details:
+Date : 14.05.2022. 0:00:00; Medicine: Albuterol
+Number of pills to take:
+Morning:49,Noon49,Afternoon:48
+Take before/during/after food:During;Your examination has been delayed.;;;;;;;
+danilo_danilovic|
+Prescription details:
+Date : 14.05.2022. 0:00:00; Medicine: Vicodin
+Number of pills to take:
+Morning:49,Noon50,Afternoon:49
+Take before/during/after food:Before;
+Prescription details:
+Date : 14.05.2022. 0:00:00; Medicine: Vicodin
+Number of pills to take:
+Morning:48,Noon48,Afternoon:49
+Take before/during/after food:Irrelevant;
+Prescription details:
+Date : 20.05.2022. 0:00:00; Medicine: Vicodin
+Number of pills to take:
+Morning:50,Noon49,Afternoon:50
+Take before/during/after food:Before;You have an emergency examination.;;;
+danijela_rasevic|You have an emergency examination.;;;

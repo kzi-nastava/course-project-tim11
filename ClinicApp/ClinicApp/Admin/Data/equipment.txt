@@ -4,3 +4,4 @@
 4|Chair|2|3|RoomFurniture
 5|Syrgery Knife|3|0|Operations
 6|Stiches|25|0|Stiches
+7|Bandages|15|0|Bandages

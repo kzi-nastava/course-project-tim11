@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClinicApp.AdminFunctions;
 
 namespace ClinicApp.Users
 {
@@ -365,7 +366,7 @@ namespace ClinicApp.Users
                                 SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
                                 SystemFunctions.CurrentAppointments.Remove(appointment.ID);
                                 SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
-                                appointment.Patient.InsertExamination(editedExamination);
+                                appointment.Patient.InsertAppointment(editedExamination);
                                 editedExamination.Doctor.InsertAppointment(editedExamination);
                             }
                         }
@@ -451,7 +452,7 @@ namespace ClinicApp.Users
                                     //Creates the examination.
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor, patient, false, 0, 0);
                                     doctor.InsertAppointment(examination);
-                                    patient.InsertExamination(examination);
+                                    patient.InsertAppointment(examination);
                                     SystemFunctions.AllAppointments.Add(id, examination);
                                     SystemFunctions.CurrentAppointments.Add(id, examination);
                                     patient.Referrals.RemoveAt(0);
@@ -539,7 +540,7 @@ namespace ClinicApp.Users
                                     id++;
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor.Value, patient, false, 0, 0);
                                     doctor.Value.InsertAppointment(examination);
-                                    patient.InsertExamination(examination);
+                                    patient.InsertAppointment(examination);
                                     SystemFunctions.AllAppointments.Add(id, examination);
                                     SystemFunctions.CurrentAppointments.Add(id, examination);
                                     doctor.Value.MessageBox.AddMessage("You have an emergency examination.");
@@ -611,7 +612,7 @@ namespace ClinicApp.Users
                     //Creates the examination.
                     Clinic.Examination examination2 = new Clinic.Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
                     examinationForDelaying.Key.Doctor.InsertAppointment(examination2);
-                    patient.InsertExamination(examination2);
+                    patient.InsertAppointment(examination2);
                     SystemFunctions.AllAppointments.Add(id, examination2);
                     SystemFunctions.CurrentAppointments.Add(id, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("You have an emergency examination.");
@@ -624,7 +625,7 @@ namespace ClinicApp.Users
                     examinationForDelaying.Key.DateTime = examinationForDelaying.Value;
                     examinationForDelaying.Key.Edited++;
                     examinationForDelaying.Key.Doctor.InsertAppointment(examination2);
-                    examinationForDelaying.Key.Patient.InsertExamination(examination2);
+                    examinationForDelaying.Key.Patient.InsertAppointment(examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("Your examination has been delayed.");
                     examinationForDelaying.Key.Patient.MessageBox.AddMessage("Your examination has been delayed.");
                     Console.WriteLine("The other examination has been delayed successfully.");
@@ -643,15 +644,15 @@ namespace ClinicApp.Users
         private static void OrderDynamiicEquipment()
         {
             bool gauzes = false, stiches = false, vaccines = false, bandages = false;
-            foreach (AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+            foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
             {
-                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Gauzes && equipment.RoomId == 0)
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Gauzes && equipment.RoomId == 0)
                     gauzes = true;
-                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Stiches && equipment.RoomId == 0)
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Stiches && equipment.RoomId == 0)
                     stiches = true;
-                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Vaccines && equipment.RoomId == 0)
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Vaccines && equipment.RoomId == 0)
                     vaccines = true;
-                if (equipment.Amount > 0 && equipment.Type == AdminFunctions.EquipmentType.Bandages && equipment.RoomId == 0)
+                if (equipment.Amount > 0 && equipment.Type == EquipmentType.Bandages && equipment.RoomId == 0)
                     bandages = true;
             }
             if (gauzes == true && stiches == true && vaccines == true && bandages == true)
@@ -695,7 +696,7 @@ namespace ClinicApp.Users
                             {
                                 Console.WriteLine("How many gauzes would you like to order?");
                                 option = OtherFunctions.EnterNumberWithLimit(1, 1000);
-                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Gauzes, option, DateTime.Now.Date);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Gauzes, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
                         }
@@ -706,7 +707,7 @@ namespace ClinicApp.Users
                             {
                                 Console.WriteLine("How many stiches would you like to order?");
                                 option = OtherFunctions.EnterNumberWithLimit(1, 1000);
-                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Stiches, option, DateTime.Now.Date);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Stiches, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
                         }
@@ -717,7 +718,7 @@ namespace ClinicApp.Users
                             {
                                 Console.WriteLine("How many vaccines would you like to order?");
                                 option = OtherFunctions.EnterNumberWithLimit(1, 1000);
-                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Vaccines, option, DateTime.Now.Date);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Vaccines, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
                         }
@@ -728,7 +729,7 @@ namespace ClinicApp.Users
                             {
                                 Console.WriteLine("How many bandages would you like to order?");
                                 option = OtherFunctions.EnterNumberWithLimit(1, 1000);
-                                EquipmentRequest equipmentRequest = new EquipmentRequest(AdminFunctions.EquipmentType.Bandages, option, DateTime.Now.Date);
+                                EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Bandages, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
                         }
@@ -741,18 +742,18 @@ namespace ClinicApp.Users
         //Redistributes dynamic equipment
         private static void RedistributeDynamiicEquipment()
         {
-            foreach(AdminFunctions.Room room in RoomService.ClinicRooms)
+            foreach(Room room in RoomRepo.ClinicRooms)
             {
                 int gauzes = 0, stiches = 0, vaccines = 0, bandages = 0;
-                foreach(AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+                foreach(Equipment equipment in EquipmentRepo.ClinicEquipmentList)
                 {
-                    if (equipment.Type == AdminFunctions.EquipmentType.Gauzes && equipment.RoomId == room.Id)
+                    if (equipment.Type == EquipmentType.Gauzes && equipment.RoomId == room.Id)
                         gauzes += equipment.Amount;
-                    if (equipment.Type == AdminFunctions.EquipmentType.Stiches && equipment.RoomId == room.Id)
+                    if (equipment.Type == EquipmentType.Stiches && equipment.RoomId == room.Id)
                         stiches += equipment.Amount;
-                    if (equipment.Type == AdminFunctions.EquipmentType.Vaccines && equipment.RoomId == room.Id)
+                    if (equipment.Type == EquipmentType.Vaccines && equipment.RoomId == room.Id)
                         vaccines += equipment.Amount;
-                    if (equipment.Type == AdminFunctions.EquipmentType.Bandages && equipment.RoomId == room.Id)
+                    if (equipment.Type == EquipmentType.Bandages && equipment.RoomId == room.Id)
                         bandages += equipment.Amount;
                 }
                 if(gauzes < 5 || stiches < 5 || vaccines < 5 || bandages < 5)
@@ -788,8 +789,8 @@ namespace ClinicApp.Users
                 if (option == 1)
                 {
                     int idFrom, idTo, amount, totalEquipment = 0;
-                    AdminFunctions.EquipmentType type;
-                    AdminFunctions.Room roomFrom, roomTo;
+                    EquipmentType type;
+                    Room roomFrom, roomTo;
                     Console.WriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
                     idFrom = OtherFunctions.EnterNumber();
                     idTo = OtherFunctions.EnterNumber();
@@ -803,32 +804,32 @@ namespace ClinicApp.Users
                     switch (option)
                     {
                         case 1:
-                            type = AdminFunctions.EquipmentType.Gauzes;
+                            type = EquipmentType.Gauzes;
                             break;
                         case 2:
-                            type = AdminFunctions.EquipmentType.Stiches;
+                            type = EquipmentType.Stiches;
                             break;
                         case 3:
-                            type = AdminFunctions.EquipmentType.Vaccines;
+                            type = EquipmentType.Vaccines;
                             break;
                         default:
-                            type = AdminFunctions.EquipmentType.Bandages;
+                            type = EquipmentType.Bandages;
                             break;
                     }
-                    roomFrom = RoomService.Get(idFrom);
+                    roomFrom = RoomRepo.Get(idFrom);
                     if(roomFrom == default)
-                        roomFrom = RoomService.Get(0);
-                    roomTo = RoomService.Get(idTo);
+                        roomFrom = RoomRepo.Get(0);
+                    roomTo = RoomRepo.Get(idTo);
                     if (roomTo == default)
-                        roomTo = RoomService.Get(0);
-                    foreach (AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+                        roomTo = RoomRepo.Get(0);
+                    foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
                     {
                         if (equipment.Type == type && equipment.RoomId == roomFrom.Id)
                             totalEquipment += equipment.Amount;
                     }
                     if(amount > totalEquipment)
                         amount = totalEquipment;
-                    AdminFunctions.Equipment equipmentNew = new AdminFunctions.Equipment
+                    Equipment equipmentNew = new Equipment
                     {
                         Id = 0,
                         Name = type.ToString(),
@@ -836,8 +837,8 @@ namespace ClinicApp.Users
                         RoomId = roomTo.Id,
                         Type = type
                     };
-                    EquipmentService.Add(equipmentNew);
-                    foreach (AdminFunctions.Equipment equipment in EquipmentService.ClinicEquipmentList)
+                    EquipmentRepo.Add(equipmentNew);
+                    foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
                         if (equipment.Type == type && equipment.RoomId == roomTo.Id && amount > 0)
                             if(amount < equipment.Amount)
                             {
@@ -847,9 +848,9 @@ namespace ClinicApp.Users
                             else
                             {
                                 amount -= equipment.Amount;
-                                EquipmentService.ClinicEquipmentList.Remove(equipment);
+                                EquipmentRepo.ClinicEquipmentList.Remove(equipment);
                             }
-                    AdminFunctions.EquipmentRepo.PersistChanges();
+                    EquipmentRepo.PersistChanges();
                 }
             }
         }

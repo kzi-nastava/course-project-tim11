@@ -9,13 +9,13 @@ namespace ClinicApp.Users
 {
     public enum Blocked
     {
-        Unblocked,Secretary,System
+        Unblocked, Secretary, System
     };
 
     public class Patient : User
     {
         public Blocked Blocked { get; set; }
-        public List<Examination> Examinations { get; set; }
+        public List<Appointment> Appointments { get; set; }
         public List<Referral> Referrals { get; set; }
         public static Dictionary<DateTime, string> ActivityHistory { get; set; } = new Dictionary<DateTime, string>();
 
@@ -32,7 +32,7 @@ namespace ClinicApp.Users
             Role = Roles.Patient;
             MessageBox = new MessageBox(this);
             Blocked = blocked;
-            Examinations = new List<Examination>();
+            Appointments = new List<Appointment>();
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
             LoadActivityHistory();
@@ -57,9 +57,12 @@ namespace ClinicApp.Users
                 if (Blocked.TryParse(data[7], out temp))
                     this.Blocked = temp;
             }
-            catch {
+            catch
+            {
                 this.Blocked = Blocked.Unblocked;
-            }   
+            }
+
+
             Appointments = new List<Appointment>();
             Referrals = new List<Referral>();
             ActivityHistory = new Dictionary<DateTime, string>();
@@ -180,7 +183,8 @@ namespace ClinicApp.Users
 
         public void InsertAppointment(Appointment newExamination)
         {
-            if (this.Appointments.Count() == 0) {
+            if (this.Appointments.Count() == 0)
+            {
                 this.Appointments.Add(newExamination);
                 return;
             }
@@ -219,7 +223,7 @@ namespace ClinicApp.Users
             } while (time < DateTime.Now);
 
             dateTime = time;
-            if(doctor == null)
+            if (doctor == null)
             {
                 Console.WriteLine("Enter the username of doctor. Do you want to view the list of doctors? (y/n)");
                 Console.Write(">>");
@@ -418,7 +422,7 @@ namespace ClinicApp.Users
                 DateTime newTime = OtherFunctions.AskForTime();
                 DateTime oldTime = examination.DateTime;
                 examination.DateTime.Date.Add(newTime.TimeOfDay);
-                bool validation = examination.Doctor.CheckAppointment(examination.DateTime,duration);
+                bool validation = examination.Doctor.CheckAppointment(examination.DateTime, duration);
                 if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available.");
@@ -465,7 +469,7 @@ namespace ClinicApp.Users
                     Console.WriteLine("Doctor with that user name does not eixst.");
                     return;
                 }
-                bool validate = doctor.CheckAppointment(examination.DateTime,duration);
+                bool validate = doctor.CheckAppointment(examination.DateTime, duration);
                 if (validate == false)
                 {
                     Console.WriteLine("Doctor is not available");
@@ -533,7 +537,8 @@ namespace ClinicApp.Users
             }
         }
 
-        public void ViewPatient() {
+        public void ViewPatient()
+        {
             Console.WriteLine($"Patient {Name} {LastName};\nDate of birth {DateOfBirth.ToShortDateString()}; Gender:\n{Gender}");
         }
 
@@ -794,15 +799,15 @@ namespace ClinicApp.Users
             Console.WriteLine(">>");
             string userInput = Console.ReadLine();
             string[] parametersOfSearch = userInput.Split(',');
-            if(parametersOfSearch.Length == 1)
+            if (parametersOfSearch.Length == 1)
             {
                 SearchDoctorsOneParameter(parametersOfSearch);
             }
-            else if(parametersOfSearch.Length == 2)
+            else if (parametersOfSearch.Length == 2)
             {
                 SearchDoctorTwoParameters(parametersOfSearch);
             }
-            else if(parametersOfSearch.Length == 3)
+            else if (parametersOfSearch.Length == 3)
             {
                 //SearchDoctorAllParameters(parametersOfSearch);
                 Console.WriteLine("Method is implemented.");
@@ -819,15 +824,15 @@ namespace ClinicApp.Users
         private void SearchDoctorsOneParameter(string[] parameters)
         {
             //validate parameters
-            if(parameters[0] == "first name")
+            if (parameters[0] == "first name")
             {
                 SearchDoctorByFirstName();
             }
-            else if(parameters[0] == "last name")
+            else if (parameters[0] == "last name")
             {
                 SearchDoctorByLastName();
             }
-            else if(parameters[0] == "field")
+            else if (parameters[0] == "field")
             {
                 SearchDoctorByField();
             }
@@ -859,22 +864,22 @@ namespace ClinicApp.Users
 
         private void SearchDoctorTwoParameters(string[] parameters)
         {
-            string firstName="";
-            string lastName="";
-            string field="";
+            string firstName = "";
+            string lastName = "";
+            string field = "";
             bool parameter0 = false;
             bool parameter1 = false;
             bool parameter2 = false;
             if (ValidateParameter(parameters[0]) && ValidateParameter(parameters[1]))
             {
-                if(parameters.Contains<string>("first name"))
+                if (parameters.Contains<string>("first name"))
                 {
                     Console.WriteLine("Input the first name you want to search.");
                     Console.WriteLine(">>");
                     firstName = Console.ReadLine();
                     parameter0 = true;
                 }
-                if(parameters.Contains<string>("last name"))
+                if (parameters.Contains<string>("last name"))
                 {
                     Console.WriteLine("Input the last name you want to search.");
                     Console.WriteLine(">>");
@@ -913,20 +918,20 @@ namespace ClinicApp.Users
         private bool ValidateParameter(string parameter)
         {
             //TODO validate parameters
-            if (parameter=="first name" || parameter=="last name" || parameter == "field")
+            if (parameter == "first name" || parameter == "last name" || parameter == "field")
             {
                 return true;
             }
-                return false;
+            return false;
         }
 
 
         private List<Doctor> SortDoctorsByFirstName(List<Doctor> doctorsUnsorted)
         {
-            doctorsUnsorted.Sort(delegate(Doctor d1, Doctor d2)
+            doctorsUnsorted.Sort(delegate (Doctor d1, Doctor d2)
             {
                 return d1.Name.CompareTo(d2.Name);
-	        });
+            });
             return doctorsUnsorted;
         }
 
