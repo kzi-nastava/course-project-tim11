@@ -33,7 +33,6 @@ namespace ClinicApp
             }
             return input;
         }
-        
 
         public static int EnterNumber()
         {
@@ -86,6 +85,7 @@ namespace ClinicApp
 
             return option;
         }
+
         public static DateTime EnterDate()
         {
             DateTime date;
@@ -104,6 +104,7 @@ namespace ClinicApp
                 };
             }
         }
+
         public static DateTime AskForDate()
         {
             DateTime? date = null;
@@ -122,6 +123,7 @@ namespace ClinicApp
             }
             return (DateTime)date;
         }
+
         public static DateTime AskForTime()
         {
             DateTime? time = null;
@@ -139,7 +141,6 @@ namespace ClinicApp
                 }
             }
             return (DateTime)time;
-            
         }
 
         public static bool AskQuit()
@@ -470,6 +471,7 @@ namespace ClinicApp
             }
             Console.WriteLine();
         }
+
         public static DateTime GetGoodDate()
         {
             DateTime date;
@@ -483,6 +485,7 @@ namespace ClinicApp
             } while (date.Date < DateTime.Now.Date);
             return date;
         }
+
         public static bool CheckForRenovations(DateRange examinationTime, int roomId)
         {
             foreach(var renovation in RoomRenovationRepo.RoomRenovationList)
