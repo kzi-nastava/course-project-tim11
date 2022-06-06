@@ -49,7 +49,7 @@ namespace ClinicApp.AdminFunctions
         {
             //get renovated room id
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int id = OtherFunctions.GetValidRoomId();
+            int id = RoomService.GetValidRoomId();
             Room room = RoomRepo.Get(id);
             if (room.Id == 0)
             {
@@ -61,7 +61,7 @@ namespace ClinicApp.AdminFunctions
             CLI.CLIWrite("Name of new room: ");
             string name = OtherFunctions.EnterStringWithoutDelimiter("|");
             CLI.CLIWrite("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
-            RoomType roomType = OtherFunctions.ChooseRoomType();
+            RoomType roomType = RoomService.ChooseRoomType();
             Room newRoom = new Room { Name = name, Type = roomType };
             RoomRenovation renovation = new RoomRenovation
             {
@@ -77,7 +77,7 @@ namespace ClinicApp.AdminFunctions
         {
             //get renovated room id
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int id = OtherFunctions.GetValidRoomId();
+            int id = RoomService.GetValidRoomId();
             Room room = RoomRepo.Get(id);
             if (room.Id == 0)
             {
@@ -88,7 +88,7 @@ namespace ClinicApp.AdminFunctions
 
             //get the joined room
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int otherId = OtherFunctions.GetValidRoomId();
+            int otherId = RoomService.GetValidRoomId();
             Room otherRoom = RoomRepo.Get(otherId);
             if (room.Id == 0)
             {
@@ -119,7 +119,7 @@ namespace ClinicApp.AdminFunctions
         {
 
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int id = OtherFunctions.GetValidRoomId();
+            int id = RoomService.GetValidRoomId();
             Room room = RoomRepo.Get(id);
             if (room.Id == 0)
             {

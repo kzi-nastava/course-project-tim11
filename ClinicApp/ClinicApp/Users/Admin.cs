@@ -18,7 +18,6 @@ namespace ClinicApp.Users
             Role = Roles.Admin;
             MessageBox = new MessageBox(this);
         }
-
         public Admin(string text)
         {
             string[] data = text.Split("|");
@@ -32,12 +31,10 @@ namespace ClinicApp.Users
             Role = Roles.Admin;
             MessageBox = new MessageBox(this);
         }
-
         public override string Compress()
         {
             return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
         }
-
         public override int MenuWrite()
         {
             EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
@@ -52,7 +49,6 @@ namespace ClinicApp.Users
 
             return 6;
         }
-
         public override void MenuDo(int option)
         {
             switch (option)
@@ -155,84 +151,14 @@ namespace ClinicApp.Users
                         EquipmentMovementService.MoveEquipment();
                         break;
                     case 2:
-                        AddEqToStorage();
+                        EquipmentService.AddEqToStorage();
                         break;
                     default:
-                        Console.WriteLine("Invalid option, try again");
+                        CLI.CLIWriteLine("Invalid option, try again");
                         break;
                 }
             }
         }
-        public static void AddEqToStorage()
-        {
-            Console.WriteLine("List Equipment in Storage? (y/n): ");
-            string answer = Console.ReadLine();
-            if (answer.ToLower() == "y")
-            {
-                EquipmentService.ListAllEquipmentInRoom(0); //zero for storage
-            }
-
-            while (true) //storage submenu
-            {
-                Console.WriteLine("1. Add new Equipment");
-                Console.WriteLine("2. Edit amount of existing Equipment");
-                answer = Console.ReadLine();
-                if (answer == "1")
-                {
-                    string name;
-                    EquipmentType type;
-                    int amount = OtherFunctions.EnterNumber();
-                    List<string> exsistingNames = new List<string>();
-                    foreach (Equipment item in EquipmentRepo.ClinicEquipmentList)
-                    {
-                        if (item.RoomId == 0)
-                        {
-                            exsistingNames.Add(item.Name);
-                        }
-                    }
-                    Console.Write("Name: ");
-                    name = OtherFunctions.EnterStringWithoutDelimiter("|");
-                    while(exsistingNames.Contains(name))
-                    {
-                        Console.Write("Name already in use! Enter name: ");
-                        name = OtherFunctions.EnterStringWithoutDelimiter("|");
-                    }
-                    Console.WriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-                    type = OtherFunctions.ChooseEquipmentType();
-                    Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
-                    EquipmentRepo.Add(eq);
-                    break;
-                }
-                else if (answer == "2")
-                {
-                    
-                    Console.WriteLine("Enter ID of equipment to change:");
-                    Equipment eq = EquipmentRepo.Get(OtherFunctions.GetValidEquipmentId());
-                    if (eq.RoomId != 0)
-                    {
-                        Console.WriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in the Manage Equipment menu");
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Enter new amount: ");
-                        int amount = OtherFunctions.EnterNumberWithLimit(1, 99999999);
-                        EquipmentRepo.Update(eq.Id, amount);
-                    }
-
-                    break;
-                }
-                else if (answer.ToUpper() == "X")
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-            }
-        }
-        
         //-------------------------------------------------RENOVATIONS---------------------------------------------
         public static void RoomRenovationMenu()
         {
@@ -286,7 +212,7 @@ namespace ClinicApp.Users
                     break;
             }
         }
-        //MEDICINES MENU
+//------------------------------MEDICINES MENU-----------------------------------------------
         public static void MedicinesMenu()
         {
             Console.WriteLine("1. Create medicine");

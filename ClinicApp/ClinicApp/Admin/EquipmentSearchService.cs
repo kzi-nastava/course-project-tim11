@@ -77,7 +77,7 @@ namespace ClinicApp.AdminFunctions
             {
                 STerms.FilterByRoomTypeBool = true;
                 CLI.CLIWriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
-                STerms.FilterByRoom = OtherFunctions.ChooseRoomType();
+                STerms.FilterByRoom = RoomService.ChooseRoomType();
             }
 
 

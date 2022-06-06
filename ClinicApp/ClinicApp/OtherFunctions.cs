@@ -234,27 +234,7 @@ namespace ClinicApp
 
             return user;
         }
-        public static RoomType ChooseRoomType()
-        {
-            RoomType type;
-            int input = EnterNumberWithLimit(1, 3);
-            switch (input)
-            {
-                case 1:
-                    type = RoomType.Operations;
-                    break;
-                case 2:
-                    type = RoomType.Examinations;
-                    break;
-                case 3:
-                    type = RoomType.Waiting;
-                    break;
-                default:
-                    type = RoomType.STORAGE;
-                    break;
-            }
-            return type;
-        }
+        
         public static EquipmentType ChooseEquipmentType()
         {
             EquipmentType type;
@@ -278,32 +258,6 @@ namespace ClinicApp
                     break;
             }
             return type;
-        }
-        public static int GetValidRoomId()
-        {
-            Room room;
-            int id = CLI.CLIEnterNumber();
-            room = RoomRepo.Get(id);
-            while(room is null)
-            {
-                Console.WriteLine("Invalid ID");
-                id = CLI.CLIEnterNumber();
-                room = RoomRepo.Get(id);
-            }
-            return id;
-        }
-        public static int GetValidEquipmentId()
-        {
-            Equipment eq;
-            int id = EnterNumber();
-            eq = EquipmentRepo.Get(id);
-            while (eq is null)
-            {
-                Console.WriteLine("Invalid ID");
-                id = EnterNumber();
-                eq = EquipmentRepo.Get(id);
-            }
-            return id;
         }
         public static User Register(Roles role = Roles.Nobody)
         {

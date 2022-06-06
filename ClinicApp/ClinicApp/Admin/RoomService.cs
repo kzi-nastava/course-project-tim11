@@ -10,11 +10,32 @@ public static class RoomService {
         room = RoomRepo.Get(id);
         while (room is null)
         {
-            Console.WriteLine("Invalid ID");
+            CLI.CLIWriteLine("Invalid ID");
             id = CLI.CLIEnterNumber();
             room = RoomRepo.Get(id);
         }
         return id;
+    }
+    public static RoomType ChooseRoomType()
+    {
+        RoomType type;
+        int input = CLI.CLIEnterNumberWithLimit(1, 3);
+        switch (input)
+        {
+            case 1:
+                type = RoomType.Operations;
+                break;
+            case 2:
+                type = RoomType.Examinations;
+                break;
+            case 3:
+                type = RoomType.Waiting;
+                break;
+            default:
+                type = RoomType.STORAGE;
+                break;
+        }
+        return type;
     }
     public static void ListAllRooms()
     {
@@ -29,7 +50,7 @@ public static class RoomService {
         CLI.CLIWriteLine("Enter name: ");
         string name = CLI.CLIEnterStringWithoutDelimiter("|");
         CLI.CLIWriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
-        RoomType roomType = OtherFunctions.ChooseRoomType();
+        RoomType roomType = ChooseRoomType();
         Room room = new Room { Name = name, Type = roomType };
         RoomRepo.Add(room);
     }
@@ -42,34 +63,34 @@ public static class RoomService {
         room = RoomRepo.Get(id);
         if (room.Id == 0)
         {
-            Console.WriteLine("You cannot edit Storage!");
+            CLI.CLIWriteLine("You cannot edit Storage!");
             return;
         }
-        Console.WriteLine("Do you wish to edit this rooms' name? Y/N");
+        CLI.CLIWriteLine("Do you wish to edit this rooms' name? Y/N");
         string answer = OtherFunctions.EnterString();
         if (answer.ToLower() == "y")
         {
-            Console.WriteLine("Enter new name: ");
-            name = OtherFunctions.EnterStringWithoutDelimiter("|");
+            CLI.CLIWriteLine("Enter new name: ");
+            name = CLI.CLIEnterStringWithoutDelimiter("|");
         }
         else name = room.Name;
-        Console.WriteLine("Do you wish to edit this rooms' type? Y/N");
-        answer = OtherFunctions.EnterString();
+        CLI.CLIWriteLine("Do you wish to edit this rooms' type? Y/N");
+        answer = CLI.CLIEnterString();
         if (answer.ToLower() == "y")
         {
-            Console.WriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
-            roomType = OtherFunctions.ChooseRoomType();
+            CLI.CLIWriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+            roomType = ChooseRoomType();
         }
         else roomType = room.Type;
         RoomRepo.Update(room.Id, name, roomType);
     }
     public static void DeleteRoom()
     {
-        Console.WriteLine("Enter ID of the room you want to Delete");
+        CLI.CLIWriteLine("Enter ID of the room you want to Delete");
         int id = GetValidRoomId();
         if (id == 0)
         {
-            Console.WriteLine("You cannot delete Storage!");
+            CLI.CLIWriteLine("You cannot delete Storage!");
         }
         else RoomRepo.Delete(id);
     }
