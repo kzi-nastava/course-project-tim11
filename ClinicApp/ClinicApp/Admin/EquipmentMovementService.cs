@@ -6,7 +6,22 @@ namespace ClinicApp.AdminFunctions
 {
     public static class EquipmentMovementService
     {
-        
+        public static void MoveEquipment() //menu for creating a new equipment movement 
+        {
+            CLI.CLIWriteLine("Enter ID of equipment to change:");
+            int id = OtherFunctions.GetValidEquipmentId();
+            Equipment eq = EquipmentRepo.Get(id);
+            CLI.CLIWriteLine("Enter amount to move");
+            int amount = OtherFunctions.EnterNumberWithLimit(1, eq.Amount);
+            CLI.CLIWriteLine("Enter the Id of the room where the equipment is going to");
+            id = OtherFunctions.GetValidRoomId();
+            Room room = RoomRepo.Get(id);
+            CLI.CLIWriteLine("Enter date on which the equipment is being moved");
+            DateTime date = OtherFunctions.EnterDate();
+            EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = room.Id, MovementDate = date, Done = false };
+            EquipmentMovementRepo.Add(movement);
+        }
+
         public static void CommitChanges(EquipmentMovement item)   //actually moves the equipment
         {
             Dictionary<string,int> newRoomEqNames = new Dictionary<string, int>();

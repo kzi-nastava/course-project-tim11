@@ -1,71 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
     class IngrediantService
     {
-        public static List<string> Ingrediants;
-
-        static IngrediantService()
+        public static void CreateIngrediant()
         {
-            Ingrediants = LoadIngrediants();
+            CLI.CLIWriteLine("Enter the new ingrediant");
+            string ingrediant = CLI.CLIEnterStringWithoutDelimiter("|");
+            IngrediantRepo.Add(ingrediant);
         }
-        public static List<string> GetAll() => Ingrediants;
-        
-        public static void Add(string ingr)
+        public static void UpdateIngrediant()
         {
-            if (!Ingrediants.Contains(ingr))
+            CLI.CLIWriteLine("Select the ingrediant to update, 0 to continue");
+            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            foreach (var ingrediant in offeredIngrediants)
             {
-                Ingrediants.Add(ingr);
+                CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
             }
-            PresistChanges();
+            int indexOfSelected = CLI.CLIEnterNumberWithLimit(1, offeredIngrediants.Count);
+            if (indexOfSelected == 0)
+            {
+                return;
+            }
+            string selected = offeredIngrediants[indexOfSelected - 1];
+            CLI.CLIWriteLine("Enter the new ingrediant");
+            string newIngr = CLI.CLIEnterStringWithoutDelimiter("|");
+            IngrediantRepo.Update(selected, newIngr);
         }
-        public static void Update(string ingr, string newIng)
+        public static void DeleteIngrediant()
         {
-            if (Ingrediants.Contains(ingr))
+            CLI.CLIWriteLine("Select the ingrediant to delete, 0 to return");
+            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            foreach (var ingrediant in offeredIngrediants)
             {
-                Ingrediants[Ingrediants.IndexOf(ingr)] = newIng;
+                CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
             }
-            PresistChanges();
-        }
-        public static void Delete(string ingr)
-        {
-            if (Ingrediants.Contains(ingr))
+            int indexOfSelected = CLI.CLIEnterNumberWithLimit(1, offeredIngrediants.Count);
+            if (indexOfSelected == 0)
             {
-                Ingrediants.Remove(ingr);
+                return;
             }
-            PresistChanges();
-        }
-
-
-
-        public static List<string> LoadIngrediants()
-        {
-            List<string> ing = new List<string>();
-            using (StreamReader reader = new StreamReader("../../../Data/ingrediants.txt"))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    ing.Add(line);
-                }
-            }
-            return ing;
-        }
-        public static void PresistChanges()
-        {
-            File.Delete("../../../Data/ingrediants.txt");
-            foreach (var ingr in Ingrediants)
-            {
-                string newLine = ingr;
-                using (StreamWriter sw = File.AppendText("../../../Data/ingrediants.txt"))
-                {
-                    sw.WriteLine(newLine);
-                }
-            }
+            string selected = offeredIngrediants[indexOfSelected - 1];
+            IngrediantRepo.Delete(selected);
         }
     }
 }

@@ -282,12 +282,12 @@ namespace ClinicApp
         public static int GetValidRoomId()
         {
             Room room;
-            int id = EnterNumber();
+            int id = CLI.CLIEnterNumber();
             room = RoomRepo.Get(id);
             while(room is null)
             {
                 Console.WriteLine("Invalid ID");
-                id = EnterNumber();
+                id = CLI.CLIEnterNumber();
                 room = RoomRepo.Get(id);
             }
             return id;

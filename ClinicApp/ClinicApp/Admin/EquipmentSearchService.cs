@@ -58,7 +58,7 @@ namespace ClinicApp.AdminFunctions
         public static void SearchEquipment()
         {
             CLI.CLIWriteLine("Search");
-            SearchTerms STerms = new SearchTerms();
+            EquipmentSearch STerms = new EquipmentSearch();
             List<Equipment> Results;
             CLI.CLIWrite("Enter search terms: ");
             STerms.SearchTerm = CLI.CLIEnterString();
@@ -124,10 +124,10 @@ namespace ClinicApp.AdminFunctions
                         break;
                 }
             }
-            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+            CLI.CLIWriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
             foreach (Equipment eq in Results)
             {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
             }
 
         }

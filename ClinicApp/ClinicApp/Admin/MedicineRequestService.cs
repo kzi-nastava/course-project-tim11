@@ -1,106 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class MedicineRequestService
+    class MedicineRequestService
     {
-        public static List<MedicineRequest> MedicineRequests;
-        static MedicineRequestService()
+        public static void CreateMedicineRequest()
         {
-            MedicineRequests = LoadMedicineRequests();
-        }
-
-        public static List<MedicineRequest> GetAll() => MedicineRequests;
-
-        public static MedicineRequest? Get(int id) => MedicineRequests.FirstOrDefault(p => p.Id == id);
-        public static void Add(MedicineRequest item)
-        {
-            if (MedicineRequests.Count == 0)
+            string name;
+            CLI.CLIWriteLine("Enter medicine name");
+            name = CLI.CLIEnterStringWithoutDelimiter("|");
+            while (SystemFunctions.Medicine.ContainsKey(name))
             {
-                item.Id = 1;
+                CLI.CLIWriteLine("Name already taken, enter another name");
+                name = CLI.CLIEnterStringWithoutDelimiter("|");
             }
-            else
+            List<string> chosenIngrediants = new List<string>();
+            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
+            while (true)
             {
-                item.Id = MedicineRequests.Last().Id + 1;
-            }
-            MedicineRequests.Add(item);
-            PersistChanges();
-        }
-        public static void Delete(int id)
-        {
-            var item = Get(id);
-            if (item is null)
-                return;
-            MedicineRequests.Remove(item);
-            PersistChanges();
-        }
-        public static void Update(int id, MedicineRequest newMedicineRequest)
-        {
-            MedicineRequest toUpdate = Get(id);
-            if (toUpdate is null)
-                return;
-            toUpdate.Medicine = newMedicineRequest.Medicine;
-            toUpdate.Comment = newMedicineRequest.Comment;
-            PersistChanges();
-        }
-        public static void Approve(int id)
-        {
-            MedicineRequest toApprove = Get(id);
-            if (toApprove is null)
-                return;
-            SystemFunctions.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
-            Delete(id);
-            PersistChanges();
-        }
-        public static void Reject(int id, string comment)
-        {
-            MedicineRequest toReject = Get(id);
-            if (toReject is null)
-                return;
-            toReject.Comment = comment;
-            PersistChanges();
-        }
-
-        //files stuff
-
-        static MedicineRequest ParseMedicineRequest(string line)
-        {
-            string[] parameters = line.Split("|");
-            MedicineRequest medicineRequest = new MedicineRequest {
-                Id = Convert.ToInt32(parameters[0]),
-                Medicine = new Clinic.Medicine(parameters[1], parameters[2].Split("/").ToList()),
-                Comment = parameters[3]
-            };
-            return medicineRequest;
-        }
-
-        static List<MedicineRequest> LoadMedicineRequests()
-        {
-            List<MedicineRequest> lista = new List<MedicineRequest>();
-            using (StreamReader reader = new StreamReader("../../../Admin/Data/medicineRequests.txt"))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                foreach (var ingrediant in offeredIngrediants)
                 {
-                    MedicineRequest mr = ParseMedicineRequest(line);
-                    lista.Add(mr);
+                    CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                }
+                var choice = CLI.CLIEnterNumberWithLimit(0, offeredIngrediants.Count);
+                if (choice == 0)
+                {
+                    break;
+                }
+                chosenIngrediants.Add(offeredIngrediants[choice - 1]);
+                offeredIngrediants.Remove(offeredIngrediants[choice - 1]);
+            }
+            Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
+            MedicineRequest mr = new MedicineRequest { Medicine = medicine, Comment = "" };
+            MedicineRequestRepo.Add(mr);
+        }
+        public static void ReviewedMedsMenu()
+        {
+            ListMedicineRequests();
+            int id = CLI.CLIEnterNumber();
+            string name;
+            CLI.CLIWriteLine("Enter medicine name");
+            name = CLI.CLIEnterStringWithoutDelimiter("|");
+            while (SystemFunctions.Medicine.ContainsKey(name))
+            {
+                CLI.CLIWriteLine("Name already taken, enter another name");
+                name = CLI.CLIEnterStringWithoutDelimiter("|");
+            }
+            List<string> chosenIngrediants = new List<string>();
+            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
+            while (true)
+            {
+                foreach (var ingrediant in offeredIngrediants)
+                {
+                    CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                }
+                var choice = CLI.CLIEnterNumberWithLimit(0, offeredIngrediants.Count);
+                if (choice == 0)
+                {
+                    break;
+                }
+                chosenIngrediants.Add(offeredIngrediants[choice - 1]);
+                offeredIngrediants.Remove(offeredIngrediants[choice - 1]);
+            }
+            Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
+            MedicineRequest newRequest = new MedicineRequest { Medicine = medicine, Comment = "" };
+            MedicineRequestRepo.Update(id, newRequest);
+
+        }
+        public static void ListMedicineRequests(string parameter = "rbd") //rbd = reviewed by doctor (default), sba = sent by admin, all = all requests 
+        {
+            if (parameter == "rbd")
+            {
+                CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
+                foreach (var request in MedicineRequestRepo.GetAll())
+                {
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                    if (request.Comment != "")
+                    {
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nDoctor's comment: " + request.Comment);
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
                 }
             }
-            return lista;
-        }
-        public static void PersistChanges()
-        {
-            File.Delete("../../../Admin/Data/medicineRequests.txt");
-            foreach (MedicineRequest medicineRequest in MedicineRequests)
+            else if (parameter == "sba")
             {
-                string newLine = Convert.ToString(medicineRequest.Id) + "|" + medicineRequest.Medicine.Compress() + "|" + medicineRequest.Comment;
-                using (StreamWriter sw = File.AppendText("../../../Admin/Data/medicineRequests.txt"))
+                CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
+                foreach (var request in MedicineRequestRepo.GetAll())
                 {
-                    sw.WriteLine(newLine);
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                    if (request.Comment == "")
+                    {
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nDoctor's comment: " + request.Comment);
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
+                }
+            }
+            else if (parameter == "all")
+            {
+                CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
+                foreach (var request in MedicineRequestRepo.GetAll())
+                {
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                    CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nDoctor's comment: " + request.Comment);
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+
                 }
             }
         }

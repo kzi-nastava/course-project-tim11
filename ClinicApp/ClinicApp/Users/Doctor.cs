@@ -671,7 +671,7 @@ namespace ClinicApp.Users
 
         public void ManageMedicine() {
             Console.WriteLine("Medicine requests: ");
-            List<AdminFunctions.MedicineRequest> listRequests = AdminFunctions.MedicineRequestService.GetAll();
+            List<AdminFunctions.MedicineRequest> listRequests = AdminFunctions.MedicineRequestRepo.GetAll();
             foreach (AdminFunctions.MedicineRequest request in listRequests) {
                 Console.WriteLine($"ID: {request.Id}");
                 Console.WriteLine($"Name: {request.Medicine.Name}");
@@ -685,12 +685,12 @@ namespace ClinicApp.Users
                 string choice = Console.ReadLine();
                 if (choice.ToUpper() == "Y")
                 {
-                    AdminFunctions.MedicineRequestService.Approve(request.Id);
+                    AdminFunctions.MedicineRequestRepo.Approve(request.Id);
                 }
                 else {
                     Console.WriteLine("Why do you want to reject this medicine? Write a short comment.");
                     string comment = Console.ReadLine();
-                    AdminFunctions.MedicineRequestService.Reject(request.Id, comment);
+                    AdminFunctions.MedicineRequestRepo.Reject(request.Id, comment);
                 }
             
             }

@@ -3,7 +3,19 @@ using System;
 using ClinicApp;
 
 public static class RoomService {
-
+    public static int GetValidRoomId()
+    {
+        Room room;
+        int id = CLI.CLIEnterNumber();
+        room = RoomRepo.Get(id);
+        while (room is null)
+        {
+            Console.WriteLine("Invalid ID");
+            id = CLI.CLIEnterNumber();
+            room = RoomRepo.Get(id);
+        }
+        return id;
+    }
     public static void ListAllRooms()
     {
         CLI.CLIWriteLine("ID | NAME | TYPE");
@@ -26,7 +38,7 @@ public static class RoomService {
         Room room;
         string name;
         RoomType roomType;
-        int id = OtherFunctions.GetValidRoomId();
+        int id = GetValidRoomId();
         room = RoomRepo.Get(id);
         if (room.Id == 0)
         {
@@ -54,7 +66,7 @@ public static class RoomService {
     public static void DeleteRoom()
     {
         Console.WriteLine("Enter ID of the room you want to Delete");
-        int id = OtherFunctions.GetValidRoomId();
+        int id = GetValidRoomId();
         if (id == 0)
         {
             Console.WriteLine("You cannot delete Storage!");
