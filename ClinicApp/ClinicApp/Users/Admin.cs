@@ -123,10 +123,10 @@ namespace ClinicApp.Users
                 switch (choice.ToUpper())
                 {
                     case "1":
-                        ListAllEquipment();
+                        EquipmentService.ListAllEquipment();
                         break;
                     case "2":
-                        SearchEquipment();
+                        EquipmentSearchService.SearchEquipment();
                         break;
                     case "3":
                         MoveEquipmentMenu();
@@ -138,155 +138,6 @@ namespace ClinicApp.Users
                         break;
                 }
             }
-        }
-        public static void ListAllEquipment()
-        {
-            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
-            {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
-            }
-        }
-        public static void ListAllEquipmentInRoom(int id)
-        {
-            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
-            {
-                if(eq.RoomId == id)
-                    Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
-            }
-        }
-        public static void SearchEquipment()
-        {
-            Console.WriteLine("Search");
-            SearchTerms STerms = new SearchTerms();
-            List<Equipment> Results;
-            while (true)
-            {
-                Console.Write("Enter search terms: ");
-                STerms.SearchTerm = Console.ReadLine();
-                if (STerms.SearchTerm is null)
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            Results = EquipmentService.Search(STerms.SearchTerm);
-
-            while (true)
-            {
-                Console.WriteLine("\nFilter by Equipment Type? (y/n): ");
-                string eq = Console.ReadLine();
-                if (eq.ToLower() == "y")
-                {
-                    STerms.FilterByEqTypeBool = true;
-                    Console.WriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-                    STerms.FilterByEq = OtherFunctions.ChooseEquipmentType();
-                    break;
-                }
-                else if (eq.ToLower() == "n")
-                {
-                    STerms.FilterByEqTypeBool = false;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-            }
-
-            Console.WriteLine("Filter by room type? (y/n): ");
-                string room = Console.ReadLine();
-                if (room.ToLower() == "y")
-                {
-                    STerms.FilterByRoomTypeBool = true;
-                    Console.WriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
-                    STerms.FilterByRoom = OtherFunctions.ChooseRoomType();
-                }
-                else
-                {
-                    STerms.FilterByRoomTypeBool = false;
-                }
-
-
-            
-            while (true)
-            {
-                Console.WriteLine("Filter by amount?(y/n): ");
-                string answer = Console.ReadLine();
-                if (answer.ToLower() == "y")
-                {
-                    STerms.FilterByAmountBool = true;
-                    while (true)
-                    {
-                        Console.WriteLine("Choose!\n1. 0\n2. 1-10\n3. 10+");
-                        answer = Console.ReadLine();
-                        if (answer == "1")
-                        {
-                            STerms.STAmount = 1;
-                            break;
-                        }
-                        else if (answer == "2")
-                        {
-                            STerms.STAmount = 2;
-                            break;
-                        }
-                        else if (answer == "3")
-                        {
-                            STerms.STAmount = 3;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid option, try again");
-                        }
-
-                    }
-                    break;
-                }
-                else if (answer.ToLower() == "n")
-                {
-                    STerms.FilterByAmountBool = false;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option, try again");
-                }
-            }
-            if (STerms.FilterByEqTypeBool == true)
-            {
-                Results = EquipmentService.FilterByEqType(Results, STerms.FilterByEq);
-            }
-            if (STerms.FilterByRoomTypeBool == true)
-            {
-                Results = EquipmentService.FilterByRoomType(Results, STerms.FilterByRoom);
-            }
-            if (STerms.FilterByAmountBool == true)
-            {
-                switch (STerms.STAmount)
-                {
-                    case 1:
-                        Results = EquipmentService.FilterByNumbers(Results, 0, 0);
-                        break;
-                    case 2:
-                        Results = EquipmentService.FilterByNumbers(Results, 1, 10);
-                        break;
-                    case 3:
-                        Results = EquipmentService.FilterByNumbers(Results, 11, 10000000);
-                        break;
-                }
-            }
-            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-            foreach (Equipment eq in Results)
-            {
-                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
-            }
-
         }
         public static void MoveEquipmentMenu()
         {
@@ -318,7 +169,7 @@ namespace ClinicApp.Users
             string answer = Console.ReadLine();
             if (answer.ToLower() == "y")
             {
-                ListAllEquipmentInRoom(0); //zero for storage
+                EquipmentService.ListAllEquipmentInRoom(0); //zero for storage
             }
 
             while (true) //storage submenu

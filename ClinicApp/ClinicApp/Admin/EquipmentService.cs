@@ -12,7 +12,23 @@ public static class EquipmentService
         eq.RoomId = roomId;
         EquipmentRepo.PersistChanges();
     }
-
+    public static void ListAllEquipment()
+    {
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
+        {
+            Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+        }
+    }
+    public static void ListAllEquipmentInRoom(int id)
+    {
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
+        {
+            if (eq.RoomId == id)
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+        }
+    }
 
     public static List<Equipment> GetEquipmentFromRoom(int id)
     {
@@ -25,55 +41,5 @@ public static class EquipmentService
             }
         }
         return movements;
-    }
-    //---------------SEARCH AND FILTERING-------------------------------------------------------------
-    public static List<Equipment> Search(string searchTerm)
-    {
-        searchTerm = searchTerm.ToLower();
-        var results = new List<Equipment>();
-        foreach (var item in EquipmentRepo.ClinicEquipmentList)
-        {
-            if (item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomRepo.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
-            {
-                results.Add(item);
-            }
-        }
-        return results;
-    }
-    public static List<Equipment> FilterByEqType(List<Equipment> inputList, EquipmentType type)
-    {
-        var results = new List<Equipment>();
-        foreach (var item in inputList)
-        {
-            if (item.Type == type)
-            {
-                results.Add(item);
-            }
-        }
-        return results;
-    }
-    public static List<Equipment> FilterByRoomType(List<Equipment> inputList, RoomType type)
-    {
-        var results = new List<Equipment>();
-        foreach (var item in inputList)
-        {
-            if (RoomRepo.Get(item.RoomId).Type == type)
-            {
-                results.Add(item);
-            }
-        }
-        return results;
-    }
-    public static List<Equipment> FilterByNumbers(List<Equipment> inputList, int lowerBound, int upperBound)
-    {
-        var results = new List<Equipment>();
-        foreach (var item in inputList)
-        {
-            if (item.Amount >= lowerBound && item.Amount <= upperBound)
-            {
-                results.Add(item);
-            }
-        }
-        return results;
-    }
+    }    
 }
