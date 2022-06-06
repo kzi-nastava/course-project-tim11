@@ -685,12 +685,12 @@ namespace ClinicApp.Users
                 string choice = Console.ReadLine();
                 if (choice.ToUpper() == "Y")
                 {
-                    AdminFunctions.MedicineRequestRepo.Approve(request.Id);
+                    AdminFunctions.MedicineRequestService.Approve(request.Id);
                 }
                 else {
                     Console.WriteLine("Why do you want to reject this medicine? Write a short comment.");
                     string comment = Console.ReadLine();
-                    AdminFunctions.MedicineRequestRepo.Reject(request.Id, comment);
+                    AdminFunctions.MedicineRequestService.Reject(request.Id, comment);
                 }
             
             }

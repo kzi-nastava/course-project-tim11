@@ -6,6 +6,23 @@ namespace ClinicApp.AdminFunctions
 {
     class MedicineRequestService
     {
+        public static void Approve(int id)
+        {
+            MedicineRequest toApprove = MedicineRequestRepo.Get(id);
+            if (toApprove is null)
+                return;
+            SystemFunctions.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
+            MedicineRequestRepo.Delete(id);
+            MedicineRequestRepo.PersistChanges();
+        }
+        public static void Reject(int id, string comment)
+        {
+            MedicineRequest toReject = MedicineRequestRepo.Get(id);
+            if (toReject is null)
+                return;
+            toReject.Comment = comment;
+            MedicineRequestRepo.PersistChanges();
+        }
         public static void CreateMedicineRequest()
         {
             string name;

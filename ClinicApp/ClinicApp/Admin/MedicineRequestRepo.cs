@@ -47,23 +47,7 @@ namespace ClinicApp.AdminFunctions
             toUpdate.Comment = newMedicineRequest.Comment;
             PersistChanges();
         }
-        public static void Approve(int id)
-        {
-            MedicineRequest toApprove = Get(id);
-            if (toApprove is null)
-                return;
-            SystemFunctions.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
-            Delete(id);
-            PersistChanges();
-        }
-        public static void Reject(int id, string comment)
-        {
-            MedicineRequest toReject = Get(id);
-            if (toReject is null)
-                return;
-            toReject.Comment = comment;
-            PersistChanges();
-        }
+        
 
         //files stuff
 

@@ -39,9 +39,6 @@ namespace ClinicApp.AdminFunctions
             }
             PresistChanges();
         }
-
-
-
         public static List<string> LoadIngrediants()
         {
             List<string> ing = new List<string>();

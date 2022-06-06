@@ -12,12 +12,12 @@ namespace ClinicApp.AdminFunctions
             int id = EquipmentService.GetValidEquipmentId();
             Equipment eq = EquipmentRepo.Get(id);
             CLI.CLIWriteLine("Enter amount to move");
-            int amount = OtherFunctions.EnterNumberWithLimit(1, eq.Amount);
+            int amount = CLI.CLIEnterNumberWithLimit(1, eq.Amount);
             CLI.CLIWriteLine("Enter the Id of the room where the equipment is going to");
             id = RoomService.GetValidRoomId();
             Room room = RoomRepo.Get(id);
             CLI.CLIWriteLine("Enter date on which the equipment is being moved");
-            DateTime date = OtherFunctions.EnterDate();
+            DateTime date = CLI.CLIEnterDate();
             EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = room.Id, MovementDate = date, Done = false };
             EquipmentMovementRepo.Add(movement);
         }

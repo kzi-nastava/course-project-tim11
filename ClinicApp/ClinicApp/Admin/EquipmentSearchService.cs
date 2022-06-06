@@ -69,7 +69,7 @@ namespace ClinicApp.AdminFunctions
             {
                 STerms.FilterByEqTypeBool = true;
                 Console.WriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-                STerms.FilterByEq = OtherFunctions.ChooseEquipmentType();
+                STerms.FilterByEq = EquipmentService.ChooseEquipmentType();
             }
             CLI.CLIWriteLine("Filter by room type? (y/n): ");
             answer = CLI.CLIEnterString();
