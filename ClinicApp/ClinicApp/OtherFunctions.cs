@@ -235,30 +235,7 @@ namespace ClinicApp
             return user;
         }
         
-        public static EquipmentType ChooseEquipmentType()
-        {
-            EquipmentType type;
-            int input = EnterNumberWithLimit(1, 4);
-            switch (input)
-            {
-                case 1:
-                    type = EquipmentType.Operations;
-                    break;
-                case 2:
-                    type = EquipmentType.RoomFurniture;
-                    break;
-                case 3:
-                    type = EquipmentType.Hallway;
-                    break;
-                case 4:
-                    type = EquipmentType.Examinations;
-                    break;
-                default:
-                    type = EquipmentType.Examinations;
-                    break;
-            }
-            return type;
-        }
+        
         public static User Register(Roles role = Roles.Nobody)
         {
             string text = "", password, passwordCheck, temp;
