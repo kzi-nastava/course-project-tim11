@@ -91,13 +91,13 @@ namespace ClinicApp.AdminFunctions
                 switch (amount)
                 {
                     case 1:
-                        STerms.STAmount = 1;
+                        STerms.Amount = 1;
                         break;
                     case 2:
-                        STerms.STAmount = 2;
+                        STerms.Amount = 2;
                         break;
                     case 3:
-                        STerms.STAmount = 3;
+                        STerms.Amount = 3;
                         break;
                 }
             }
@@ -111,7 +111,7 @@ namespace ClinicApp.AdminFunctions
             }
             if (STerms.FilterByAmountBool == true)
             {
-                switch (STerms.STAmount)
+                switch (STerms.Amount)
                 {
                     case 1:
                         Results = FilterByNumbers(Results, 0, 0);

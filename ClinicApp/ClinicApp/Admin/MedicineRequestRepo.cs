@@ -47,9 +47,7 @@ namespace ClinicApp.AdminFunctions
             toUpdate.Comment = newMedicineRequest.Comment;
             PersistChanges();
         }
-        
-
-        //files stuff
+        //===============================files stuff====================================
 
         static MedicineRequest ParseMedicineRequest(string line)
         {

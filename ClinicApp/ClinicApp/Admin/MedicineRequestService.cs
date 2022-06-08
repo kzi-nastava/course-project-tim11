@@ -25,9 +25,8 @@ namespace ClinicApp.AdminFunctions
         }
         public static void CreateMedicineRequest()
         {
-            string name;
             CLI.CLIWriteLine("Enter medicine name");
-            name = CLI.CLIEnterStringWithoutDelimiter("|");
+            string name = CLI.CLIEnterStringWithoutDelimiter("|");
             while (SystemFunctions.Medicine.ContainsKey(name))
             {
                 CLI.CLIWriteLine("Name already taken, enter another name");
@@ -124,7 +123,7 @@ namespace ClinicApp.AdminFunctions
             }
             else if (parameter == "all")
             {
-                CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
+                CLI.CLIWriteLine("All medicine requests");
                 foreach (var request in MedicineRequestRepo.GetAll())
                 {
                     CLI.CLIWriteLine("----------------------------------------------------------");

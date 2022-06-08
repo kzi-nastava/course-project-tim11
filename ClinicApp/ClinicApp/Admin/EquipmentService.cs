@@ -74,15 +74,6 @@ public static class EquipmentService
         Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
         EquipmentRepo.Add(eq);
     }
-
-    public static void AddToRoom(int eqId, int roomId)
-    {
-        var eq = EquipmentRepo.Get(eqId);
-        if (eq is null)
-            return;
-        eq.RoomId = roomId;
-        EquipmentRepo.PersistChanges();
-    }
     public static void ListAllEquipment()
     {
         Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
@@ -139,9 +130,6 @@ public static class EquipmentService
                 break;
             case 3:
                 type = EquipmentType.Hallway;
-                break;
-            case 4:
-                type = EquipmentType.Examinations;
                 break;
             default:
                 type = EquipmentType.Examinations;

@@ -10,6 +10,11 @@ namespace ClinicApp.AdminFunctions
         {
             CLI.CLIWriteLine("Enter the new ingrediant");
             string ingrediant = CLI.CLIEnterStringWithoutDelimiter("|");
+            if (IngrediantRepo.GetAll().Contains(ingrediant))
+            {
+                CLI.CLIWriteLine("Ingrediant already in database");
+                return;
+            }
             IngrediantRepo.Add(ingrediant);
         }
         public static void UpdateIngrediant()
