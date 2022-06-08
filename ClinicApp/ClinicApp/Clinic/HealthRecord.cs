@@ -37,49 +37,7 @@ namespace ClinicApp.Clinic
             }
         }
 
-        public void AnamnesisSortedDoctor()
-        {
-            Anamneses.Sort(delegate (Anamnesis a1, Anamnesis a2)
-            {
-                return a1.Doctor.UserName.CompareTo(a2.Doctor.UserName);
-            });
-            Console.WriteLine("Sorted anamnesis list by doctors username.");
-            foreach(Anamnesis temp in Anamneses)
-            {
-                temp.ShowAnamnesis();
-            }
-        }
-
-        public void AnamnesisSortedDate()
-        {
-            Anamneses.Sort(delegate (Anamnesis a1, Anamnesis a2)
-            {
-                return a1.Date.CompareTo(a2.Date);
-            });
-            Console.WriteLine("Sorted anamnesis list by date.");
-            foreach(Anamnesis temp in Anamneses)
-            {
-                temp.ShowAnamnesis();
-            }
-        }
-
-        public void SearchAnamnesis(string keyword)
-        {
-            bool found = false;
-            foreach(Anamnesis temp in Anamneses)
-            {
-                if (temp.Report.Contains(keyword) == true)
-                {
-                    temp.ShowAnamnesis();
-                    found = true;
-                }
-            }
-            if(found == false)
-            {
-                Console.WriteLine("There is no amnesis with specified keyword.");
-            }
-        }
-
+        
         public HealthRecord(Patient patient) {
             Patient = patient;
             Weight = 0;

@@ -30,7 +30,7 @@ namespace ClinicApp
         // Dictionary of users created for faster and easier acces to information from the database
         public static Dictionary<string, User> Users { get; set; } = new Dictionary<string, User>();
         public static Dictionary<string, Doctor> Doctors { get; set; } = new Dictionary<string, Doctor>();
-        public static Dictionary<string, Patient> Patients { get; set; } = new Dictionary<string, Patient>();
+        
         public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
         public static Dictionary<int, Appointment> AllAppointments { get; set; } = new Dictionary<int, Appointment>();
         public static Dictionary<int, Appointment> CurrentAppointments { get; set; } = new Dictionary<int, Appointment>();
