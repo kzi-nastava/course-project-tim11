@@ -14,7 +14,7 @@ namespace ClinicApp.Users
         public static void ViewAllPatients()
         {
             int i = 1;
-            foreach (KeyValuePair<string, Patient> entry in PatientRepository.Patients)
+            foreach (KeyValuePair<string, Patient> entry in UserRepository.Patients)
             {
                 Patient patient = entry.Value;
                 Console.WriteLine($"{i}. User name: {patient.UserName}; Name: {patient.Name}; Last name: {patient.LastName}; Date of birth: {patient.DateOfBirth}");

@@ -57,23 +57,8 @@ namespace ClinicApp
         public static void LoadData()
         {
             //Loads the users.
-            using (StreamReader reader = new StreamReader(UsersFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    User user = ParseUser(line);
-                    Users.Add(user.UserName, user);
-                    if (user.Role == Roles.Doctor)
-                    {
-                        Doctors.Add(user.UserName, (Doctor)user);
-                    }
-                    else if (user.Role == Roles.Patient)
-                    {
-                        Patients.Add(user.UserName, (Patient)user);
-                    }
-                }
-            }
+            UserRepository.Load();
+
             //Loads the health records.
             using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
             {
@@ -199,20 +184,6 @@ namespace ClinicApp
             }
         }
 
-        private static User ParseUser(string line)
-        {
-            string[] data = line.Split('|');
-            if (data[6] == Roles.Admin.ToString())
-                return new Admin(line);
-            if (data[6] == Roles.Secretary.ToString())
-                return new Secretary(line);
-            if (data[6] == Roles.Doctor.ToString())
-                return new Doctor(line);
-            if (data[6] == Roles.Patient.ToString())
-                return new Patient(line);
-            return new Nobody();
-        }
-
         private static Appointment ParseAppointment(string line)
         {
             string[] data = line.Split('|');
@@ -257,14 +228,8 @@ namespace ClinicApp
             string newLine;
 
             //Uploads the users.
-            using (StreamWriter sw = File.CreateText(UsersFilePath))
-            {
-                foreach (KeyValuePair<string, User> pair in Users)
-                {
-                    newLine = pair.Value.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
+            UserRepository.Upload();
+
             //Uploads the examinations.
             using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
             {
