@@ -35,13 +35,13 @@ namespace ClinicApp.Users
             MessageBox = new MessageBox(this);
         }
 
-        //Compresses a Secretary object intu a string for easier upload.
+        //Compresses a Secretary object into a string for easier upload.
         public override string Compress()
         {
             return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role;
         }
 
-        //Writes all the option a secretary has once he logs in.
+        //Writes all the options a secretary has once he logs in.
         public override int MenuWrite()
         {
             CLI.CLIWriteLine("\nWhat would you like to do?");
@@ -103,9 +103,8 @@ namespace ClinicApp.Users
                 CLI.CLIWriteLine("2: View all patient accounts");
                 CLI.CLIWriteLine("3: Update a patient account");
                 CLI.CLIWriteLine("4: Delete a patient account");
-                CLI.CLIWriteLine("0: Back to menue");
-                CLI.CLIWrite(">> ");
-                option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                CLI.CLIWriteLine("0: Back to menu");
+                option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                 CLI.CLIWriteLine();
                 switch(option)
                 {
@@ -125,7 +124,7 @@ namespace ClinicApp.Users
                         while (option2 != 0)
                         {
                             CLI.CLIWriteLine("\nWrite the username of the patient who's account you want updated:");
-                            string userName = OtherFunctions.EnterString();
+                            string userName = CLI.CLIEnterString();
                             if (UserRepository.Users.TryGetValue(userName, out tempUser))
                             {
                                 if (tempUser.Role == Roles.Patient)
@@ -137,7 +136,7 @@ namespace ClinicApp.Users
                                     CLI.CLIWriteLine("\nThis account doesn't belong to a patient. Want to try again?");
                                     CLI.CLIWriteLine("1: Yes");
                                     CLI.CLIWriteLine("0: No");
-                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                    option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                                 }
                             }
                             else
@@ -145,7 +144,7 @@ namespace ClinicApp.Users
                                 CLI.CLIWriteLine("\nThere is no account with this username. Want to try again?");
                                 CLI.CLIWriteLine("1: Yes");
                                 CLI.CLIWriteLine("0: No");
-                                option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                             }
                         }
                         break;
@@ -155,7 +154,7 @@ namespace ClinicApp.Users
                         while(option2 != 0)
                         {
                             CLI.CLIWriteLine("\nWrite the username of the patient who's account you want deleted:");
-                            string userName = OtherFunctions.EnterString();
+                            string userName = CLI.CLIEnterString();
                             if (UserRepository.Users.TryGetValue(userName, out tempUser))
                             {
                                 if (tempUser.Role == Roles.Patient)
@@ -169,7 +168,7 @@ namespace ClinicApp.Users
                                     CLI.CLIWriteLine("\nThis account doesn't belong to a patient. Want to try again?");
                                     CLI.CLIWriteLine("1: Yes");
                                     CLI.CLIWriteLine("0: No");
-                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                    option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                                 }
                             }
                             else
@@ -177,7 +176,7 @@ namespace ClinicApp.Users
                                 CLI.CLIWriteLine("\nThere is no account with this username. Want to try again?");
                                 CLI.CLIWriteLine("1: Yes");
                                 CLI.CLIWriteLine("0: No");
-                                option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                             }
                         }
                         break;
@@ -202,19 +201,19 @@ namespace ClinicApp.Users
                 CLI.CLIWriteLine("5: Gender");
                 CLI.CLIWriteLine("6: Date of birth");
                 CLI.CLIWriteLine("0: Back to menu");
-                option = OtherFunctions.EnterNumberWithLimit(0, 6);
+                option = CLI.CLIEnterNumberWithLimit(0, 6);
 
                 switch(option)
                 {
                     //Username
                     case 1:
                         CLI.CLIWrite("Username: ");
-                        temp = OtherFunctions.EnterString();
+                        temp = CLI.CLIEnterString();
                         while (UserRepository.Users.ContainsKey(temp))
                         {
                             CLI.CLIWriteLine("This username is taken. Please, try again.");
                             CLI.CLIWrite("Username: ");
-                            temp = OtherFunctions.EnterString();
+                            temp = CLI.CLIEnterString();
                         }
                         patient.UserName = temp;
                         break;
@@ -222,44 +221,44 @@ namespace ClinicApp.Users
                     case 2:
                         string password, passwordCheck;
                         CLI.CLIWrite("Password: ");
-                        password = OtherFunctions.MaskPassword();
+                        password = CLI.CLIEnterPassword();
                         CLI.CLIWrite("\nRepeat password: ");
-                        passwordCheck = OtherFunctions.MaskPassword();
+                        passwordCheck = CLI.CLIEnterPassword();
                         while (password != passwordCheck)
                         {
                             CLI.CLIWriteLine("Passwords don't match. Please, try again.");
                             CLI.CLIWrite("Password: ");
-                            password = OtherFunctions.MaskPassword();
+                            password = CLI.CLIEnterPassword();
                             CLI.CLIWrite("\nRepeat password: ");
-                            passwordCheck = OtherFunctions.MaskPassword();
+                            passwordCheck = CLI.CLIEnterPassword();
                         }
                         patient.Password = password;
                         break;
                     //Name
                     case 3:
                         CLI.CLIWrite("\nName: ");
-                        patient.Name = OtherFunctions.EnterString();
+                        patient.Name = CLI.CLIEnterString();
                         break;
                     //Last name
                     case 4:
                         CLI.CLIWrite("\nLast name: ");
-                        patient.LastName = OtherFunctions.EnterString();
+                        patient.LastName = CLI.CLIEnterString();
                         break;
                     //Gender
                     case 5:
                         CLI.CLIWrite("Gender (m/f/n): ");
-                        temp = OtherFunctions.EnterString();
+                        temp = CLI.CLIEnterString();
                         while (temp != "m" && temp != "f" && temp != "n")
                         {
                             CLI.CLIWrite("You didn't enter a valid option. Please, try again (m/f/n): ");
-                            temp = OtherFunctions.EnterString();
+                            temp = CLI.CLIEnterString();
                         }
                         patient.Gender = temp[0];
                         break;
                     //Date of birth
                     case 6:
-                        CLI.CLIWrite("Date of birth (e.g. 02/05/1984): ");
-                        patient.DateOfBirth = OtherFunctions.AskForDate();
+                        CLI.CLIWrite("Date of birth: ");
+                        patient.DateOfBirth = CLI.CLIEnterDate();
                         break;
                 }
             }
@@ -278,8 +277,7 @@ namespace ClinicApp.Users
                 CLI.CLIWriteLine("2: Block patient accounts");
                 CLI.CLIWriteLine("3: Unblock patient accounts");
                 CLI.CLIWriteLine("0: Back to menue");
-                CLI.CLIWrite(">> ");
-                option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                 CLI.CLIWriteLine();
                 switch (option)
                 {
@@ -298,7 +296,7 @@ namespace ClinicApp.Users
                     //Block
                     case 2:
                         CLI.CLIWriteLine("\nEnter the username of the account you want to block:");
-                        username = OtherFunctions.EnterString();
+                        username = CLI.CLIEnterString();
                         if(UserRepository.Patients.TryGetValue(username, out patient))
                             if(patient.Blocked == Blocked.Unblocked)
                                 patient.Blocked = Blocked.Secretary;
@@ -310,7 +308,7 @@ namespace ClinicApp.Users
                     //Unblock
                     case 3:
                         CLI.CLIWriteLine("\nEnter the username of the account you want to unblock:");
-                        username = OtherFunctions.EnterString();
+                        username = CLI.CLIEnterString();
                         if(UserRepository.Patients.TryGetValue(username, out patient))
                             if(patient.Blocked != Blocked.Unblocked)
                                 patient.Blocked = Blocked.Unblocked;
@@ -338,7 +336,7 @@ namespace ClinicApp.Users
                     CLI.CLIWriteLine(line);
                     CLI.CLIWriteLine("1: Approve");
                     CLI.CLIWriteLine("2: Deny");
-                    option = OtherFunctions.EnterNumberWithLimit(1, 2);
+                    option = CLI.CLIEnterNumberWithLimit(1, 2);
                     if(option == 1)
                     {
                         if (!int.TryParse(line.Split("|")[0], out id))
@@ -386,7 +384,7 @@ namespace ClinicApp.Users
             while(option != 0)
             {
                 CLI.CLIWriteLine("\nEnter the patients username:");
-                userName = OtherFunctions.EnterString();
+                userName = CLI.CLIEnterString();
                 if (UserRepository.Patients.TryGetValue(userName, out patient))
                 {
                     option = 0; //We found the patient. No need to search for him again.
@@ -422,7 +420,7 @@ namespace ClinicApp.Users
                             date = OtherFunctions.GetGoodDate();
 
                             CLI.CLIWrite("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
-                            time = OtherFunctions.AskForTime();
+                            time = CLI.CLIEnterTime();
 
                             dateTime = date.Date + time.TimeOfDay;
                             if (dateTime < DateTime.Now)
@@ -438,7 +436,7 @@ namespace ClinicApp.Users
                                     CLI.CLIWriteLine("The doctor is not availible at that time. Try again?");
                                     CLI.CLIWriteLine("1: Yes");
                                     CLI.CLIWriteLine("0: No");
-                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                    option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                                 }
                                 else if (!PatientService.CheckAppointment(patient, dateTime, 15))
                                 {
@@ -446,7 +444,7 @@ namespace ClinicApp.Users
                                     CLI.CLIWriteLine("The patient is not availible at that time. Try again?");
                                     CLI.CLIWriteLine("1: Yes");
                                     CLI.CLIWriteLine("0: No");
-                                    option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
+                                    option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                                 }
                                 else
                                 {
@@ -468,7 +466,7 @@ namespace ClinicApp.Users
                     CLI.CLIWriteLine("\nThere is no such patient. Try again?");
                     CLI.CLIWriteLine("1: Yes");
                     CLI.CLIWriteLine("0: No");
-                    option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                    option = CLI.CLIEnterNumberWithLimit(0, 1);
                 }
             }
         }
@@ -483,7 +481,7 @@ namespace ClinicApp.Users
             {
                 //Finding the patient.
                 CLI.CLIWriteLine("\nEnter the patients username:");
-                userName = OtherFunctions.EnterString();
+                userName = CLI.CLIEnterString();
                 if (UserRepository.Patients.TryGetValue(userName, out patient))
                 {
                     option = 0; //We found the patient. No need to search for him again.
@@ -498,7 +496,7 @@ namespace ClinicApp.Users
                         CLI.CLIWriteLine(numberOfOptions + ": " + field);
                         fields.Add(field);
                     }
-                    option2 = OtherFunctions.EnterNumberWithLimit(1, numberOfOptions);
+                    option2 = CLI.CLIEnterNumberWithLimit(1, numberOfOptions);
                     Fields fieldOfDoctor = fields[option2 - 1]; //-1 because it starts from zero and options start from 1.
 
                     //Checking if there's a doctor with that specialty.
@@ -595,7 +593,7 @@ namespace ClinicApp.Users
                         CLI.CLIWriteLine("There are no more examinations left that can be delayed.");
 
                     //Finally, we create the examination and delay the other one.
-                    option2 = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                    option2 = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                     if (option2 == 0)
                         return;
                     KeyValuePair<Clinic.Examination, DateTime> examinationForDelaying = examinationsForDelayingOptions[option2 - 1]; //-1 because it starts from zero and options start from 1.
@@ -636,7 +634,7 @@ namespace ClinicApp.Users
                     CLI.CLIWriteLine("\nThere is no such patient. Try again?");
                     CLI.CLIWriteLine("1: Yes");
                     CLI.CLIWriteLine("0: No");
-                    option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                    option = CLI.CLIEnterNumberWithLimit(0, 1);
                 }
             }
         }
@@ -686,7 +684,7 @@ namespace ClinicApp.Users
                         CLI.CLIWriteLine(numberOfOptions + ": Bandages");
                     }
                     CLI.CLIWriteLine("0: Back to menu");
-                    option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                    option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                     if(option != 0)
                     {
                         CLI.CLIWriteLine("");
@@ -696,7 +694,7 @@ namespace ClinicApp.Users
                             if(option == 0)
                             {
                                 CLI.CLIWriteLine("How many gauzes would you like to order?");
-                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                option = CLI.CLIEnterNumberWithLimit(1, 1000);
                                 EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Gauzes, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
@@ -707,7 +705,7 @@ namespace ClinicApp.Users
                             if (option == 0)
                             {
                                 CLI.CLIWriteLine("How many stiches would you like to order?");
-                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                option = CLI.CLIEnterNumberWithLimit(1, 1000);
                                 EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Stiches, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
@@ -718,7 +716,7 @@ namespace ClinicApp.Users
                             if (option == 0)
                             {
                                 CLI.CLIWriteLine("How many vaccines would you like to order?");
-                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                option = CLI.CLIEnterNumberWithLimit(1, 1000);
                                 EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Vaccines, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
@@ -729,7 +727,7 @@ namespace ClinicApp.Users
                             if (option == 0)
                             {
                                 CLI.CLIWriteLine("How many bandages would you like to order?");
-                                option = OtherFunctions.EnterNumberWithLimit(1, 1000);
+                                option = CLI.CLIEnterNumberWithLimit(1, 1000);
                                 EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Bandages, option, DateTime.Now.Date);
                                 SystemFunctions.EquipmentRequests.Add(equipmentRequest);
                             }
@@ -786,22 +784,22 @@ namespace ClinicApp.Users
                 CLI.CLIWriteLine("\nDo you want to move equipment?");
                 CLI.CLIWriteLine("1: Yes");
                 CLI.CLIWriteLine("0: No");
-                option = OtherFunctions.EnterNumberWithLimit(0, 1);
+                option = CLI.CLIEnterNumberWithLimit(0, 1);
                 if (option == 1)
                 {
                     int idFrom, idTo, amount, totalEquipment = 0;
                     EquipmentType type;
                     Room roomFrom, roomTo;
                     CLI.CLIWriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
-                    idFrom = OtherFunctions.EnterNumber();
-                    idTo = OtherFunctions.EnterNumber();
-                    amount = OtherFunctions.EnterNumber();
+                    idFrom = CLI.CLIEnterNumber();
+                    idTo = CLI.CLIEnterNumber();
+                    amount = CLI.CLIEnterNumber();
                     CLI.CLIWriteLine("\nWhich of the following equipment would you like to move?");
                     CLI.CLIWriteLine("1: Gauzes");
                     CLI.CLIWriteLine("2: Stiches");
                     CLI.CLIWriteLine("3: Vaccines");
                     CLI.CLIWriteLine("4: Bandages");
-                    option = OtherFunctions.EnterNumberWithLimit(1, 4);
+                    option = CLI.CLIEnterNumberWithLimit(1, 4);
                     switch (option)
                     {
                         case 1:

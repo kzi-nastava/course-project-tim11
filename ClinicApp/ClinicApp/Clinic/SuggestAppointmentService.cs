@@ -27,7 +27,7 @@ namespace ClinicApp.Clinic
             DateTime time;
             do
             {
-                time = OtherFunctions.AskForTime();
+                time = CLI.CLIEnterTime();
                 time = date.Date + time.TimeOfDay;
                 if (time < DateTime.Now)
                 {
@@ -39,7 +39,7 @@ namespace ClinicApp.Clinic
 
             //todo take time of appointment
             Console.WriteLine("Please enter the preferred time of your Examination in format [HH:mm]:");
-            DateTime preferredTime = OtherFunctions.AskForTime();
+            DateTime preferredTime = CLI.CLIEnterTime();
 
 
             Console.WriteLine("Enter the username of your preferred doctor. Do you want to view the list of doctors? (y/n)");

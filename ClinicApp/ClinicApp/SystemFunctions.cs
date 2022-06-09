@@ -43,7 +43,6 @@ namespace ClinicApp
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         public static string ReferralsFilePath = "../../../Data/referrals.txt";
-        public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
         public static string MedicineFilePath = "../../../Data/medicine.txt";
         public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
         public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
@@ -70,9 +69,7 @@ namespace ClinicApp
                 }
             }
 
-
-            //Load medicine
-
+            //Loads medicine.
             using (StreamReader reader = new StreamReader(MedicineFilePath))
             {
                 string line;
@@ -83,6 +80,7 @@ namespace ClinicApp
                 }
             }
 
+            //Loads perscriptions.
             using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
             {
                 string line;
@@ -95,10 +93,7 @@ namespace ClinicApp
                 }
             }
 
-
-
-            // Load referrals
-
+            //Loads referrals.
             using (StreamReader reader = new StreamReader(ReferralsFilePath))
             {
                 string line;
@@ -112,7 +107,6 @@ namespace ClinicApp
 
 
             //Loads the examinations.
-
             using (StreamReader reader = new StreamReader(AppointmentsFilePath))
             {
                 string line;
@@ -154,7 +148,6 @@ namespace ClinicApp
             }
 
             //Loads the equipment requests.
-
             using (StreamReader reader = new StreamReader(EquipmentRequestsFilePath))
             {
                 string line;

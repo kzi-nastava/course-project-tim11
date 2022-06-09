@@ -19,7 +19,7 @@ namespace ClinicApp
                 SystemFunctions.Update();
                 numberOfOptions = currentUser.MenuWrite();
                 Console.Write(">> ");
-                option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                 Console.WriteLine();
                 if (option == 1)
                 {

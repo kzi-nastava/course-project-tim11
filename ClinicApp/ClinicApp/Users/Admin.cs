@@ -220,7 +220,7 @@ namespace ClinicApp.Users
             Console.WriteLine("2. CRUD ingrediants");
             Console.WriteLine("3. Reviewed medicine requests");
             Console.WriteLine("0. Return");
-            int answer = OtherFunctions.EnterNumber();
+            int answer = CLI.CLIEnterNumber();
             while (true)
             {
                 switch (answer)

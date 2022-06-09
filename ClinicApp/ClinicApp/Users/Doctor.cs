@@ -93,7 +93,7 @@ namespace ClinicApp.Users
             Console.WriteLine("Chose how you wish to manage your appointments: ");
             string options = "\n1. Create\n2. View\n3. Edit(by ID)\n4. Delete(by ID)\n";
             Console.Write($"{options}Write the number of your choice\n>> ");
-            int choice = OtherFunctions.EnterNumberWithLimit(1, 4);
+            int choice = CLI.CLIEnterNumberWithLimit(1, 4);
             switch (choice)
             {
                 case 1:
@@ -118,11 +118,11 @@ namespace ClinicApp.Users
             int type = 0;
             int duration = 0;
             Console.Write("\nDo you want to create an (1)EXAMINATION or an (2)OPERATION?\n>> ");
-            type = OtherFunctions.EnterNumberWithLimit(0, 3);
+            type = CLI.CLIEnterNumberWithLimit(0, 3);
             if (type == 2)
             {
                 Console.Write("\nEnter the duration of your Operation in minutes (e.g. 60)\n>> ");
-                duration = OtherFunctions.EnterNumberWithLimit(15, 1000);
+                duration = CLI.CLIEnterNumberWithLimit(15, 1000);
             }
             else duration = 15;
 
@@ -161,7 +161,7 @@ namespace ClinicApp.Users
             
             do
             {
-                time = OtherFunctions.AskForTime();
+                time = CLI.CLIEnterTime();
                 time = date.Date + time.TimeOfDay;
                 if (time < DateTime.Now)
                 {
@@ -253,7 +253,7 @@ namespace ClinicApp.Users
             while (appointment == null)
             {
                 Console.WriteLine("Enter the ID of the appointment you wish to edit?");
-                int id = OtherFunctions.EnterNumber();
+                int id = CLI.CLIEnterNumber();
                 foreach (Appointment tmp in this.Appointments)
                 {
                     if (tmp.ID == id)
@@ -279,7 +279,7 @@ namespace ClinicApp.Users
             DateTime newDate;
             do
             {
-                newDate = OtherFunctions.AskForDate();
+                newDate = CLI.CLIEnterDate();
                 if (newDate.Date < DateTime.Now.Date)
                 {
                     Console.WriteLine("You can't enter a date that's in the past");
@@ -314,7 +314,7 @@ namespace ClinicApp.Users
             DateTime newTime;
             do
             {
-                newTime = OtherFunctions.AskForTime();
+                newTime = CLI.CLIEnterTime();
                 newTime = appointment.DateTime.Date + newTime.TimeOfDay;
                 if (newTime < DateTime.Now)
                 {
@@ -348,7 +348,7 @@ namespace ClinicApp.Users
         private void DeleteAppointment()
         {
             Console.WriteLine("Enter the ID of the appointment you wish to delete.");
-            int id = OtherFunctions.EnterNumber();
+            int id = CLI.CLIEnterNumber();
             Appointment appointment = null;
             foreach (Appointment tmp in this.Appointments)
             {
@@ -409,7 +409,7 @@ namespace ClinicApp.Users
                 if (choice.ToUpper() == "Y")
                 {
                     Console.Write("\n\nEnter the ID of the appointment you wish to view\n>> ");
-                    int id = OtherFunctions.EnterNumber();
+                    int id = CLI.CLIEnterNumber();
                     Appointment chosenAppointment;
                     if (!SystemFunctions.CurrentAppointments.TryGetValue(id, out chosenAppointment))
                     {
@@ -442,7 +442,7 @@ namespace ClinicApp.Users
             if (choice.ToUpper() == "Y")
             {
                 Console.Write("\n\nEnter the ID of the appointment you wish to perform\n>> ");
-                int id = OtherFunctions.EnterNumber();
+                int id = CLI.CLIEnterNumber();
 
                 Appointment chosenAppointment;
                 if (!SystemFunctions.CurrentAppointments.TryGetValue(id, out chosenAppointment))
@@ -543,7 +543,7 @@ namespace ClinicApp.Users
                 if (choice.ToUpper() == "Y")
                 {
                     Console.Write("New weight: ");
-                    double weight = OtherFunctions.EnterDouble();
+                    double weight = CLI.CLIEnterDouble();
                     healthRecord.Weight = weight;
                 }
                 Console.Write("Change height? (y/n): ");
@@ -551,7 +551,7 @@ namespace ClinicApp.Users
                 if (choice.ToUpper() == "Y")
                 {
                     Console.Write("New height: ");
-                    double height = OtherFunctions.EnterDouble();
+                    double height = CLI.CLIEnterDouble();
                     healthRecord.Height = height;
                 }
                 Console.Write("Add to medical history(y/n): ");
@@ -575,7 +575,7 @@ namespace ClinicApp.Users
 
         void CreateReferral(ref Patient patient) {
             Console.WriteLine("Create referral for (1) specific doctor or (2) specific field");
-            int i = OtherFunctions.EnterNumberWithLimit(0, 3);
+            int i = CLI.CLIEnterNumberWithLimit(0, 3);
             if (i == 1)
             {
                 Doctor doctor = AskUsernameDoctor();
@@ -629,11 +629,11 @@ namespace ClinicApp.Users
             for(int i = 0; i < 3; i++)
             {
                 Console.Write((i+1) + ") >> ");
-                frequency[i] = OtherFunctions.EnterNumber();
+                frequency[i] = CLI.CLIEnterNumber();
                 Console.WriteLine();
             }
             Console.WriteLine("Should the patient take the medicine: \n(1) Before a meal\n(2) After a meal\n(3) During a meal\n(4) Doesn't matter\n\nChose by number");
-            int medicineMealInfo = OtherFunctions.EnterNumberWithLimit(0, 5);
+            int medicineMealInfo = CLI.CLIEnterNumberWithLimit(0, 5);
             MedicineFoodIntake medicineFoodIntake = (MedicineFoodIntake)(medicineMealInfo - 1);
             Prescription prescription = new Prescription(patient, this, DateTime.Now, medicine, frequency, medicineFoodIntake);
             prescription.ShowPrescription();
@@ -659,7 +659,7 @@ namespace ClinicApp.Users
                 
                 var clinicEquipment = EquipmentRepo.Get(equipment.Id);
                 Console.Write($"{equipment.Name} : ");
-                int quantity = OtherFunctions.EnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
+                int quantity = CLI.CLIEnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
                 int newQuantity = clinicEquipment.Amount - quantity;
                 EquipmentRepo.Update(equipment.Id, newQuantity);
                 Console.WriteLine();
