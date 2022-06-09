@@ -20,7 +20,6 @@ namespace ClinicApp
             else return false;
         }
 
-
         public static Fields AskField() {
 
             CLI.CLIWriteLine("\nChose specialization by number:\n");
@@ -36,6 +35,41 @@ namespace ClinicApp
 
 
         }      
+
+        public static User FindUser(Roles role = Roles.Nobody)
+        {
+            User user;
+            int option = 1;
+
+            while (option != 0)
+            {
+                CLI.CLIWriteLine("\nWrite the username of the patient who's account you want updated:");
+                string userName = CLI.CLIEnterString();
+                if (UserRepository.Users.TryGetValue(userName, out user))
+                {
+                    if (user.Role == role || role == Roles.Nobody)
+                    {
+                        return user;
+                    }
+                    else
+                    {
+                        CLI.CLIWriteLine("\nThis account doesn't belong to a " + role.ToString().ToLower() + ". Want to try again?");
+                        CLI.CLIWriteLine("1: Yes");
+                        CLI.CLIWriteLine("0: No");
+                        option = CLI.CLIEnterNumberWithLimit(0, 1);
+                    }
+                }
+                else
+                {
+                    CLI.CLIWriteLine("\nThere is no account with this username. Want to try again?");
+                    CLI.CLIWriteLine("1: Yes");
+                    CLI.CLIWriteLine("0: No");
+                    option = CLI.CLIEnterNumberWithLimit(0, 1);
+                }
+            }
+
+            return null;
+        }
 
         public static User LogIn()
         {

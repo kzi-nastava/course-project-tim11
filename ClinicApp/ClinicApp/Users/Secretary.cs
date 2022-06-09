@@ -94,8 +94,9 @@ namespace ClinicApp.Users
         //Manages the Patient CRUD.
         private static void PatientsCRUD()
         {
-            int option = 1, option2, numberOfOptions = 4;
-            User tempUser;
+            int option = 1, numberOfOptions = 4;
+            User patient;
+
             while (option != 0)
             {
                 CLI.CLIWriteLine("\nWhat would you like to do?");
@@ -110,9 +111,7 @@ namespace ClinicApp.Users
                 {
                     //Create
                     case 1:
-                        User patient = Registration.Register(Roles.Patient);
-                        UserRepository.Users.Add(patient.UserName, patient);
-                        UserRepository.Patients.Add(patient.UserName, (Patient)patient);
+                        PatientService.CreatePatient();
                         break;
                     //Read
                     case 2:
@@ -120,122 +119,22 @@ namespace ClinicApp.Users
                         break;
                     //Update
                     case 3:
-                        option2 = 1;
-                        while (option2 != 0)
-                        {
-                            CLI.CLIWriteLine("\nWrite the username of the patient who's account you want updated:");
-                            string userName = CLI.CLIEnterString();
-                            if (UserRepository.Users.TryGetValue(userName, out tempUser))
-                            {
-                                if (tempUser.Role == Roles.Patient)
-                                {
-                                    UpdatePatient((Patient)tempUser);
-                                }
-                                else
-                                {
-                                    CLI.CLIWriteLine("\nThis account doesn't belong to a patient. Want to try again?");
-                                    CLI.CLIWriteLine("1: Yes");
-                                    CLI.CLIWriteLine("0: No");
-                                    option2 = CLI.CLIEnterNumberWithLimit(0, 1);
-                                }
-                            }
-                            else
-                            {
-                                CLI.CLIWriteLine("\nThere is no account with this username. Want to try again?");
-                                CLI.CLIWriteLine("1: Yes");
-                                CLI.CLIWriteLine("0: No");
-                                option2 = CLI.CLIEnterNumberWithLimit(0, 1);
-                            }
-                        }
+                        patient = OtherFunctions.FindUser(Roles.Patient);
+                        if (patient != null)
+                            PatientService.UpdatePatient((Patient)patient);
                         break;
                     //Delete
                     case 4:
-                        option2 = 1;
-                        while(option2 != 0)
-                        {
-                            CLI.CLIWriteLine("\nWrite the username of the patient who's account you want deleted:");
-                            string userName = CLI.CLIEnterString();
-                            if (UserRepository.Users.TryGetValue(userName, out tempUser))
-                            {
-                                if (tempUser.Role == Roles.Patient)
-                                {
-                                    UserRepository.Users.Remove(userName);
-                                    UserRepository.Patients.Remove(userName);
-                                    option2 = 0;
-                                }
-                                else
-                                {
-                                    CLI.CLIWriteLine("\nThis account doesn't belong to a patient. Want to try again?");
-                                    CLI.CLIWriteLine("1: Yes");
-                                    CLI.CLIWriteLine("0: No");
-                                    option2 = CLI.CLIEnterNumberWithLimit(0, 1);
-                                }
-                            }
-                            else
-                            {
-                                CLI.CLIWriteLine("\nThere is no account with this username. Want to try again?");
-                                CLI.CLIWriteLine("1: Yes");
-                                CLI.CLIWriteLine("0: No");
-                                option2 = CLI.CLIEnterNumberWithLimit(0, 1);
-                            }
-                        }
+                        patient = OtherFunctions.FindUser(Roles.Patient);
+                        if (patient != null)
+                            PatientService.DeletePatient((Patient)patient);
                         break;
                 }
             }
-        }
-
-        //Patient update.
-        private static void UpdatePatient(Patient patient)
-        {
-            int option = 1;
-
-            while(option != 0)
-            {
-                patient.Print();
-                CLI.CLIWriteLine("\nWhat would you like to change?");
-                CLI.CLIWriteLine("1: Username");
-                CLI.CLIWriteLine("2: Password");
-                CLI.CLIWriteLine("3: Name");
-                CLI.CLIWriteLine("4: Last name");
-                CLI.CLIWriteLine("5: Gender");
-                CLI.CLIWriteLine("6: Date of birth");
-                CLI.CLIWriteLine("0: Back to menu");
-                option = CLI.CLIEnterNumberWithLimit(0, 6);
-
-                switch(option)
-                {
-                    //Username
-                    case 1:
-                        patient.UserName = Registration.GetUsername();
-                        break;
-                    //Password
-                    case 2:
-                        patient.Password = Registration.GetPassword();
-                        break;
-                    //Name
-                    case 3:
-                        patient.Name = Registration.GetName();
-                        break;
-                    //Last name
-                    case 4:
-                        patient.LastName = Registration.GetName();
-                        break;
-                    //Gender
-                    case 5:
-                        patient.Gender = Registration.GetGender()[0];
-                        break;
-                    //Date of birth
-                    case 6:
-                        DateTime date;
-                        DateTime.TryParse(Registration.GetDateOfBirth(), out date);
-                        patient.DateOfBirth = date.Date;
-                        break;
-                }
-            }
-        }
+        }        
 
         //Manages blocked and unblocked patients.
-        private static void ManageBlockedPatients()
+        public static void ManageBlockedPatients()
         {
             int option = 1, numberOfOptions = 4;
             string username;
