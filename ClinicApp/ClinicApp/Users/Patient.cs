@@ -71,8 +71,13 @@ namespace ClinicApp.Users
 
         }
 
-//============================================= KRAJ PACIJENTA , MAIN KLASA ZA PACIJENTA =========================================
-//========================== MENU KLASA ZA PACIJENTA????? ==============================================
+        public string Compress()
+        {
+            return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role + "|" + Blocked.ToString();
+        }
+
+        //============================================= KRAJ PACIJENTA , MAIN KLASA ZA PACIJENTA =========================================
+        //========================== MENU KLASA ZA PACIJENTA????? ==============================================
         public override int MenuWrite()
         {
             Console.WriteLine("What would you like to do?");

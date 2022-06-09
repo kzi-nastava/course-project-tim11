@@ -30,10 +30,5 @@ namespace ClinicApp.Users
         {
         }
 
-        public string Compress(Patient patient)
-        {
-            return patient.UserName + "|" + patient.Password + "|" + patient.Name + "|" + patient.LastName + "|" + patient.DateOfBirth.ToString("dd/MM/yyyy") + "|" + patient.Gender + "|" + patient.Role + "|" + patient.Blocked.ToString();
-        }
-
     }
 }

@@ -15,7 +15,7 @@ namespace ClinicApp.Users
         public Roles Role { get; set; }
         public MessageBox MessageBox { get; set; }
 
-        //public abstract string Compress();
+        public abstract string Compress();
         public abstract int MenuWrite();
         public abstract void MenuDo(int option);
         public void Print(bool withRole = false)
