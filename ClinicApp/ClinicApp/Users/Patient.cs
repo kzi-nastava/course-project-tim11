@@ -71,7 +71,7 @@ namespace ClinicApp.Users
 
         }
 
-        public string Compress()
+        public override string Compress()
         {
             return UserName + "|" + Password + "|" + Name + "|" + LastName + "|" + DateOfBirth.ToString("dd/MM/yyyy") + "|" + Gender + "|" + Role + "|" + Blocked.ToString();
         }

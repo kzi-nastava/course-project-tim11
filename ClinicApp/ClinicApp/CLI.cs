@@ -7,12 +7,12 @@ namespace ClinicApp
 {
     public class CLI
     {
-        public static void CLIWrite(string text)
+        public static void CLIWrite(string text = "")
         {
             Console.Write(text);
         }
 
-        public static void CLIWriteLine(string text)
+        public static void CLIWriteLine(string text = "")
         {
             Console.WriteLine(text);
         }
