@@ -340,7 +340,7 @@ namespace ClinicApp.Users
                     option = OtherFunctions.EnterNumberWithLimit(1, 2);
                     if(option == 1)
                     {
-                        if (!Int32.TryParse(line.Split("|")[0], out id))
+                        if (!int.TryParse(line.Split("|")[0], out id))
                             id = -1;
                         if (line.Split("|")[1] == "DELETE")
                         {
@@ -366,7 +366,7 @@ namespace ClinicApp.Users
                                 SystemFunctions.AllAppointments.Add(editedExamination.ID, editedExamination);
                                 SystemFunctions.CurrentAppointments.Remove(appointment.ID);
                                 SystemFunctions.CurrentAppointments.Add(editedExamination.ID, editedExamination);
-                                appointment.Patient.InsertAppointment(editedExamination);
+                                PatientService.InsertAppointmentPatient(appointment.Patient, editedExamination);
                                 editedExamination.Doctor.InsertAppointment(editedExamination);
                             }
                         }
@@ -414,7 +414,7 @@ namespace ClinicApp.Users
                         //Finds the date and time for the examination.
                         bool hasTime = false;
                         int option2 = 1;
-                        DateTime dateTime = DateTime.Now, date, time;
+                        DateTime dateTime, date, time;
                         while(hasTime == false && option2 != 0)
                         {
                             CLI.CLIWrite("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
@@ -439,7 +439,7 @@ namespace ClinicApp.Users
                                     CLI.CLIWriteLine("0: No");
                                     option2 = OtherFunctions.EnterNumberWithLimit(0, 1);
                                 }
-                                else if (!patient.CheckAppointment(dateTime, 15))
+                                else if (!PatientService.CheckAppointment(patient, dateTime, 15))
                                 {
                                     hasTime = false;
                                     CLI.CLIWriteLine("The patient is not availible at that time. Try again?");
@@ -452,7 +452,7 @@ namespace ClinicApp.Users
                                     //Creates the examination.
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor, patient, false, 0, 0);
                                     doctor.InsertAppointment(examination);
-                                    patient.InsertAppointment(examination);
+                                    PatientService.InsertAppointmentPatient(patient, examination);
                                     SystemFunctions.AllAppointments.Add(id, examination);
                                     SystemFunctions.CurrentAppointments.Add(id, examination);
                                     patient.Referrals.RemoveAt(0);
@@ -519,7 +519,7 @@ namespace ClinicApp.Users
                     while(dateTime <= DateTime.Now.AddMinutes(120) && hasFoundTime == false)
                     {
                         DateRange dateRange = new DateRange(dateTime, dateTime.AddMinutes(15));
-                        if(patient.CheckAppointment(dateTime, 15))
+                        if(PatientService.CheckAppointment(patient, dateTime, 15))
                         {
                             foreach(KeyValuePair<string, Doctor> doctor in UserRepository.Doctors)
                             {
@@ -540,7 +540,7 @@ namespace ClinicApp.Users
                                     id++;
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor.Value, patient, false, 0, 0);
                                     doctor.Value.InsertAppointment(examination);
-                                    patient.InsertAppointment(examination);
+                                    PatientService.InsertAppointmentPatient(patient, examination);
                                     SystemFunctions.AllAppointments.Add(id, examination);
                                     SystemFunctions.CurrentAppointments.Add(id, examination);
                                     doctor.Value.MessageBox.AddMessage("You have an emergency examination.");
@@ -558,7 +558,7 @@ namespace ClinicApp.Users
                     //First, we make a list of all the examinations that can be delayed and by how much can they be delayed.
                     List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelaying = new List<KeyValuePair<Clinic.Examination, DateTime>>();
                     foreach (KeyValuePair<int, Clinic.Appointment> examinationForDelay in SystemFunctions.AllAppointments)
-                        if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || patient.CheckAppointment(examinationForDelay.Value.DateTime, 15)))
+                        if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || PatientService.CheckAppointment(patient, examinationForDelay.Value.DateTime, 15)))
                         {
                             examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>((Clinic.Examination)examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
                             CLI.CLIWriteLine(examinationForDelay.Key.ToString());
@@ -612,7 +612,7 @@ namespace ClinicApp.Users
                     //Creates the examination.
                     Clinic.Examination examination2 = new Clinic.Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
                     examinationForDelaying.Key.Doctor.InsertAppointment(examination2);
-                    patient.InsertAppointment(examination2);
+                    PatientService.InsertAppointmentPatient(patient, examination2);
                     SystemFunctions.AllAppointments.Add(id, examination2);
                     SystemFunctions.CurrentAppointments.Add(id, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("You have an emergency examination.");
@@ -625,7 +625,7 @@ namespace ClinicApp.Users
                     examinationForDelaying.Key.DateTime = examinationForDelaying.Value;
                     examinationForDelaying.Key.Edited++;
                     examinationForDelaying.Key.Doctor.InsertAppointment(examination2);
-                    examinationForDelaying.Key.Patient.InsertAppointment(examination2);
+                    PatientService.InsertAppointmentPatient(examinationForDelaying.Key.Patient, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("Your examination has been delayed.");
                     examinationForDelaying.Key.Patient.MessageBox.AddMessage("Your examination has been delayed.");
                     CLI.CLIWriteLine("The other examination has been delayed successfully.");

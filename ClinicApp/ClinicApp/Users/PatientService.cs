@@ -22,12 +22,12 @@ namespace ClinicApp.Users
             }
         }
 
-        public void ViewPatient(Patient patient)
+        public static void ViewPatient(Patient patient)
         {
             Console.WriteLine($"Patient {patient.Name} {patient.LastName};\nDate of birth {patient.DateOfBirth.ToShortDateString()}; Gender:\n{patient.Gender}");
         }
 
-        public bool CheckAppointment(Patient patient,DateTime dateTime, int duration)
+        public static bool CheckAppointment(Patient patient,DateTime dateTime, int duration)
         {
             foreach (Examination examination in patient.Appointments)
             {
@@ -47,7 +47,7 @@ namespace ClinicApp.Users
             return true;
         }
 
-        public void InsertAppointmentPatient(Patient patient,Appointment newExamination)
+        public static void InsertAppointmentPatient(Patient patient,Appointment newExamination)
         {
             if (patient.Appointments.Count() == 0)
             {
