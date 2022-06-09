@@ -40,7 +40,7 @@ namespace ClinicApp
         public static User LogIn()
         {
             int option = 1;
-            User user = new Nobody(), tempUser = null;
+            User user = new Nobody(), tempUser;
             while (option != 0)
             {
                 CLI.CLIWrite("Username: ");
@@ -73,133 +73,6 @@ namespace ClinicApp
             }
 
             return user;
-        }
-        
-        
-        public static User Register(Roles role = Roles.Nobody)
-        {
-            string text = "", password, passwordCheck, temp;
-            int option;
-
-            CLI.CLIWrite("Username: ");
-            temp = CLI.CLIEnterString();
-            while(UserRepository.Users.ContainsKey(temp))
-            {
-                CLI.CLIWriteLine("This username is taken. Please, try again.");
-                CLI.CLIWrite("Username: ");
-                temp = CLI.CLIEnterString();
-            }
-            text += temp + "|";
-
-            CLI.CLIWrite("Password: ");
-            password = CLI.CLIEnterPassword();
-            CLI.CLIWrite("\nRepeat password: ");
-            passwordCheck = CLI.CLIEnterPassword();
-            while(password != passwordCheck)
-            {
-                CLI.CLIWriteLine("Passwords don't match. Please, try again.");
-                CLI.CLIWrite("Password: ");
-                password = CLI.CLIEnterPassword();
-                CLI.CLIWrite("\nRepeat password: ");
-                passwordCheck = CLI.CLIEnterPassword();
-            }
-            text += password + "|";
-
-            CLI.CLIWrite("\nName: ");
-            text += CLI.CLIEnterString() + "|";
-            CLI.CLIWrite("Last name: ");
-            text += CLI.CLIEnterString() + "|";
-
-            CLI.CLIWrite("Date of birth (e.g. 02/05/1984): ");
-            string format = "dd/MM/yyyy";
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            temp = null;
-            while(temp == null)
-            {
-                try
-                {
-                    temp = DateTime.ParseExact(CLI.CLIEnterString(), format, provider).ToString();
-                }
-                catch (FormatException)
-                {
-                    CLI.CLIWriteLine("Incorrect date format. Please, try again.");
-                }
-            }
-            text += temp + "|";
-
-            CLI.CLIWrite("Gender (m/f/n): ");
-            temp = CLI.CLIEnterString();
-            while(temp != "m" && temp != "f" && temp!= "n")
-            {
-                CLI.CLIWrite("You didn't enter a valid option. Please, try again (m/f/n): ");
-                temp = CLI.CLIEnterString();
-            }
-            text += temp + "|";
-
-            switch(role)
-            {
-                case Roles.Nobody:
-                    CLI.CLIWriteLine("Chose your role.");
-                    CLI.CLIWriteLine("1: Admin");
-                    CLI.CLIWriteLine("2: Secretary");
-                    CLI.CLIWriteLine("3: Doctor");
-                    CLI.CLIWriteLine("4: Patient");
-                    option = CLI.CLIEnterNumberWithLimit(1, 4);
-                    switch (option)
-                    {
-                        case 1:
-                            text += "Admin";
-                            return RegisterAdmin(text);
-                        case 2:
-                            text += "Secretary";
-                            return RegisterSecretary(text);
-                        case 3:
-                            text += "Doctor";
-                            return RegisterDoctor(text);
-                        case 4:
-                            text += "Patient";
-                            return RegisterPatient(text);
-                        default:
-                            return new Nobody();
-                    }
-                case Roles.Admin:
-                    text += "Admin";
-                    return RegisterAdmin(text);
-                case Roles.Secretary:
-                    text += "Secretary";
-                    return RegisterSecretary(text);
-                case Roles.Doctor:
-                    text += "Doctor";
-                    return RegisterDoctor(text);
-                case Roles.Patient:
-                    text += "Patient";
-                    return RegisterPatient(text);
-                default:
-                    return new Nobody();
-            }
-        }
-
-        private static User RegisterAdmin(string text)
-        {
-            return new Admin(text);
-        }
-
-        private static User RegisterSecretary(string text)
-        {
-            return new Secretary(text);
-        }
-
-        private static User RegisterDoctor(string text)
-        {
-            Fields field = AskField();            
-            text += "|" + field.ToString();
-            return new Doctor(text);
-        }
-
-        private static User RegisterPatient(string text)
-        {
-            text += "|Unblocked";
-            return new Patient(text);
         }
 
         public static string Space(int length, string text)

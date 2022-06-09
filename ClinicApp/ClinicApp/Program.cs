@@ -32,7 +32,7 @@ namespace ClinicApp
                 }
                 else if (option == 2 && currentUser.Role == Roles.Nobody)
                 {
-                    currentUser = OtherFunctions.Register();
+                    currentUser = Registration.Register();
                     if(currentUser.Role != Roles.Nobody)
                     {
                         UserRepository.Users.Add(currentUser.UserName, currentUser);

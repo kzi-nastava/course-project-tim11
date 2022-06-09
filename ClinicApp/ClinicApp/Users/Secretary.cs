@@ -110,7 +110,7 @@ namespace ClinicApp.Users
                 {
                     //Create
                     case 1:
-                        User patient = OtherFunctions.Register(Roles.Patient);
+                        User patient = Registration.Register(Roles.Patient);
                         UserRepository.Users.Add(patient.UserName, patient);
                         UserRepository.Patients.Add(patient.UserName, (Patient)patient);
                         break;
@@ -184,11 +184,10 @@ namespace ClinicApp.Users
             }
         }
 
-        //Puts the U in CRUD.
+        //Patient update.
         private static void UpdatePatient(Patient patient)
         {
             int option = 1;
-            string temp;
 
             while(option != 0)
             {
@@ -207,58 +206,29 @@ namespace ClinicApp.Users
                 {
                     //Username
                     case 1:
-                        CLI.CLIWrite("Username: ");
-                        temp = CLI.CLIEnterString();
-                        while (UserRepository.Users.ContainsKey(temp))
-                        {
-                            CLI.CLIWriteLine("This username is taken. Please, try again.");
-                            CLI.CLIWrite("Username: ");
-                            temp = CLI.CLIEnterString();
-                        }
-                        patient.UserName = temp;
+                        patient.UserName = Registration.GetUsername();
                         break;
                     //Password
                     case 2:
-                        string password, passwordCheck;
-                        CLI.CLIWrite("Password: ");
-                        password = CLI.CLIEnterPassword();
-                        CLI.CLIWrite("\nRepeat password: ");
-                        passwordCheck = CLI.CLIEnterPassword();
-                        while (password != passwordCheck)
-                        {
-                            CLI.CLIWriteLine("Passwords don't match. Please, try again.");
-                            CLI.CLIWrite("Password: ");
-                            password = CLI.CLIEnterPassword();
-                            CLI.CLIWrite("\nRepeat password: ");
-                            passwordCheck = CLI.CLIEnterPassword();
-                        }
-                        patient.Password = password;
+                        patient.Password = Registration.GetPassword();
                         break;
                     //Name
                     case 3:
-                        CLI.CLIWrite("\nName: ");
-                        patient.Name = CLI.CLIEnterString();
+                        patient.Name = Registration.GetName();
                         break;
                     //Last name
                     case 4:
-                        CLI.CLIWrite("\nLast name: ");
-                        patient.LastName = CLI.CLIEnterString();
+                        patient.LastName = Registration.GetName();
                         break;
                     //Gender
                     case 5:
-                        CLI.CLIWrite("Gender (m/f/n): ");
-                        temp = CLI.CLIEnterString();
-                        while (temp != "m" && temp != "f" && temp != "n")
-                        {
-                            CLI.CLIWrite("You didn't enter a valid option. Please, try again (m/f/n): ");
-                            temp = CLI.CLIEnterString();
-                        }
-                        patient.Gender = temp[0];
+                        patient.Gender = Registration.GetGender()[0];
                         break;
                     //Date of birth
                     case 6:
-                        CLI.CLIWrite("Date of birth: ");
-                        patient.DateOfBirth = CLI.CLIEnterDate();
+                        DateTime date;
+                        DateTime.TryParse(Registration.GetDateOfBirth(), out date);
+                        patient.DateOfBirth = date.Date;
                         break;
                 }
             }

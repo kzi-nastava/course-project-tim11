@@ -23,7 +23,7 @@ namespace ClinicApp
             input = input.Trim();
             while (input == "")
             {
-                Console.WriteLine("You have to write something.");
+                CLIWriteLine("You have to write something.");
                 input = Console.ReadLine();
                 input = input.Trim();
             }
@@ -42,7 +42,7 @@ namespace ClinicApp
                     if (password.Length > 0)
                     {
                         password = password.Substring(0, (password.Length - 1));
-                        Console.Write("\b \b");
+                        CLIWrite("\b \b");
                     }
                 }
                 else if (key.Key == ConsoleKey.Enter && password.Length > 0)
@@ -52,7 +52,7 @@ namespace ClinicApp
                 else
                 {
                     password += key.KeyChar;
-                    Console.Write("*");
+                    CLIWrite("*");
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace ClinicApp
             string input = CLIEnterString();
             while (input.Contains(delimiter))
             {
-                Console.WriteLine("Invalid option, cannot contain " + delimiter + ", try again.");
+                CLIWriteLine("Invalid option, cannot contain " + delimiter + ", try again.");
                 input = CLIEnterString();
             }
             return input;
@@ -81,7 +81,7 @@ namespace ClinicApp
                 }
                 catch
                 {
-                    Console.WriteLine("You didn't enter a number. Try again.");
+                    CLIWriteLine("You didn't enter a number. Try again.");
                 }
                 return x;
             }
@@ -94,7 +94,7 @@ namespace ClinicApp
             int option = CLIEnterNumber();
             while (option < lowerLimit || option > upperLimit)
             {
-                Console.WriteLine("You didn't enter a valid option. Try again.");
+                CLIWriteLine("You didn't enter a valid option. Try again.");
                 option = CLIEnterNumber();
             }
 
@@ -114,7 +114,7 @@ namespace ClinicApp
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("You didn't enter a decimal number. Try again.");
+                    CLIWriteLine("You didn't enter a decimal number. Try again.");
                 }
                 return x;
             }
@@ -127,14 +127,13 @@ namespace ClinicApp
             while (true)
             {
                 s = CLIEnterString();
-                if (DateTime.TryParse(s, out date) == false)
+                if (DateTime.TryParse(s, out date) == true)
                 {
-                    Console.WriteLine("Invalid option, try again");
+                    return date.Date;
                 }
                 else
                 {
-                    date = DateTime.Parse(s);
-                    return date.Date;
+                    CLIWriteLine("Invalid option, try again");
                 }
             }
         }
@@ -147,7 +146,7 @@ namespace ClinicApp
                 date = CLIEnterDate();
                 if (date.Date < DateTime.Now.Date)
                 {
-                    Console.WriteLine("You can't enter a date that's in the past");
+                    CLIWriteLine("You can't enter a date that's in the past");
                 }
             } while (date.Date < DateTime.Now.Date);
             return date;
@@ -167,7 +166,7 @@ namespace ClinicApp
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("\nIncorrect time format, try again");
+                    CLIWriteLine("\nIncorrect time format, try again");
                 }
             }
             return (DateTime)time;
