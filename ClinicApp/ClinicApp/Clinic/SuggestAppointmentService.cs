@@ -1,4 +1,6 @@
 ﻿using System;
+using ClinicApp.Users;
+
 namespace ClinicApp.Clinic
 {
     public class SuggestAppointmentService
@@ -51,12 +53,12 @@ namespace ClinicApp.Clinic
             Console.WriteLine("\nEnter the username:");
             string userName = Console.ReadLine();
             Doctor doctor = null;
-            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+            if (!UserRepository.Doctors.TryGetValue(userName, out doctor))
             {
                 Console.WriteLine("Doctor with that username does not exist");
                 return;
             }
-            doctor = SystemFunctions.Doctors[userName];
+            doctor = UserRepository.Doctors[userName];
 
             Console.WriteLine("Please enter the priority for your search. Enter 'd' if doctor is your priority, enter 'a' if appointment is your priority.");
             string priority = Console.ReadLine();
@@ -156,7 +158,7 @@ namespace ClinicApp.Clinic
             DateTime preferredAppointment = DateTime.Today + preferredTime.TimeOfDay;
             while (preferredAppointment < lastAppointment)
             {
-                foreach (Doctor doctor in SystemFunctions.Doctors.Values)
+                foreach (Doctor doctor in UserRepository.Doctors.Values)
                 {
                     bool check = doctor.CheckAppointment(preferredAppointment, duration);
                     if (check)

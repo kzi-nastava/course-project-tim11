@@ -190,7 +190,7 @@ namespace ClinicApp.Users
             Console.Write("\nEnter the username: ");
             string userName = Console.ReadLine();
             Patient patient = null;
-            if (!SystemFunctions.Patients.TryGetValue(userName, out patient))
+            if (!UserRepository.Patients.TryGetValue(userName, out patient))
             {
                 Console.WriteLine("Patient with that username does not exist.");
             }
@@ -600,7 +600,7 @@ namespace ClinicApp.Users
             Console.Write(">> ");
             string userName = Console.ReadLine();
             Doctor doctor = null;
-            if (!SystemFunctions.Doctors.TryGetValue(userName, out doctor))
+            if (!UserRepository.Doctors.TryGetValue(userName, out doctor))
             {
                 Console.WriteLine("Doctor with that username does not exist.");
             }

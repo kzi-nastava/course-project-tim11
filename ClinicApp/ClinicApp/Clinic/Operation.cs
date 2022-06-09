@@ -28,8 +28,8 @@ namespace ClinicApp.Clinic
 
             ID = Convert.ToInt32(data[0]);
             DateTime = DateTime.Parse(data[1]);
-            Doctor = SystemFunctions.Doctors[data[2]];
-            Patient = SystemFunctions.Patients[data[3]];
+            Doctor = UserRepository.Doctors[data[2]];
+            Patient = UserRepository.Patients[data[3]];
             Finished = Convert.ToBoolean(data[4]);
             Tombstone = Convert.ToInt32(data[5]);
             Edited = Convert.ToInt32(data[6]);

@@ -207,7 +207,7 @@ namespace ClinicApp
                 string userName = EnterString();
                 Console.Write("Password: ");
                 string password = MaskPassword();
-                if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                if (UserRepository.Users.TryGetValue(userName, out tempUser))
                 {
                     if (tempUser.Password == password)
                     {
@@ -243,7 +243,7 @@ namespace ClinicApp
 
             Console.Write("Username: ");
             temp = EnterString();
-            while(SystemFunctions.Users.ContainsKey(temp))
+            while(UserRepository.Users.ContainsKey(temp))
             {
                 Console.WriteLine("This username is taken. Please, try again.");
                 Console.Write("Username: ");
@@ -392,7 +392,7 @@ namespace ClinicApp
             Console.WriteLine(LineInTable(withRole));
             Console.WriteLine(TableHeader(withRole));
             Console.WriteLine(LineInTable(withRole));
-            foreach(KeyValuePair<string, User> pair in SystemFunctions.Users)
+            foreach(KeyValuePair<string, User> pair in UserRepository.Users)
             {
                 if(role == Roles.Nobody || pair.Value.Role == role)
                 {

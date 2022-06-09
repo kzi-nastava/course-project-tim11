@@ -26,11 +26,8 @@ namespace ClinicApp
 
     public class SystemFunctions
     {
+        //Dictionaries
 
-        // Dictionary of users created for faster and easier acces to information from the database
-        public static Dictionary<string, User> Users { get; set; } = new Dictionary<string, User>();
-        public static Dictionary<string, Doctor> Doctors { get; set; } = new Dictionary<string, Doctor>();
-        
         public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
         public static Dictionary<int, Appointment> AllAppointments { get; set; } = new Dictionary<int, Appointment>();
         public static Dictionary<int, Appointment> CurrentAppointments { get; set; } = new Dictionary<int, Appointment>();
@@ -39,9 +36,8 @@ namespace ClinicApp
         public static List<Referral> Referrals { get; set; } = new List<Referral>();
         static public List<EquipmentRequest> EquipmentRequests { get; set; } = new List<EquipmentRequest>();
 
-        // User file path may change in release mode, this is the file path in debug mode
+        // File paths
 
-        public static string UsersFilePath = "../../../Data/users.txt";
         public static string AppointmentsFilePath = "../../../Data/appointments.txt";
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
@@ -164,7 +160,7 @@ namespace ClinicApp
                 {
                     User user;
                     string[] data = line.Split("|");
-                    if (Users.TryGetValue(data[0], out user))
+                    if (UserRepository.Users.TryGetValue(data[0], out user))
                         user.MessageBox.LoadMessages(data[1]);
                 }
             }
@@ -269,7 +265,7 @@ namespace ClinicApp
             //Uploads the messages.
             using (StreamWriter sw = File.CreateText(MessageBoxesFilePath))
             {
-                foreach (KeyValuePair<string, User> pair in Users)
+                foreach (KeyValuePair<string, User> pair in UserRepository.Users)
                 {
                     newLine = pair.Value.MessageBox.Compress();
                     if (newLine != null)

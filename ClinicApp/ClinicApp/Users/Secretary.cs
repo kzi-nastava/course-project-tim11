@@ -111,8 +111,8 @@ namespace ClinicApp.Users
                     //Create
                     case 1:
                         User patient = OtherFunctions.Register(Roles.Patient);
-                        SystemFunctions.Users.Add(patient.UserName, patient);
-                        SystemFunctions.Patients.Add(patient.UserName, (Patient)patient);
+                        UserRepository.Users.Add(patient.UserName, patient);
+                        UserRepository.Patients.Add(patient.UserName, (Patient)patient);
                         break;
                     //Read
                     case 2:
@@ -125,7 +125,7 @@ namespace ClinicApp.Users
                         {
                             CLI.CLIWriteLine("\nWrite the username of the patient who's account you want updated:");
                             string userName = OtherFunctions.EnterString();
-                            if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                            if (UserRepository.Users.TryGetValue(userName, out tempUser))
                             {
                                 if (tempUser.Role == Roles.Patient)
                                 {
@@ -155,12 +155,12 @@ namespace ClinicApp.Users
                         {
                             CLI.CLIWriteLine("\nWrite the username of the patient who's account you want deleted:");
                             string userName = OtherFunctions.EnterString();
-                            if (SystemFunctions.Users.TryGetValue(userName, out tempUser))
+                            if (UserRepository.Users.TryGetValue(userName, out tempUser))
                             {
                                 if (tempUser.Role == Roles.Patient)
                                 {
-                                    SystemFunctions.Users.Remove(userName);
-                                    SystemFunctions.Patients.Remove(userName);
+                                    UserRepository.Users.Remove(userName);
+                                    UserRepository.Patients.Remove(userName);
                                     option2 = 0;
                                 }
                                 else
@@ -209,7 +209,7 @@ namespace ClinicApp.Users
                     case 1:
                         CLI.CLIWrite("Username: ");
                         temp = OtherFunctions.EnterString();
-                        while (SystemFunctions.Users.ContainsKey(temp))
+                        while (UserRepository.Users.ContainsKey(temp))
                         {
                             CLI.CLIWriteLine("This username is taken. Please, try again.");
                             CLI.CLIWrite("Username: ");
@@ -287,7 +287,7 @@ namespace ClinicApp.Users
                         CLI.CLIWriteLine(OtherFunctions.LineInTable() + "-----------------+");
                         CLI.CLIWriteLine(OtherFunctions.TableHeader() + " Blocked by      |");
                         CLI.CLIWriteLine(OtherFunctions.LineInTable() + "-----------------+");
-                        foreach (KeyValuePair<string, Patient> pair in SystemFunctions.Patients)
+                        foreach (KeyValuePair<string, Patient> pair in UserRepository.Patients)
                         {
                             CLI.CLIWriteLine(pair.Value.TextInTable() + " " + pair.Value.Blocked.ToString() + OtherFunctions.Space(15, pair.Value.Blocked.ToString()) + " |");
                             CLI.CLIWriteLine(OtherFunctions.LineInTable() + "-----------------+");
@@ -298,7 +298,7 @@ namespace ClinicApp.Users
                     case 2:
                         CLI.CLIWriteLine("\nEnter the username of the account you want to block:");
                         username = OtherFunctions.EnterString();
-                        if(SystemFunctions.Patients.TryGetValue(username, out patient))
+                        if(UserRepository.Patients.TryGetValue(username, out patient))
                             if(patient.Blocked == Blocked.Unblocked)
                                 patient.Blocked = Blocked.Secretary;
                             else
@@ -310,7 +310,7 @@ namespace ClinicApp.Users
                     case 3:
                         CLI.CLIWriteLine("\nEnter the username of the account you want to unblock:");
                         username = OtherFunctions.EnterString();
-                        if(SystemFunctions.Patients.TryGetValue(username, out patient))
+                        if(UserRepository.Patients.TryGetValue(username, out patient))
                             if(patient.Blocked != Blocked.Unblocked)
                                 patient.Blocked = Blocked.Unblocked;
                             else
@@ -357,7 +357,7 @@ namespace ClinicApp.Users
 
                             appointment.DateTime = DateTime.Parse(line.Split("|")[2]);
                             Doctor doctor;
-                            if (SystemFunctions.Doctors.TryGetValue(line.Split("|")[3], out doctor))
+                            if (UserRepository.Doctors.TryGetValue(line.Split("|")[3], out doctor))
                             {
                                 appointment.Doctor.Appointments.Remove(appointment);
                                 appointment.Patient.Appointments.Remove(appointment);
@@ -386,7 +386,7 @@ namespace ClinicApp.Users
             {
                 CLI.CLIWriteLine("\nEnter the patients username:");
                 userName = OtherFunctions.EnterString();
-                if (SystemFunctions.Patients.TryGetValue(userName, out patient))
+                if (UserRepository.Patients.TryGetValue(userName, out patient))
                 {
                     option = 0; //We found the patient. No need to search for him again.
                     if(patient.Referrals.Count() == 0)
@@ -483,7 +483,7 @@ namespace ClinicApp.Users
                 //Finding the patient.
                 CLI.CLIWriteLine("\nEnter the patients username:");
                 userName = OtherFunctions.EnterString();
-                if (SystemFunctions.Patients.TryGetValue(userName, out patient))
+                if (UserRepository.Patients.TryGetValue(userName, out patient))
                 {
                     option = 0; //We found the patient. No need to search for him again.
 
@@ -502,7 +502,7 @@ namespace ClinicApp.Users
 
                     //Checking if there's a doctor with that specialty.
                     bool hasSpecialty = false;
-                    foreach(KeyValuePair<string, Doctor> pair in SystemFunctions.Doctors)
+                    foreach(KeyValuePair<string, Doctor> pair in UserRepository.Doctors)
                     {
                         if(pair.Value.Field == fieldOfDoctor)
                             hasSpecialty = true;
@@ -521,7 +521,7 @@ namespace ClinicApp.Users
                         DateRange dateRange = new DateRange(dateTime, dateTime.AddMinutes(15));
                         if(patient.CheckAppointment(dateTime, 15))
                         {
-                            foreach(KeyValuePair<string, Doctor> doctor in SystemFunctions.Doctors)
+                            foreach(KeyValuePair<string, Doctor> doctor in UserRepository.Doctors)
                             {
                                 if (doctor.Value.Field == fieldOfDoctor && !OtherFunctions.CheckForRenovations(dateRange, doctor.Value.RoomId) &&
                                     !OtherFunctions.CheckForExaminations(dateRange, doctor.Value.RoomId) &&
@@ -561,7 +561,7 @@ namespace ClinicApp.Users
                         if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || patient.CheckAppointment(examinationForDelay.Value.DateTime, 15)))
                         {
                             examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>((Clinic.Examination)examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
-                            CLI.CLIWriteLine(examinationForDelay.Key);
+                            CLI.CLIWriteLine(examinationForDelay.Key.ToString());
                         }
                     if(examinationsForDelaying.Count == 0)
                     {

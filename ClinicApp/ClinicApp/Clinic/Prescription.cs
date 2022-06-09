@@ -27,8 +27,8 @@ namespace ClinicApp.Clinic
         public Prescription(string text)
         {
             string[] data = text.Split('|');
-            Patient = SystemFunctions.Patients[data[0]];
-            Doctor = SystemFunctions.Doctors[data[1]];
+            Patient = UserRepository.Patients[data[0]];
+            Doctor = UserRepository.Doctors[data[1]];
             Date = DateTime.Parse(data[2]);
             Medicine = SystemFunctions.Medicine[data[3]];
             Frequency = new int[3];

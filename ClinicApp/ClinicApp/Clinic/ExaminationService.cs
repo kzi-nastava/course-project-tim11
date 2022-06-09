@@ -60,12 +60,12 @@ namespace ClinicApp.Clinic
                 Console.WriteLine("\nEnter the username:");
                 string userName = Console.ReadLine();
                 Doctor doctorDict = null;
-                if (!SystemFunctions.Doctors.TryGetValue(userName, out doctorDict))
+                if (!UserRepository.Doctors.TryGetValue(userName, out doctorDict))
                 {
                     Console.WriteLine("Doctor with that username does not exist");
                     return;
                 }
-                doctor = SystemFunctions.Doctors[userName];
+                doctor = UserRepository.Doctors[userName];
                 //TODO : types of appointment -> duration
                 int duration = 15;
                 bool validateAppointment = doctor.CheckAppointment(dateTime, duration);
@@ -263,7 +263,7 @@ namespace ClinicApp.Clinic
                 Console.WriteLine("Write username of new doctor:");
                 string inputUserName = Console.ReadLine();
                 Doctor doctor = null;
-                if (!SystemFunctions.Doctors.TryGetValue(UserName, out doctor))
+                if (!UserRepository.Doctors.TryGetValue(UserName, out doctor))
                 {
                     Console.WriteLine("Doctor with that user name does not eixst.");
                     return;
