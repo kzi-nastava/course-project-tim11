@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.AdminFunctions;
+using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
 {

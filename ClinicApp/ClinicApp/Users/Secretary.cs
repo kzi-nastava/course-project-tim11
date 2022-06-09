@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ClinicApp.AdminFunctions;
+using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
 {

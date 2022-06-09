@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ClinicApp.AdminFunctions;
+using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
 {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using ClinicApp.HelperClasses;
 
 namespace ClinicApp
 {
@@ -55,6 +56,9 @@ namespace ClinicApp
             //Loads the users.
             UserRepository.Load();
 
+            //Loads the messages.
+            MessageBoxRepository.Load();
+
             //Loads the health records.
             using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
             {
@@ -63,7 +67,6 @@ namespace ClinicApp
                 {
                     HealthRecord healthRecord = new HealthRecord(line);
                     HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
-
                 }
             }
 
@@ -77,7 +80,6 @@ namespace ClinicApp
                 {
                     Medicine medicine = new Medicine(line);
                     Medicine.Add(medicine.Name, medicine);
-
                 }
             }
 
@@ -105,8 +107,6 @@ namespace ClinicApp
                     Referral referral = new Referral(line);
                     referral.Patient.Referrals.Add(referral);
                     Referrals.Add(referral);
-                    ;
-
                 }
             }
 
@@ -152,19 +152,6 @@ namespace ClinicApp
                     currentAppointment.Patient.Appointments.Add(currentAppointment);
                 }
             }
-            //Loads the messages.
-            using (StreamReader reader = new StreamReader(MessageBoxesFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    User user;
-                    string[] data = line.Split("|");
-                    if (UserRepository.Users.TryGetValue(data[0], out user))
-                        user.MessageBox.LoadMessages(data[1]);
-                }
-            }
-
 
             //Loads the equipment requests.
 
@@ -226,6 +213,9 @@ namespace ClinicApp
             //Uploads the users.
             UserRepository.Upload();
 
+            //Uploads the messages.
+            MessageBoxRepository.Upload();
+
             //Uploads the examinations.
             using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
             {
@@ -260,16 +250,6 @@ namespace ClinicApp
                 {
                     newLine = referral.Compress();
                     sw.WriteLine(newLine);
-                }
-            }
-            //Uploads the messages.
-            using (StreamWriter sw = File.CreateText(MessageBoxesFilePath))
-            {
-                foreach (KeyValuePair<string, User> pair in UserRepository.Users)
-                {
-                    newLine = pair.Value.MessageBox.Compress();
-                    if (newLine != null)
-                        sw.WriteLine(newLine);
                 }
             }
             //Uploads the equipment requests.

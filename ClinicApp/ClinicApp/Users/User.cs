@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
 {
@@ -16,8 +17,8 @@ namespace ClinicApp.Users
         public MessageBox MessageBox { get; set; }
 
         public abstract string Compress();
-        public abstract int MenuWrite();
-        public abstract void MenuDo(int option);
+        public abstract int MenuWrite(); //Returns the number of options the user can choose from in the menu.
+        public abstract void MenuDo(int option); //Executes the chosen option.
         public void Print(bool withRole = false)
         {
             Console.WriteLine("Username: " + UserName);
