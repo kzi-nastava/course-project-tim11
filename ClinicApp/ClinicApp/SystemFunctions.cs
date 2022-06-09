@@ -177,6 +177,7 @@ namespace ClinicApp
         //Updates certain information that depends on date and time
         public static void Update()
         {
+            AdminFunctions.EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
             UpdateEquipmentRequests();
         }
 

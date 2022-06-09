@@ -44,51 +44,13 @@ namespace ClinicApp.Users
         //Writes all the options a secretary has once he logs in.
         public override int MenuWrite()
         {
-            CLI.CLIWriteLine("\nWhat would you like to do?");
-            CLI.CLIWriteLine("1: Log out");
-            CLI.CLIWriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
-            CLI.CLIWriteLine("3: Manage patient accounts");
-            CLI.CLIWriteLine("4: Block or unbolck patient accounts");
-            CLI.CLIWriteLine("5: Manage examination requests");
-            CLI.CLIWriteLine("6: Create examinations based upon referrals");
-            CLI.CLIWriteLine("7: Create an emergency examination");
-            CLI.CLIWriteLine("8: Make an order of dynamic equipment");
-            CLI.CLIWriteLine("9: Redistribute dynamic equipment");
-            CLI.CLIWriteLine("0: Exit");
-
-            return 9;
+            return Menu.SecretaryMenuWrite(this);
         }
 
         //Executes the chosen command.
         public override void MenuDo(int option)
         {
-            switch (option)
-            {
-                case 2:
-                    MessageBox.DisplayMessages();
-                    break;
-                case 3:
-                    PatientService.PatientsCRUD();
-                    break;
-                case 4:
-                    ManageBlockedPatients();
-                    break;
-                case 5:
-                    ManageExaminationRequests();
-                    break;
-                case 6:
-                    CreateExaminationsFromReferrals();
-                    break;
-                case 7:
-                    CreateEmergencyExamination();
-                    break;
-                case 8:
-                    EquipmentService.OrderDynamiicEquipment();
-                    break;
-                case 9:
-                    EquipmentService.RedistributeDynamiicEquipment();
-                    break;
-            }
+            Menu.SecretaryMenuDo(this, option);
         }
 
         //Manages blocked and unblocked patients.

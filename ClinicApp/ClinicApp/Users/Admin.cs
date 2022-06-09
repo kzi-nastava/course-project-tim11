@@ -38,38 +38,11 @@ namespace ClinicApp.Users
         }
         public override int MenuWrite()
         {
-            EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine("1: Log out");
-            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
-            Console.WriteLine("3: Manage Clinic Rooms");
-            Console.WriteLine("4: Manage Clinic Equipment");
-            Console.WriteLine("5: Manage Room Renovations");
-            Console.WriteLine("6: Manage Medicines");
-            Console.WriteLine("0: Exit");
-
-            return 6;
+            return Menu.AdminMenuWrite(this);
         }
         public override void MenuDo(int option)
         {
-            switch (option)
-            {
-                case 2:
-                    MessageBox.DisplayMessages();
-                    break;
-                case 3:
-                    RoomManagmentMenu();
-                    break;
-                case 4:
-                    EquipmentManagmentMenu();
-                    break;
-                case 5:
-                    RoomRenovationMenu();
-                    break;
-                case 6:
-                    MedicinesMenu();
-                    break;
-            }
+            Menu.AdminMenuDo(this, option);
         }
         //-------------------------------------MANAGE ROOMS----------------------------------------
         public static void RoomManagmentMenu()

@@ -26,18 +26,12 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine("1: Log in");
-            Console.WriteLine("2: Register");
-            Console.WriteLine("0: Exit");
-
-            return 2;
+            return Menu.NobodyMenuWrite(this);
         }
 
         public override void MenuDo(int option)
         {
-            //Nobody isn't supposed to do anything.
-            return;
+            Menu.NobodyMenuDo(this, option);
         }
     }
 }

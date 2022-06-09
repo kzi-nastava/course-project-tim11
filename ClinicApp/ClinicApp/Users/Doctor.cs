@@ -57,38 +57,14 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            Console.WriteLine("\nWhat would you like to do?");
-            Console.WriteLine("1: Log out");
-            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
-            Console.WriteLine("3: Manage examinations");
-            Console.WriteLine("4: View schedule");
-            Console.WriteLine("5: Manage medicine");
-            Console.WriteLine("0: Exit");
-
-            return 5;
+            return Menu.DoctorMenuWrite(this);
         }
 
         public override void MenuDo(int option)
         {
-            switch (option)
-            {
-                case 2:
-                    MessageBox.DisplayMessages();
-                    break;
-                case 3:
-                    ManageAppointments();
-                    break;
-                case 4:
-                    ViewSchedule();
-                    break;
-                case 5:
-                    ManageMedicine();
-                    break;
-                default:
-                    break;
-            }
+            Menu.DoctorMenuDo(this, option);
         }
-        private void ManageAppointments()
+        public void ManageAppointments()
         {
             Console.WriteLine("Chose how you wish to manage your appointments: ");
             string options = "\n1. Create\n2. View\n3. Edit(by ID)\n4. Delete(by ID)\n";
@@ -373,7 +349,7 @@ namespace ClinicApp.Users
 
         //=======================================================================================================================================================================
         // VIEW SCHEDULE
-        private void ViewSchedule()
+        public void ViewSchedule()
         {
             Console.WriteLine("Enter a date for which you wish to see your schedule (e.g. 22/10/1987): ");
             DateTime date = OtherFunctions.GetGoodDate();

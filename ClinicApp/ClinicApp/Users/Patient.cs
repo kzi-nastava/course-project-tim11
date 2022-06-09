@@ -81,50 +81,12 @@ namespace ClinicApp.Users
         //========================== MENU KLASA ZA PACIJENTA????? ==============================================
         public override int MenuWrite()
         {
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine("1: Log out");
-
-            Console.WriteLine("2: Display new messages (" + MessageBox.NumberOfMessages + ")");
-            Console.WriteLine("3: Make appointment");
-            Console.WriteLine("4: Edit appointment");
-            Console.WriteLine("5: Cancel appointment");
-            Console.WriteLine("6: View appointments");
-            Console.WriteLine("7: Appointment suggestion");
-            Console.WriteLine("8: View health record history");
-            Console.WriteLine("9: Search doctors");
-            Console.WriteLine("0: Exit");
-
-            return 9;
-
+            return Menu.PatientMenuWrite(this);
         }
 
         public override void MenuDo(int option)
         {
-            switch (option)
-            {
-                case 2:
-                    MessageBox.DisplayMessages();
-                    break;
-                case 3:
-                    CreateExamination();
-                    break;
-                case 4:
-                    EditExamination();
-                    break;
-                case 5:
-                    DeleteExamination();
-                    break;
-                case 6:
-                    ViewExaminations();
-                    break;
-                case 7:
-                    SuggestAppointment();
-                    break;
-                case 8:
-                    ViewAnamnesis();
-                    break;
-            }
-
+            Menu.PatientMenuDo(this, option);
         }
 //==================================================================================================
 
