@@ -7,7 +7,7 @@ namespace ClinicApp
 {
     public class Menu
     {
-        //=====================================================
+        //======================================================================================================
         //Users' menus
 
         //Nobody
@@ -90,7 +90,7 @@ namespace ClinicApp
                     secretary.MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    PatientService.PatientsCRUD();
+                    PatientsCRUDMenu();
                     break;
                 case 4:
                     Secretary.ManageBlockedPatients();
@@ -192,6 +192,51 @@ namespace ClinicApp
                 case 8:
                     ViewAnamnesis();
                     break;
+            }
+        }
+
+        //======================================================================================================
+        //Other Menus
+
+        //Manages the Patient CRUD.
+        public static void PatientsCRUDMenu()
+        {
+            int option = 1, numberOfOptions = 4;
+            User patient;
+
+            while (option != 0)
+            {
+                CLI.CLIWriteLine("\nWhat would you like to do?");
+                CLI.CLIWriteLine("1: Create a patient account");
+                CLI.CLIWriteLine("2: View all patient accounts");
+                CLI.CLIWriteLine("3: Update a patient account");
+                CLI.CLIWriteLine("4: Delete a patient account");
+                CLI.CLIWriteLine("0: Back to menu");
+                option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
+                CLI.CLIWriteLine();
+                switch (option)
+                {
+                    //Create
+                    case 1:
+                        PatientService.CreatePatient();
+                        break;
+                    //Read
+                    case 2:
+                        OtherFunctions.PrintUsers(role: Roles.Patient);
+                        break;
+                    //Update
+                    case 3:
+                        patient = OtherFunctions.FindUser(Roles.Patient);
+                        if (patient != null)
+                            PatientService.UpdatePatient((Patient)patient);
+                        break;
+                    //Delete
+                    case 4:
+                        patient = OtherFunctions.FindUser(Roles.Patient);
+                        if (patient != null)
+                            PatientService.DeletePatient((Patient)patient);
+                        break;
+                }
             }
         }
     }
