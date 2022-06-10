@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using ClinicApp.HelperClasses;
 
 namespace ClinicApp
 {
@@ -26,11 +27,8 @@ namespace ClinicApp
 
     public class SystemFunctions
     {
+        //Dictionaries
 
-        // Dictionary of users created for faster and easier acces to information from the database
-        public static Dictionary<string, User> Users { get; set; } = new Dictionary<string, User>();
-        public static Dictionary<string, Doctor> Doctors { get; set; } = new Dictionary<string, Doctor>();
-        
         public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
         public static Dictionary<int, Appointment> AllAppointments { get; set; } = new Dictionary<int, Appointment>();
         public static Dictionary<int, Appointment> CurrentAppointments { get; set; } = new Dictionary<int, Appointment>();
@@ -39,14 +37,12 @@ namespace ClinicApp
         public static List<Referral> Referrals { get; set; } = new List<Referral>();
         static public List<EquipmentRequest> EquipmentRequests { get; set; } = new List<EquipmentRequest>();
 
-        // User file path may change in release mode, this is the file path in debug mode
+        // File paths
 
-        public static string UsersFilePath = "../../../Data/users.txt";
         public static string AppointmentsFilePath = "../../../Data/appointments.txt";
         public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         public static string ReferralsFilePath = "../../../Data/referrals.txt";
-        public static string MessageBoxesFilePath = "../../../Data/message_boxes.txt";
         public static string MedicineFilePath = "../../../Data/medicine.txt";
         public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
         public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
@@ -57,23 +53,11 @@ namespace ClinicApp
         public static void LoadData()
         {
             //Loads the users.
-            using (StreamReader reader = new StreamReader(UsersFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    User user = ParseUser(line);
-                    Users.Add(user.UserName, user);
-                    if (user.Role == Roles.Doctor)
-                    {
-                        Doctors.Add(user.UserName, (Doctor)user);
-                    }
-                    else if (user.Role == Roles.Patient)
-                    {
-                        Patients.Add(user.UserName, (Patient)user);
-                    }
-                }
-            }
+            UserRepository.Load();
+
+            //Loads the messages.
+            MessageBoxRepository.Load();
+
             //Loads the health records.
             using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
             {
@@ -82,13 +66,10 @@ namespace ClinicApp
                 {
                     HealthRecord healthRecord = new HealthRecord(line);
                     HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
-
                 }
             }
 
-
-            //Load medicine
-
+            //Loads medicine.
             using (StreamReader reader = new StreamReader(MedicineFilePath))
             {
                 string line;
@@ -96,10 +77,10 @@ namespace ClinicApp
                 {
                     Medicine medicine = new Medicine(line);
                     Medicine.Add(medicine.Name, medicine);
-
                 }
             }
 
+            //Loads perscriptions.
             using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
             {
                 string line;
@@ -112,10 +93,7 @@ namespace ClinicApp
                 }
             }
 
-
-
-            // Load referrals
-
+            //Loads referrals.
             using (StreamReader reader = new StreamReader(ReferralsFilePath))
             {
                 string line;
@@ -124,14 +102,11 @@ namespace ClinicApp
                     Referral referral = new Referral(line);
                     referral.Patient.Referrals.Add(referral);
                     Referrals.Add(referral);
-                    ;
-
                 }
             }
 
 
             //Loads the examinations.
-
             using (StreamReader reader = new StreamReader(AppointmentsFilePath))
             {
                 string line;
@@ -171,22 +146,8 @@ namespace ClinicApp
                     currentAppointment.Patient.Appointments.Add(currentAppointment);
                 }
             }
-            //Loads the messages.
-            using (StreamReader reader = new StreamReader(MessageBoxesFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    User user;
-                    string[] data = line.Split("|");
-                    if (Users.TryGetValue(data[0], out user))
-                        user.MessageBox.LoadMessages(data[1]);
-                }
-            }
-
 
             //Loads the equipment requests.
-
             using (StreamReader reader = new StreamReader(EquipmentRequestsFilePath))
             {
                 string line;
@@ -197,20 +158,6 @@ namespace ClinicApp
 
                 }
             }
-        }
-
-        private static User ParseUser(string line)
-        {
-            string[] data = line.Split('|');
-            if (data[6] == Roles.Admin.ToString())
-                return new Admin(line);
-            if (data[6] == Roles.Secretary.ToString())
-                return new Secretary(line);
-            if (data[6] == Roles.Doctor.ToString())
-                return new Doctor(line);
-            if (data[6] == Roles.Patient.ToString())
-                return new Patient(line);
-            return new Nobody();
         }
 
         private static Appointment ParseAppointment(string line)
@@ -230,6 +177,7 @@ namespace ClinicApp
         //Updates certain information that depends on date and time
         public static void Update()
         {
+            AdminFunctions.EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
             UpdateEquipmentRequests();
         }
 
@@ -257,14 +205,11 @@ namespace ClinicApp
             string newLine;
 
             //Uploads the users.
-            using (StreamWriter sw = File.CreateText(UsersFilePath))
-            {
-                foreach (KeyValuePair<string, User> pair in Users)
-                {
-                    newLine = pair.Value.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
+            UserRepository.Upload();
+
+            //Uploads the messages.
+            MessageBoxRepository.Upload();
+
             //Uploads the examinations.
             using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
             {
@@ -299,16 +244,6 @@ namespace ClinicApp
                 {
                     newLine = referral.Compress();
                     sw.WriteLine(newLine);
-                }
-            }
-            //Uploads the messages.
-            using (StreamWriter sw = File.CreateText(MessageBoxesFilePath))
-            {
-                foreach (KeyValuePair<string, User> pair in Users)
-                {
-                    newLine = pair.Value.MessageBox.Compress();
-                    if (newLine != null)
-                        sw.WriteLine(newLine);
                 }
             }
             //Uploads the equipment requests.

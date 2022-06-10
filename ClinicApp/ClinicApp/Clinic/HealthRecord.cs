@@ -49,7 +49,7 @@ namespace ClinicApp.Clinic
         public HealthRecord(string text) {
             string[] data = text.Split('|');
 
-            Patient = SystemFunctions.Patients[data[0]];
+            Patient = UserRepository.Patients[data[0]];
             Weight = Convert.ToDouble(data[1]);
             Height = Convert.ToDouble(data[2]);
             MedicalHistory = new List<string>();

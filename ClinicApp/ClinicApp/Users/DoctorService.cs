@@ -12,7 +12,7 @@ namespace ClinicApp.Users
         public static void ViewAllDoctors()
         {
             int i = 1;
-            foreach (KeyValuePair<string, Doctor> entry in SystemFunctions.Doctors)
+            foreach (KeyValuePair<string, Doctor> entry in UserRepository.Doctors)
             {
                 Doctor doctor = entry.Value;
                 Console.WriteLine($"{i}.User name: {doctor.UserName} ; Name: {doctor.Name}; Last Name: {doctor.LastName}");

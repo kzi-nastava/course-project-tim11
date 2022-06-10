@@ -59,7 +59,7 @@ namespace ClinicApp.AdminFunctions
             DateRange duration = GetUninterruptedDateRange(room.Id);
             //create new room
             CLI.CLIWrite("Name of new room: ");
-            string name = OtherFunctions.EnterStringWithoutDelimiter("|");
+            string name = CLI.CLIEnterStringWithoutDelimiter("|");
             CLI.CLIWrite("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
             RoomType roomType = RoomService.ChooseRoomType();
             Room newRoom = new Room { Name = name, Type = roomType };

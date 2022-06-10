@@ -37,7 +37,7 @@ namespace ClinicApp.Clinic
             //NEPOTREBAN DO WHILE!!!!
             do
             {
-                time = OtherFunctions.AskForTime();
+                time = CLI.CLIEnterTime();
                 time = date.Date + time.TimeOfDay;
                 if (time < DateTime.Now)
                 {
@@ -60,12 +60,12 @@ namespace ClinicApp.Clinic
                 Console.WriteLine("\nEnter the username:");
                 string userName = Console.ReadLine();
                 Doctor doctorDict = null;
-                if (!SystemFunctions.Doctors.TryGetValue(userName, out doctorDict))
+                if (!UserRepository.Doctors.TryGetValue(userName, out doctorDict))
                 {
                     Console.WriteLine("Doctor with that username does not exist");
                     return;
                 }
-                doctor = SystemFunctions.Doctors[userName];
+                doctor = UserRepository.Doctors[userName];
                 //TODO : types of appointment -> duration
                 int duration = 15;
                 bool validateAppointment = doctor.CheckAppointment(dateTime, duration);
@@ -97,7 +97,7 @@ namespace ClinicApp.Clinic
         private void DeleteExamination(Patient patient)
         {
             Console.WriteLine("Enter the ID of the examination you want to delete?");
-            int id = OtherFunctions.EnterNumber();
+            int id = CLI.CLIEnterNumber();
             Examination examination = null;
             foreach (Examination tmp in patient.Appointments)
             {
@@ -146,7 +146,7 @@ namespace ClinicApp.Clinic
         {
             bool quit = false;
             Console.WriteLine("Enter the ID of the examination you want to edit:");
-            int id = OtherFunctions.EnterNumber();
+            int id = CLI.CLIEnterNumber();
             Examination examination = null;
             int duration = 15;
 
@@ -183,7 +183,7 @@ namespace ClinicApp.Clinic
             if (choice.ToUpper() == "D")
             {
                 Console.WriteLine("Enter the new date of your Examination (e.g 22/10/2022):");
-                DateTime newDate = OtherFunctions.AskForDate();
+                DateTime newDate = CLI.CLIEnterDate();
                 newDate += examination.DateTime.TimeOfDay;
                 //TODO : type of appointment -> duration
                 bool validation = examination.Doctor.CheckAppointment(newDate, duration);
@@ -219,7 +219,7 @@ namespace ClinicApp.Clinic
             else if (choice.ToUpper() == "T")
             {
                 Console.WriteLine("Enter the new time of your Examination (e.g. 12:00)");
-                DateTime newTime = OtherFunctions.AskForTime();
+                DateTime newTime = CLI.CLIEnterTime();
                 DateTime oldTime = examination.DateTime;
                 examination.DateTime.Date.Add(newTime.TimeOfDay);
                 bool validation = examination.Doctor.CheckAppointment(examination.DateTime, duration);
@@ -264,7 +264,7 @@ namespace ClinicApp.Clinic
                 Console.WriteLine("Write username of new doctor:");
                 string inputUserName = Console.ReadLine();
                 Doctor doctor = null;
-                if (!SystemFunctions.Doctors.TryGetValue(UserName, out doctor))
+                if (!UserRepository.Doctors.TryGetValue(UserName, out doctor))
                 {
                     Console.WriteLine("Doctor with that user name does not eixst.");
                     return;

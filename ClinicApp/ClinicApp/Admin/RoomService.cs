@@ -67,7 +67,7 @@ public static class RoomService {
             return;
         }
         CLI.CLIWriteLine("Do you wish to edit this rooms' name? Y/N");
-        string answer = OtherFunctions.EnterString();
+        string answer = CLI.CLIEnterString();
         if (answer.ToLower() == "y")
         {
             CLI.CLIWriteLine("Enter new name: ");
