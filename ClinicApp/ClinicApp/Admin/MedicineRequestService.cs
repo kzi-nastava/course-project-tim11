@@ -41,7 +41,10 @@ namespace ClinicApp.AdminFunctions
         public static void ReviewedMedsMenu()
         {
             ListMedicineRequests();
+            CLI.CLIWriteLine("Enter ID of the request, 0 to return");
             int id = CLI.CLIEnterNumber();
+            if (id == 0)
+                return;
             string name;
             CLI.CLIWriteLine("Enter medicine name");
             name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -54,7 +57,6 @@ namespace ClinicApp.AdminFunctions
             Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
             MedicineRequest newRequest = new MedicineRequest { Medicine = medicine, Comment = "" };
             MedicineRequestRepo.Update(id, newRequest);
-
         }
 
         
@@ -65,12 +67,12 @@ namespace ClinicApp.AdminFunctions
                 CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
                 foreach (var request in MedicineRequestRepo.GetAll())
                 {
-                    CLI.CLIWriteLine("----------------------------------------------------------");
                     if (request.Comment != "")
                     {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
                             "\nDoctor's comment: " + request.Comment);
                         CLI.CLIWriteLine("----------------------------------------------------------");
                     }
@@ -81,12 +83,12 @@ namespace ClinicApp.AdminFunctions
                 CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
                 foreach (var request in MedicineRequestRepo.GetAll())
                 {
-                    CLI.CLIWriteLine("----------------------------------------------------------");
                     if (request.Comment == "")
                     {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
                         CLI.CLIWriteLine("----------------------------------------------------------");
                     }
                 }
@@ -99,12 +101,21 @@ namespace ClinicApp.AdminFunctions
                     CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
                             "\nDoctor's comment: " + request.Comment);
                     CLI.CLIWriteLine("----------------------------------------------------------");
 
                 }
             }
+        }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
         }
 
         public static void ReviewMedicineRequests()
@@ -113,13 +124,13 @@ namespace ClinicApp.AdminFunctions
             CLI.CLIWriteLine("Medicine requests: ");
             foreach (var request in MedicineRequestRepo.GetAll())
             {
-               
+                
                 if (request.Comment == "")
                 {
                     CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                         "\nMedicine name: " + request.Medicine.Name +
-                        "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
+                        "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
                     CLI.CLIWriteLine("----------------------------------------------------------");
                 }
 

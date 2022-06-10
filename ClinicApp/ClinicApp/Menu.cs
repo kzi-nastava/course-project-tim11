@@ -95,16 +95,16 @@ namespace ClinicApp
                     PatientsCRUDMenu();
                     break;
                 case 4:
-                    Secretary.ManageBlockedPatients();
+                    PatientService.ManageBlockedPatients();
                     break;
                 case 5:
-                    Secretary.ManageExaminationRequests();
+                    PatientService.ManageExaminationRequests();
                     break;
                 case 6:
-                    Secretary.CreateExaminationsFromReferrals();
+                    ExaminationService.CreateExaminationsFromReferrals();
                     break;
                 case 7:
-                    Secretary.CreateEmergencyExamination();
+                    ExaminationService.CreateEmergencyExamination();
                     break;
                 case 8:
                     EquipmentService.OrderDynamiicEquipment();
@@ -191,8 +191,7 @@ namespace ClinicApp
             return 9;
         }
 
-        /*
-        public static void PatientMenuDo(User patient, int option)
+        /*public static void PatientMenuDo(User patient, int option)
         {
             switch (option)
             {
@@ -209,7 +208,7 @@ namespace ClinicApp
                     DeleteExamination();
                     break;
                 case 6:
-                    ViewExaminations();
+                    ExaminationService.ViewExaminations((Patient)patient);
                     break;
                 case 7:
                     SuggestAppointment();
@@ -218,8 +217,7 @@ namespace ClinicApp
                     ViewAnamnesis();
                     break;
             }
-        }
-        */
+        }*/
 
         //======================================================================================================
         //Other Menus
@@ -252,13 +250,13 @@ namespace ClinicApp
                         break;
                     //Update
                     case 3:
-                        patient = OtherFunctions.FindUser(Roles.Patient);
+                        patient = OtherFunctions.FindUser("\nEnter the username of the patient whose account you want to update:", Roles.Patient);
                         if (patient != null)
                             PatientService.UpdatePatient((Patient)patient);
                         break;
                     //Delete
                     case 4:
-                        patient = OtherFunctions.FindUser(Roles.Patient);
+                        patient = OtherFunctions.FindUser("\nEnter the username of the patient whose account you want to delete:", Roles.Patient);
                         if (patient != null)
                             PatientService.DeletePatient((Patient)patient);
                         break;
