@@ -10,7 +10,7 @@ namespace ClinicApp.AdminFunctions
     {
         static string Path { get; set; } = "../../../Admin/Data/equipment.txt";
 
-        static public List<Equipment> ClinicEquipmentList { get; set; }
+        static public List<Equipment> ClinicEquipmentList { get; set; } = new List<Equipment>();
 
         static EquipmentRepo()
         {
@@ -110,7 +110,7 @@ namespace ClinicApp.AdminFunctions
                 Amount = Convert.ToInt32(parameteres[2]),
                 RoomId = Convert.ToInt32(parameteres[3]),
                 Type = type,
-                Dynamic = Convert.ToBoolean(parameteres[4])
+                Dynamic = Convert.ToBoolean(parameteres[5])
             };
 
             return eq;

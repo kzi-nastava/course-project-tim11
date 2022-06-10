@@ -49,7 +49,7 @@ namespace ClinicApp.Clinic
         {
             Console.WriteLine($"EXAMINATION ID: {ID}\nDate and time:{DateTime}\nDuration: 15min\nPatient name: {Patient.Name}; ");
             Console.WriteLine($"Patient last name: {Patient.LastName};");
-            Console.WriteLine($"Date of birth {Patient.DateOfBirth.ToShortDateString()}");
+            Console.WriteLine($"Date of birth: {Patient.DateOfBirth.ToShortDateString()}");
         }
 
         public override DateTime NextAvailable()

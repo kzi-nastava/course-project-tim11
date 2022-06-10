@@ -358,7 +358,7 @@ public static class EquipmentService
     {
         CLI.CLIWriteLine($"\nThe state of equipment in room {doctor.RoomId} before the appointment: ");
         CLI.CLIWriteLine();
-        List<Equipment> equipmentList = EquipmentService.GetEquipmentFromRoom(doctor.RoomId);
+        List<Equipment> equipmentList = GetEquipmentFromRoom(doctor.RoomId);
         foreach (Equipment equipment in equipmentList)
         {
             CLI.CLIWriteLine($"{equipment.Name} : {equipment.Amount}");

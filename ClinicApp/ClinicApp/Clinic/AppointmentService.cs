@@ -96,7 +96,7 @@ namespace ClinicApp.Clinic
             {
                 if (appointment.Type == 'e') type = "Examination";
                 else type = "Operation";
-                CLI.CLIWriteLine($"\n\n{i}. {type}\n\nId: {appointment.ID};\nTime and Date: {appointment.DateTime};\nDuration: {appointment.Duration};\nPatient last name: {appointment.Patient.LastName}; Patient name: {appointment.Patient.Name}\n");
+                CLI.CLIWriteLine($"\n\n{i}. {type}\n\nId: {appointment.ID};\nTime and Date: {appointment.DateTime};\nDuration: {appointment.Duration}min;\nPatient last name: {appointment.Patient.LastName}; Patient name: {appointment.Patient.Name}\n");
 
                 i++;
             }

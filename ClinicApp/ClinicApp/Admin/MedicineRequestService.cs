@@ -113,9 +113,10 @@ namespace ClinicApp.AdminFunctions
             CLI.CLIWriteLine("Medicine requests: ");
             foreach (var request in MedicineRequestRepo.GetAll())
             {
-                CLI.CLIWriteLine("----------------------------------------------------------");
+               
                 if (request.Comment == "")
                 {
+                    CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                         "\nMedicine name: " + request.Medicine.Name +
                         "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");

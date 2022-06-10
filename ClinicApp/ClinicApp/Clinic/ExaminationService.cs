@@ -11,7 +11,7 @@ namespace ClinicApp.Clinic
         {
         }
 
-        private void ViewExaminations(Patient patient)
+        private static void ViewExaminations(Patient patient)
         {
             if (patient.Appointments.Count == 0)
             {
