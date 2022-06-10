@@ -12,10 +12,6 @@ namespace ClinicApp.Clinic
 
         public static string AppointmentsFilePath = "../../../Data/appointments.txt";
 
-        static AppointmentRepo()
-        {
-            LoadAppointments();
-        }
         public static Dictionary<int, Appointment> GetAll() => AllAppointments;
 
         public static void Add(Appointment appointment)
