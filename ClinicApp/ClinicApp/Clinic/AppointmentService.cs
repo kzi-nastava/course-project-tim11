@@ -11,10 +11,11 @@ namespace ClinicApp.Clinic
         //=======================================================================================================================================================================
         // CREATE
 
-        public static void CreateAppointment(ref Doctor doctor)
+        public static void CreateAppointment(ref Doctor doctor, bool patientCalled = false)
         {
             int type = 0;
             int duration = 0;
+            if (!patientCalled) {
             CLI.CLIWrite("\nDo you want to create an (1)EXAMINATION or an (2)OPERATION?\n>> ");
             type = CLI.CLIEnterNumberWithLimit(0, 3);
             if (type == 2)
@@ -23,6 +24,8 @@ namespace ClinicApp.Clinic
                 duration = CLI.CLIEnterNumberWithLimit(15, 1000);
             }
             else duration = 15;
+            }
+            
 
             DateTime dateTime = AskDateTime(duration, ref doctor);
             Patient patient = OtherFunctions.AskUsernamePatient();
@@ -219,7 +222,7 @@ namespace ClinicApp.Clinic
                     break;
                 }
             }
-
         }
+        
     }
 }
