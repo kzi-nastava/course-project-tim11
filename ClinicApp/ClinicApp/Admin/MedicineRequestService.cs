@@ -65,9 +65,9 @@ namespace ClinicApp.AdminFunctions
                 CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
                 foreach (var request in MedicineRequestRepo.GetAll())
                 {
-                    CLI.CLIWriteLine("----------------------------------------------------------");
                     if (request.Comment != "")
                     {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
                             "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
@@ -81,9 +81,9 @@ namespace ClinicApp.AdminFunctions
                 CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
                 foreach (var request in MedicineRequestRepo.GetAll())
                 {
-                    CLI.CLIWriteLine("----------------------------------------------------------");
                     if (request.Comment == "")
                     {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
                             "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
@@ -122,9 +122,10 @@ namespace ClinicApp.AdminFunctions
             CLI.CLIWriteLine("Medicine requests: ");
             foreach (var request in MedicineRequestRepo.GetAll())
             {
-                CLI.CLIWriteLine("----------------------------------------------------------");
+                
                 if (request.Comment == "")
                 {
+                    CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                         "\nMedicine name: " + request.Medicine.Name +
                         "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
