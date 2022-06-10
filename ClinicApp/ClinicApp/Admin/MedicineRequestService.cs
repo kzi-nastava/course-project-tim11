@@ -66,28 +66,14 @@ namespace ClinicApp.AdminFunctions
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");
             }
-            List<string> chosenIngrediants = new List<string>();
-            List<string> offeredIngrediants = IngrediantRepo.GetAll();
-            CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
-            while (true)
-            {
-                foreach (var ingrediant in offeredIngrediants)
-                {
-                    CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
-                }
-                var choice = CLI.CLIEnterNumberWithLimit(0, offeredIngrediants.Count);
-                if (choice == 0)
-                {
-                    break;
-                }
-                chosenIngrediants.Add(offeredIngrediants[choice - 1]);
-                offeredIngrediants.Remove(offeredIngrediants[choice - 1]);
-            }
+            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
             Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
             MedicineRequest newRequest = new MedicineRequest { Medicine = medicine, Comment = "" };
             MedicineRequestRepo.Update(id, newRequest);
 
         }
+
+        
         public static void ListMedicineRequests(string parameter = "rbd") //rbd = reviewed by doctor (default), sba = sent by admin, all = all requests 
         {
             if (parameter == "rbd")
