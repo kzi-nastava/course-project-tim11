@@ -195,7 +195,7 @@ namespace ClinicApp.Clinic
 
         //=======================================================================================================================================================================
         // DELETE
-        public void DeleteAppointment(ref Doctor doctor)
+        public static void DeleteAppointment(ref Doctor doctor)
         {
             CLI.CLIWriteLine("Enter the ID of the appointment you wish to delete.");
             int id = CLI.CLIEnterNumber();

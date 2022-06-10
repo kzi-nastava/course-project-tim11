@@ -2,6 +2,7 @@ using ClinicApp.AdminFunctions;
 using System;
 using System.Collections.Generic;
 using ClinicApp;
+using ClinicApp.Users;
 
 public static class EquipmentService
 {
@@ -52,11 +53,15 @@ public static class EquipmentService
     public static void AddNewToStorage()
     {
         string name;
+        EquipmentType type;
         int amount = CLI.CLIEnterNumber();
         List<string> exsistingNames = new List<string>();
-        foreach (Equipment item in GetEquipmentFromRoom(0))
+        foreach (Equipment item in EquipmentRepo.ClinicEquipmentList)
         {
-            exsistingNames.Add(item.Name);
+            if (item.RoomId == 0)
+            {
+                exsistingNames.Add(item.Name);
+            }
         }
         CLI.CLIWrite("Name: ");
         name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -66,30 +71,25 @@ public static class EquipmentService
             name = CLI.CLIEnterStringWithoutDelimiter("|");
         }
         CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-        EquipmentType type = ChooseEquipmentType();
-        bool dynamic = false;
-        CLI.CLIWriteLine("Is this equipment dynamic (y/n)");
-        if (CLI.CLIEnterString().ToLower() == "y")
-        {
-            dynamic = true;
-        }
-        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type, Dynamic = dynamic };
+        type = ChooseEquipmentType();
+        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
         EquipmentRepo.Add(eq);
     }
     public static void ListAllEquipment()
     {
-        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
         foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
         {
-            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type + " "+ eq.Dynamic);
+            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
         }
     }
     public static void ListAllEquipmentInRoom(int id)
     {
-        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
-        foreach (Equipment eq in GetEquipmentFromRoom(id))
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
         {
-            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type + " " + eq.Dynamic);
+            if (eq.RoomId == id)
+                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
         }
     }
     public static int GetValidEquipmentId()
@@ -107,15 +107,15 @@ public static class EquipmentService
     }
     public static List<Equipment> GetEquipmentFromRoom(int id)
     {
-        List<Equipment> items = new List<Equipment>();
+        List<Equipment> movements = new List<Equipment>();
         foreach (var eq in EquipmentRepo.ClinicEquipmentList)
         {
             if (eq.RoomId == id)
             {
-                items.Add(eq);
+                movements.Add(eq);
             }
         }
-        return items;
+        return movements;
     }
     public static EquipmentType ChooseEquipmentType()
     {
@@ -352,5 +352,30 @@ public static class EquipmentService
                 EquipmentRepo.PersistChanges();
             }
         }
+
+    }
+    public static void UpdateRoomEquipment(Doctor doctor)
+    {
+        CLI.CLIWriteLine($"\nThe state of equipment in room {doctor.RoomId} before the appointment: ");
+        CLI.CLIWriteLine();
+        List<Equipment> equipmentList = EquipmentService.GetEquipmentFromRoom(doctor.RoomId);
+        foreach (Equipment equipment in equipmentList)
+        {
+            CLI.CLIWriteLine($"{equipment.Name} : {equipment.Amount}");
+        }
+        CLI.CLIWriteLine($"Please enter the quantity of the equipment that was used during the appointment: ");
+        CLI.CLIWriteLine();
+        foreach (Equipment equipment in equipmentList)
+        {
+
+            var clinicEquipment = EquipmentRepo.Get(equipment.Id);
+            CLI.CLIWrite($"{equipment.Name} : ");
+            int quantity = CLI.CLIEnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
+            int newQuantity = clinicEquipment.Amount - quantity;
+            EquipmentRepo.Update(equipment.Id, newQuantity);
+            CLI.CLIWriteLine();
+        }
+        CLI.CLIWriteLine("Succesfully updated equipment.");
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using ClinicApp.Clinic;
+﻿using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -184,14 +185,14 @@ namespace ClinicApp.Users
                 Console.WriteLine("No appointment with that ID found");
                 return;
             }
-            Perform(chosenAppointment, ref doctor);
+            Perform(ref chosenAppointment, ref doctor);
 
             
         }
 
         //=======================================================================================================================================================================
         // PERFORM EXAMINATION
-        private static void Perform(Appointment appointment, ref Doctor doctor)
+        private static void Perform( ref Appointment appointment, ref Doctor doctor)
         {
             string type;
             if (appointment.Type == 'e') type = "Examination";
@@ -208,108 +209,31 @@ namespace ClinicApp.Users
             {
                 HealthRecordService.ChangePatientRecord(ref healthRecord);
             }
-            
+            Patient patient = healthRecord.Patient;
             CLI.CLIWriteLine("Create referral for patient? (y/n)");
             choice = CLI.CLIEnterString().ToUpper();
             if (choice == "Y")
-            {
-                Patient patient = healthRecord.Patient;
+            { 
                 ReferralService.CreateReferral(ref patient, ref doctor);
             }
-
             do
             {
                 CLI.CLIWriteLine("Write prescription for patient? (y/n)");
                 choice = CLI.CLIEnterString().ToUpper();
                 if (choice.ToUpper() == "Y")
                 {
-                    Prescription prescription = WritePrescription(healthRecord.Patient);
-                    if (prescription != null)
-                    {
-                        PrescriptionRepo.Add(prescription, healthRecord.Patient);
-
-                    }
+                    PrescriptionService.WritePrescription(ref patient, doctor);
 
                 }
             } while (choice.ToUpper() == "Y");
 
-
+            EquipmentService.UpdateRoomEquipment(doctor);
 
             appointment.Finished = true;
-            SystemFunctions.CurrentAppointments.Remove(appointment.ID);
-            this.Appointments.Remove(appointment);
-
+            AppointmentRepo.CurrentAppointments.Remove(appointment.ID);
+            doctor.Appointments.Remove(appointment);
             appointment.Patient.Appointments.Remove(appointment);
-            Console.WriteLine($"{type} ended.");
-        }
-
-
-        
-
-        
-
-        
-        //=======================================================================================================================================================================
-        // UPDATING EQUIPMENT AFTER AN APPOINTMENT
-
-        public void UpdateEquipment()
-        {
-            Console.WriteLine($"The state of equipment in room {this.RoomId} before the appointment: ");
-            Console.WriteLine();
-            List<AdminFunctions.Equipment> equipmentList = EquipmentService.GetEquipmentFromRoom(this.RoomId);
-            foreach (AdminFunctions.Equipment equipment in equipmentList)
-            {
-                Console.WriteLine($"{equipment.Name} : {equipment.Amount}");
-            }
-            Console.WriteLine($"Please enter the quantity of the equipment that was used during the appointment: ");
-            Console.WriteLine();
-            foreach (AdminFunctions.Equipment equipment in equipmentList)
-            {
-
-                var clinicEquipment = EquipmentRepo.Get(equipment.Id);
-                Console.Write($"{equipment.Name} : ");
-                int quantity = CLI.CLIEnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
-                int newQuantity = clinicEquipment.Amount - quantity;
-                EquipmentRepo.Update(equipment.Id, newQuantity);
-                Console.WriteLine();
-            }
-            Console.WriteLine("Succesfully updated equipment.");
-
-        }
-        //=======================================================================================================================================================================
-        // MANAGING MEDICINE 
-
-        public void ManageMedicine()
-        {
-            Console.WriteLine("Medicine requests: ");
-            List<AdminFunctions.MedicineRequest> listRequests = AdminFunctions.MedicineRequestRepo.GetAll();
-            foreach (AdminFunctions.MedicineRequest request in listRequests)
-            {
-                Console.WriteLine($"ID: {request.Id}");
-                Console.WriteLine($"Name: {request.Medicine.Name}");
-                Console.Write("Ingredients: ");
-                foreach (string ingredient in request.Medicine.Ingredients)
-                {
-                    Console.Write(ingredient + ", ");
-                }
-                Console.WriteLine();
-
-                Console.WriteLine("Do you want to approve this medicine(y/n)");
-                string choice = Console.ReadLine();
-                if (choice.ToUpper() == "Y")
-                {
-                    AdminFunctions.MedicineRequestService.Approve(request.Id);
-                }
-                else
-                {
-                    Console.WriteLine("Why do you want to reject this medicine? Write a short comment.");
-                    string comment = Console.ReadLine();
-                    AdminFunctions.MedicineRequestService.Reject(request.Id, comment);
-                }
-
-            }
-
-
+            CLI.CLIWriteLine($"{type} ended.");
         }
 
 

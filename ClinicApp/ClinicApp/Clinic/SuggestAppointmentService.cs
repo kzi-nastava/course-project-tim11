@@ -134,7 +134,7 @@ namespace ClinicApp.Clinic
                     int id;
                     try
                     {
-                        id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
+                        id = AppointmentRepo.AllAppointments.Values.Last().ID + 1;
                     }
                     catch
                     {
@@ -143,7 +143,7 @@ namespace ClinicApp.Clinic
                     Examination examination = new Examination(id, today, doctor, this, false, 0, 0);
                     InsertAppointment(examination);
                     doctor.InsertAppointment(examination);
-                    SystemFunctions.AllAppointments.Add(id, examination);
+                    AppointmentRepo.AllAppointments.Add(id, examination);
                     SystemFunctions.CurrentAppointments.Add(id, examination);
                     //Console.WriteLine("\nNew examination successfully created\n");
                     ActivityHistory.Add(DateTime.Now, "CREATE");
@@ -170,7 +170,7 @@ namespace ClinicApp.Clinic
                         int id;
                         try
                         {
-                            id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
+                            id = AppointmentRepo.AllAppointments.Values.Last().ID + 1;
                         }
                         catch
                         {
@@ -179,8 +179,8 @@ namespace ClinicApp.Clinic
                         Examination examination = new Examination(id, preferredAppointment, doctor, this, false, 0, 0);
                         InsertAppointment(examination);
                         doctor.InsertAppointment(examination);
-                        SystemFunctions.AllAppointments.Add(id, examination);
-                        SystemFunctions.CurrentAppointments.Add(id, examination);
+                        AppointmentRepo.AllAppointments.Add(id, examination);
+                        AppointmentRepo.CurrentAppointments.Add(id, examination);
                         //Console.WriteLine("\nNew examination successfully created\n");
                         ActivityHistory.Add(DateTime.Now, "CREATE");
                         return true;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp
@@ -178,9 +179,9 @@ namespace ClinicApp
         }
         public static bool CheckForExaminations(DateRange dateRange, int roomId)
         {
-            foreach (int examId in SystemFunctions.AllAppointments.Keys )
+            foreach (int examId in AppointmentRepo.AllAppointments.Keys )
             {
-                Clinic.Appointment exam = SystemFunctions.AllAppointments[examId];
+                Clinic.Appointment exam = AppointmentRepo.AllAppointments[examId];
                 if(exam.Doctor.RoomId == roomId && dateRange.IsOverlaping(new DateRange(exam.DateTime, exam.DateTime.AddMinutes(15))))
                 {
                     return true;
