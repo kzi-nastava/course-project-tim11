@@ -9,21 +9,21 @@ namespace ClinicApp.AdminFunctions
     {
         public static void Approve(int id)
         {
-            MedicineRequest toApprove = MedicineRequestRepo.Get(id);
+            MedicineRequest toApprove = MedicineRequestRepository.Get(id);
             if (toApprove is null)
                 return;
             MedicineRepo.Add(toApprove.Medicine);
            
-            MedicineRequestRepo.Delete(id);
-            MedicineRequestRepo.PersistChanges();
+            MedicineRequestRepository.Delete(id);
+            MedicineRequestRepository.PersistChanges();
         }
         public static void Reject(int id, string comment)
         {
-            MedicineRequest toReject = MedicineRequestRepo.Get(id);
+            MedicineRequest toReject = MedicineRequestRepository.Get(id);
             if (toReject is null)
                 return;
             toReject.Comment = comment;
-            MedicineRequestRepo.PersistChanges();
+            MedicineRequestRepository.PersistChanges();
         }
         public static void CreateMedicineRequest()
         {
@@ -37,7 +37,7 @@ namespace ClinicApp.AdminFunctions
             List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
             Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
             MedicineRequest mr = new MedicineRequest { Medicine = medicine, Comment = "" };
-            MedicineRequestRepo.Add(mr);
+            MedicineRequestRepository.Add(mr);
         }
         public static void ReviewedMedsMenu()
         {
@@ -57,7 +57,7 @@ namespace ClinicApp.AdminFunctions
             List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
             Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
             MedicineRequest newRequest = new MedicineRequest { Medicine = medicine, Comment = "" };
-            MedicineRequestRepo.Update(id, newRequest);
+            MedicineRequestRepository.Update(id, newRequest);
         }
 
         
@@ -66,7 +66,7 @@ namespace ClinicApp.AdminFunctions
             if (parameter == "rbd")
             {
                 CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
-                foreach (var request in MedicineRequestRepo.GetAll())
+                foreach (var request in MedicineRequestRepository.GetAll())
                 {
                     if (request.Comment != "")
                     {
@@ -82,7 +82,7 @@ namespace ClinicApp.AdminFunctions
             else if (parameter == "sba")
             {
                 CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
-                foreach (var request in MedicineRequestRepo.GetAll())
+                foreach (var request in MedicineRequestRepository.GetAll())
                 {
                     if (request.Comment == "")
                     {
@@ -97,7 +97,7 @@ namespace ClinicApp.AdminFunctions
             else if (parameter == "all")
             {
                 CLI.CLIWriteLine("All medicine requests");
-                foreach (var request in MedicineRequestRepo.GetAll())
+                foreach (var request in MedicineRequestRepository.GetAll())
                 {
                     CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
@@ -123,7 +123,7 @@ namespace ClinicApp.AdminFunctions
         {
             string choice;
             CLI.CLIWriteLine("Medicine requests: ");
-            List<MedicineRequest> allRequests = MedicineRequestRepo.LoadMedicineRequests();
+            List<MedicineRequest> allRequests = MedicineRequestRepository.LoadMedicineRequests();
             foreach (var request in allRequests)
             {
                 

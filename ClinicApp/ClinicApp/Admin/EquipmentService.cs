@@ -37,7 +37,7 @@ public static class EquipmentService
     {
         CLI.CLIWriteLine("Enter ID of equipment to change:");
         int id = GetValidEquipmentId();
-        Equipment eq = EquipmentRepo.Get(id);
+        Equipment eq = EquipmentRepository.Get(id);
         if (eq.RoomId != 0)
         {
             CLI.CLIWriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in the Manage Equipment menu");
@@ -47,7 +47,7 @@ public static class EquipmentService
         {
             CLI.CLIWriteLine("Enter new amount: ");
             int amount = CLI.CLIEnterNumberWithLimit(1, 99999999);
-            EquipmentRepo.Update(eq.Id, amount);
+            EquipmentRepository.Update(eq.Id, amount);
         }
     }
     public static void AddNewToStorage()
@@ -56,7 +56,7 @@ public static class EquipmentService
         EquipmentType type;
         int amount = CLI.CLIEnterNumber();
         List<string> exsistingNames = new List<string>();
-        foreach (Equipment item in EquipmentRepo.ClinicEquipmentList)
+        foreach (Equipment item in EquipmentRepository.EquipmentList)
         {
             if (item.RoomId == 0)
             {
@@ -73,42 +73,42 @@ public static class EquipmentService
         CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
         type = ChooseEquipmentType();
         Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
-        EquipmentRepo.Add(eq);
+        EquipmentRepository.Add(eq);
     }
     public static void ListAllEquipment()
     {
         Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-        foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
+        foreach (Equipment eq in EquipmentRepository.EquipmentList)
         {
-            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
         }
     }
     public static void ListAllEquipmentInRoom(int id)
     {
         Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-        foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
+        foreach (Equipment eq in EquipmentRepository.EquipmentList)
         {
             if (eq.RoomId == id)
-                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
         }
     }
     public static int GetValidEquipmentId()
     {
         Equipment eq;
         int id = CLI.CLIEnterNumber();
-        eq = EquipmentRepo.Get(id);
+        eq = EquipmentRepository.Get(id);
         while (eq is null)
         {
             CLI.CLIWriteLine("Invalid ID");
             id = CLI.CLIEnterNumber();
-            eq = EquipmentRepo.Get(id);
+            eq = EquipmentRepository.Get(id);
         }
         return id;
     }
     public static List<Equipment> GetEquipmentFromRoom(int id)
     {
         List<Equipment> movements = new List<Equipment>();
-        foreach (var eq in EquipmentRepo.ClinicEquipmentList)
+        foreach (var eq in EquipmentRepository.EquipmentList)
         {
             if (eq.RoomId == id)
             {
@@ -143,7 +143,7 @@ public static class EquipmentService
     public static void OrderDynamiicEquipment()
     {
         bool gauzes = false, stiches = false, vaccines = false, bandages = false;
-        foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+        foreach (Equipment equipment in EquipmentRepository.EquipmentList)
         {
             if (equipment.Amount > 0 && equipment.Type == EquipmentType.Gauzes && equipment.RoomId == 0)
                 gauzes = true;
@@ -241,10 +241,10 @@ public static class EquipmentService
     //Redistributes dynamic equipment
     public static void RedistributeDynamiicEquipment()
     {
-        foreach (Room room in RoomRepo.ClinicRooms)
+        foreach (Room room in RoomRepository.Rooms)
         {
             int gauzes = 0, stiches = 0, vaccines = 0, bandages = 0;
-            foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+            foreach (Equipment equipment in EquipmentRepository.EquipmentList)
             {
                 if (equipment.Type == EquipmentType.Gauzes && equipment.RoomId == room.Id)
                     gauzes += equipment.Amount;
@@ -315,13 +315,13 @@ public static class EquipmentService
                         type = EquipmentType.Bandages;
                         break;
                 }
-                roomFrom = RoomRepo.Get(idFrom);
+                roomFrom = RoomRepository.Get(idFrom);
                 if (roomFrom == default)
-                    roomFrom = RoomRepo.Get(0);
-                roomTo = RoomRepo.Get(idTo);
+                    roomFrom = RoomRepository.Get(0);
+                roomTo = RoomRepository.Get(idTo);
                 if (roomTo == default)
-                    roomTo = RoomRepo.Get(0);
-                foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+                    roomTo = RoomRepository.Get(0);
+                foreach (Equipment equipment in EquipmentRepository.EquipmentList)
                 {
                     if (equipment.Type == type && equipment.RoomId == roomFrom.Id)
                         totalEquipment += equipment.Amount;
@@ -336,8 +336,8 @@ public static class EquipmentService
                     RoomId = roomTo.Id,
                     Type = type
                 };
-                EquipmentRepo.Add(equipmentNew);
-                foreach (Equipment equipment in EquipmentRepo.ClinicEquipmentList)
+                EquipmentRepository.Add(equipmentNew);
+                foreach (Equipment equipment in EquipmentRepository.EquipmentList)
                     if (equipment.Type == type && equipment.RoomId == roomTo.Id && amount > 0)
                         if (amount < equipment.Amount)
                         {
@@ -347,9 +347,9 @@ public static class EquipmentService
                         else
                         {
                             amount -= equipment.Amount;
-                            EquipmentRepo.ClinicEquipmentList.Remove(equipment);
+                            EquipmentRepository.EquipmentList.Remove(equipment);
                         }
-                EquipmentRepo.PersistChanges();
+                EquipmentRepository.PersistChanges();
             }
         }
 
@@ -368,11 +368,11 @@ public static class EquipmentService
         foreach (Equipment equipment in equipmentList)
         {
 
-            var clinicEquipment = EquipmentRepo.Get(equipment.Id);
+            var clinicEquipment = EquipmentRepository.Get(equipment.Id);
             CLI.CLIWrite($"{equipment.Name} : ");
             int quantity = CLI.CLIEnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
             int newQuantity = clinicEquipment.Amount - quantity;
-            EquipmentRepo.Update(equipment.Id, newQuantity);
+            EquipmentRepository.Update(equipment.Id, newQuantity);
             CLI.CLIWriteLine();
         }
         CLI.CLIWriteLine("Succesfully updated equipment.");

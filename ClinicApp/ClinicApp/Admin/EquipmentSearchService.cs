@@ -10,9 +10,9 @@ namespace ClinicApp.AdminFunctions
         {
             searchTerm = searchTerm.ToLower();
             var results = new List<Equipment>();
-            foreach (var item in EquipmentRepo.ClinicEquipmentList)
+            foreach (var item in EquipmentRepository.EquipmentList)
             {
-                if (item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomRepo.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
+                if (item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomRepository.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
                 {
                     results.Add(item);
                 }
@@ -36,7 +36,7 @@ namespace ClinicApp.AdminFunctions
             var results = new List<Equipment>();
             foreach (var item in inputList)
             {
-                if (RoomRepo.Get(item.RoomId).Type == type)
+                if (RoomRepository.Get(item.RoomId).Type == type)
                 {
                     results.Add(item);
                 }
@@ -127,7 +127,7 @@ namespace ClinicApp.AdminFunctions
             CLI.CLIWriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
             foreach (Equipment eq in Results)
             {
-                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type + " " + eq.Dynamic);
+                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type + " " + eq.Dynamic);
             }
 
         }

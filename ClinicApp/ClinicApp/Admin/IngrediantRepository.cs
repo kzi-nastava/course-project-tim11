@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    class IngrediantRepo
+    class IngrediantRepository
     {
         public static List<string> Ingrediants;
 
-        static IngrediantRepo()
+        static IngrediantRepository()
         {
             Ingrediants = LoadIngrediants();
         }

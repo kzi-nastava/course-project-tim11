@@ -6,34 +6,34 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    class EquipmentRepo
+    class EquipmentRepository
     {
         static string Path { get; set; } = "../../../Admin/Data/equipment.txt";
 
-        static public List<Equipment> ClinicEquipmentList { get; set; } = new List<Equipment>();
+        static public List<Equipment> EquipmentList { get; set; } = new List<Equipment>();
 
-        static EquipmentRepo()
+        static EquipmentRepository()
         {
-            ClinicEquipmentList = EquipmentRepo.Load();
+            EquipmentList = Load();
 
         }
-        public static List<Equipment> GetAll() => ClinicEquipmentList;
+        public static List<Equipment> GetAll() => EquipmentList;
 
-        public static Equipment? Get(int id) => ClinicEquipmentList.FirstOrDefault(p => p.Id == id);
+        public static Equipment? Get(int id) => EquipmentList.FirstOrDefault(p => p.Id == id);
 
         public static void Add(Equipment eq)
         {
-            eq.Id = ClinicEquipmentList.Last().Id + 1;
-            ClinicEquipmentList.Add(eq);
-            EquipmentRepo.PersistChanges();
+            eq.Id = EquipmentList.Last().Id + 1;
+            EquipmentList.Add(eq);
+            EquipmentRepository.PersistChanges();
         }
         public static void Delete(int id)
         {
             var heq = Get(id);
             if (heq is null)
                 return;
-            ClinicEquipmentList.Remove(heq);
-            EquipmentRepo.PersistChanges();
+            EquipmentList.Remove(heq);
+            EquipmentRepository.PersistChanges();
         }
         public static void Update(int id, int newAmount)
         {
@@ -48,7 +48,7 @@ namespace ClinicApp.AdminFunctions
         public static void PersistChanges()
         {
             File.Delete(Path);
-            foreach (Equipment eq in ClinicEquipmentList)
+            foreach (Equipment eq in EquipmentList)
             {
                 string newLine = Convert.ToString(eq.Id) + "|" + eq.Name + "|" + Convert.ToString(eq.Amount) + "|" + Convert.ToString(eq.RoomId) + "|" + Convert.ToString(eq.Type)+"|"+Convert.ToString(eq.Dynamic);
                 using (StreamWriter sw = File.AppendText(Path))

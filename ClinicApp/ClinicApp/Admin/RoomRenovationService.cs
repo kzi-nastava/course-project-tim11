@@ -10,7 +10,7 @@ namespace ClinicApp.AdminFunctions
         public static void ListAllRenovations()
         {
             string newLine;
-            foreach (RoomRenovation renovation in RoomRenovationRepo.GetAll())
+            foreach (RoomRenovation renovation in RoomRenovationRepository.GetAll())
             {
                 switch (renovation.Type)
                 {
@@ -51,7 +51,7 @@ namespace ClinicApp.AdminFunctions
             //get renovated room id
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
             int id = RoomService.GetValidRoomId();
-            Room room = RoomRepo.Get(id);
+            Room room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
                 CLI.CLIWriteLine("You cannot renovate Storage!");
@@ -72,14 +72,14 @@ namespace ClinicApp.AdminFunctions
                 Done = false,
                 NewRoom = newRoom
             };
-            RoomRenovationRepo.Add(renovation);
+            RoomRenovationRepository.Add(renovation);
         }
         public static void CreateComplexJoinRenovation()
         {
             //get renovated room id
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
             int id = RoomService.GetValidRoomId();
-            Room room = RoomRepo.Get(id);
+            Room room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
                 CLI.CLIWriteLine("You cannot renovate Storage!");
@@ -90,7 +90,7 @@ namespace ClinicApp.AdminFunctions
             //get the joined room
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
             int otherId = RoomService.GetValidRoomId();
-            Room otherRoom = RoomRepo.Get(otherId);
+            Room otherRoom = RoomRepository.Get(otherId);
             if (room.Id == 0)
             {
                 CLI.CLIWriteLine("You cannot renovate Storage!");
@@ -114,14 +114,14 @@ namespace ClinicApp.AdminFunctions
                 Done = false,
                 JoinedRoomId = otherRoom.Id,
             };
-            RoomRenovationRepo.Add(renovation);
+            RoomRenovationRepository.Add(renovation);
         }
         public static void SimpleRoomRenovation()
         {
 
             CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
             int id = RoomService.GetValidRoomId();
-            Room room = RoomRepo.Get(id);
+            Room room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
                 CLI.CLIWriteLine("You cannot renovate Storage!");
@@ -136,7 +136,7 @@ namespace ClinicApp.AdminFunctions
                 Type = RenovationType.Simple,
                 Done = false
             };
-            RoomRenovationRepo.Add(renovation);
+            RoomRenovationRepository.Add(renovation);
         }
         public static void CommitComplexJoinRenovation(RoomRenovation renovation)
         {
@@ -144,26 +144,26 @@ namespace ClinicApp.AdminFunctions
             foreach (var eq in equipmentInJoinedRoom)
             {
                 EquipmentMovement movement = new EquipmentMovement { Amount = eq.Amount, EquipmentId = eq.Id, NewRoomId = renovation.RoomId, MovementDate = DateTime.Today };
-                EquipmentMovementRepo.Add(movement);
+                EquipmentMovementRepository.Add(movement);
                 EquipmentMovementService.CheckForMovements();
-                EquipmentRepo.Delete(eq.Id);
+                EquipmentRepository.Delete(eq.Id);
             }
             renovation.Done = true;
-            RoomRepo.Delete(renovation.JoinedRoomId);
-            RoomRenovationRepo.PersistChanges();
+            RoomRepository.Delete(renovation.JoinedRoomId);
+            RoomRenovationRepository.PersistChanges();
         }
 
         public static void CommitComplexSplitRenovation(RoomRenovation renovation)
         {
 
-            RoomRepo.Add(renovation.NewRoom);
+            RoomRepository.Add(renovation.NewRoom);
             renovation.Done = true;
-            RoomRenovationRepo.PersistChanges();
+            RoomRenovationRepository.PersistChanges();
         }
 
         public static void CheckForRenovations()
         {
-            foreach (var renovation in RoomRenovationRepo.RoomRenovationList)
+            foreach (var renovation in RoomRenovationRepository.RoomRenovationList)
             {
                 if (!renovation.Done)
                 {
@@ -184,7 +184,7 @@ namespace ClinicApp.AdminFunctions
                     }
                 }
             }
-            RoomRenovationRepo.PersistChanges();
+            RoomRenovationRepository.PersistChanges();
         }
     }
 }

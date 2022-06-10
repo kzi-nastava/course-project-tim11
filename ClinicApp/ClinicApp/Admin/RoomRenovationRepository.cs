@@ -7,12 +7,12 @@ using ClinicApp.HelperClasses;
 
 namespace ClinicApp.AdminFunctions
 {
-    class RoomRenovationRepo
+    class RoomRenovationRepository
     {
         static string Path { get; set; } = "../../../Admin/Data/roomRenovations.txt";
         static public List<RoomRenovation> RoomRenovationList { get; set; }
 
-        static RoomRenovationRepo()
+        static RoomRenovationRepository()
         {
             RoomRenovationList = Load();
         }

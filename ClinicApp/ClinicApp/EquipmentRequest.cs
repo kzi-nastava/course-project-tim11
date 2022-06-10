@@ -43,7 +43,7 @@ namespace ClinicApp
                 RoomId = 0,
                 Type = Type
             };
-            EquipmentRepo.Add(equipment);
+            EquipmentRepository.Add(equipment);
         }
     }
 }

@@ -168,7 +168,7 @@ namespace ClinicApp
 
         public static bool CheckForRenovations(DateRange examinationTime, int roomId)
         {
-            foreach(var renovation in RoomRenovationRepo.RoomRenovationList)
+            foreach(var renovation in RoomRenovationRepository.RoomRenovationList)
             {
                 if (roomId == renovation.RoomId && renovation.Duration.IsOverlaping(examinationTime))
                 {

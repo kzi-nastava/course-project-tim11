@@ -6,10 +6,10 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class MedicineRequestRepo
+    public static class MedicineRequestRepository
     {
         public static List<MedicineRequest> MedicineRequests;
-        static MedicineRequestRepo()
+        static MedicineRequestRepository()
         {
             MedicineRequests = LoadMedicineRequests();
         }

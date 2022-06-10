@@ -10,17 +10,17 @@ namespace ClinicApp.AdminFunctions
         {
             CLI.CLIWriteLine("Enter the new ingrediant");
             string ingrediant = CLI.CLIEnterStringWithoutDelimiter("|");
-            if (IngrediantRepo.GetAll().Contains(ingrediant))
+            if (IngrediantRepository.GetAll().Contains(ingrediant))
             {
                 CLI.CLIWriteLine("Ingrediant already in database");
                 return;
             }
-            IngrediantRepo.Add(ingrediant);
+            IngrediantRepository.Add(ingrediant);
         }
         public static void UpdateIngrediant()
         {
             CLI.CLIWriteLine("Select the ingrediant to update, 0 to continue");
-            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            List<string> offeredIngrediants = IngrediantRepository.GetAll();
             foreach (var ingrediant in offeredIngrediants)
             {
                 CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
@@ -33,12 +33,12 @@ namespace ClinicApp.AdminFunctions
             string selected = offeredIngrediants[indexOfSelected - 1];
             CLI.CLIWriteLine("Enter the new ingrediant");
             string newIngr = CLI.CLIEnterStringWithoutDelimiter("|");
-            IngrediantRepo.Update(selected, newIngr);
+            IngrediantRepository.Update(selected, newIngr);
         }
         public static void DeleteIngrediant()
         {
             CLI.CLIWriteLine("Select the ingrediant to delete, 0 to return");
-            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            List<string> offeredIngrediants = IngrediantRepository.GetAll();
             foreach (var ingrediant in offeredIngrediants)
             {
                 CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
@@ -49,12 +49,12 @@ namespace ClinicApp.AdminFunctions
                 return;
             }
             string selected = offeredIngrediants[indexOfSelected - 1];
-            IngrediantRepo.Delete(selected);
+            IngrediantRepository.Delete(selected);
         }
         public static List<string> ChooseIngrediants()
         {
             List<string> chosenIngrediants = new List<string>();
-            List<string> offeredIngrediants = new List<string>(IngrediantRepo.GetAll());
+            List<string> offeredIngrediants = new List<string>(IngrediantRepository.GetAll());
             CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
             while (true)
             {

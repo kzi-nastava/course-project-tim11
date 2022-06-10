@@ -10,12 +10,12 @@ namespace ClinicApp.AdminFunctions
         {
             Room room;
             int id = CLI.CLIEnterNumber();
-            room = RoomRepo.Get(id);
+            room = RoomRepository.Get(id);
             while (room is null)
             {
                 CLI.CLIWriteLine("Invalid ID");
                 id = CLI.CLIEnterNumber();
-                room = RoomRepo.Get(id);
+                room = RoomRepository.Get(id);
             }
             return id;
         }
@@ -43,7 +43,7 @@ namespace ClinicApp.AdminFunctions
         public static void ListAllRooms()
         {
             CLI.CLIWriteLine("ID | NAME | TYPE");
-            foreach (Room room in RoomRepo.ClinicRooms)
+            foreach (Room room in RoomRepository.Rooms)
             {
                 CLI.CLIWriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
@@ -55,7 +55,7 @@ namespace ClinicApp.AdminFunctions
             CLI.CLIWriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
             RoomType roomType = ChooseRoomType();
             Room room = new Room { Name = name, Type = roomType };
-            RoomRepo.Add(room);
+            RoomRepository.Add(room);
         }
         public static void EditRoom()
         {
@@ -63,7 +63,7 @@ namespace ClinicApp.AdminFunctions
             string name;
             RoomType roomType;
             int id = GetValidRoomId();
-            room = RoomRepo.Get(id);
+            room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
                 CLI.CLIWriteLine("You cannot edit Storage!");
@@ -85,7 +85,7 @@ namespace ClinicApp.AdminFunctions
                 roomType = ChooseRoomType();
             }
             else roomType = room.Type;
-            RoomRepo.Update(room.Id, name, roomType);
+            RoomRepository.Update(room.Id, name, roomType);
         }
         public static void DeleteRoom()
         {
@@ -95,7 +95,7 @@ namespace ClinicApp.AdminFunctions
             {
                 CLI.CLIWriteLine("You cannot delete Storage!");
             }
-            else RoomRepo.Delete(id);
+            else RoomRepository.Delete(id);
         }
 
     }
