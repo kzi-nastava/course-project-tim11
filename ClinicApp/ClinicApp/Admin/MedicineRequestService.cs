@@ -41,7 +41,10 @@ namespace ClinicApp.AdminFunctions
         public static void ReviewedMedsMenu()
         {
             ListMedicineRequests();
+            CLI.CLIWriteLine("Enter ID of the request, 0 to return");
             int id = CLI.CLIEnterNumber();
+            if (id == 0)
+                return;
             string name;
             CLI.CLIWriteLine("Enter medicine name");
             name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -54,7 +57,6 @@ namespace ClinicApp.AdminFunctions
             Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
             MedicineRequest newRequest = new MedicineRequest { Medicine = medicine, Comment = "" };
             MedicineRequestRepo.Update(id, newRequest);
-
         }
 
         
