@@ -50,16 +50,16 @@ namespace ClinicApp
                     admin.MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    Admin.RoomManagmentMenu();
+                    Menus.Admin.RoomManagment.Menu();
                     break;
                 case 4:
-                    Admin.EquipmentManagmentMenu();
+                    Menus.Admin.EquipmentManagment.Menu();
                     break;
                 case 5:
-                    Admin.RoomRenovationMenu();
+                    Menus.Admin.RoomRenovation.Menu();
                     break;
                 case 6:
-                    Admin.MedicinesMenu();
+                    Menus.Admin.Medicines.Menu();
                     break;
             }
         }
