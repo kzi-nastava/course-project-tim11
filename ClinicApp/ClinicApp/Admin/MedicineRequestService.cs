@@ -103,6 +103,7 @@ namespace ClinicApp.AdminFunctions
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
                             "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
+                        CLI.CLIWriteLine("----------------------------------------------------------");
                     }
                 }
             }
@@ -124,7 +125,39 @@ namespace ClinicApp.AdminFunctions
 
         public static void ReviewMedicineRequests()
         {
+            string choice;
+            CLI.CLIWriteLine("Medicine requests: ");
+            foreach (var request in MedicineRequestRepo.GetAll())
+            {
+                CLI.CLIWriteLine("----------------------------------------------------------");
+                if (request.Comment == "")
+                {
+                    CLI.CLIWriteLine("Request ID: " + request.Id +
+                        "\nMedicine name: " + request.Medicine.Name +
+                        "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                }
 
+                CLI.CLIWriteLine("Do you want to approve this medicine(y/n)");
+                choice = CLI.CLIEnterString();
+                if (choice.ToUpper() == "Y")
+                {
+                    Approve(request.Id);
+                }
+                else
+                {
+                    CLI.CLIWriteLine("Do you want to reject this medicine(y/n)");
+                    choice = CLI.CLIEnterString();
+                    if (choice.ToUpper() == "Y")
+                    {
+                        CLI.CLIWriteLine("Why do you want to reject this medicine? Write a short comment.");
+                        string comment = CLI.CLIEnterString();
+                        Reject(request.Id, comment);
+                    }
+                    
+                }
+
+            }
 
         }
     }
