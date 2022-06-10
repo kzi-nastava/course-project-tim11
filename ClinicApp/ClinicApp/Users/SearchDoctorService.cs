@@ -42,7 +42,7 @@ namespace ClinicApp.Users
 
         public List<Doctor> Search(SearchDoctors search)
         {
-            List<Doctor> results = SystemFunctions.Doctors.Values.ToList();
+            List<Doctor> results = UserRepository.Doctors.Values.ToList();
             if (search.FilterByName == true)
             {
                 results = FilterByName(results,search.FirstName);

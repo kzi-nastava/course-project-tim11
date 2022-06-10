@@ -162,7 +162,7 @@ namespace ClinicApp.Users
             string choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                Patient.ViewAllPatients();
+                PatientService.ViewAllPatients();
             }
             Console.Write("\nEnter the username: ");
             string userName = Console.ReadLine();
@@ -401,7 +401,7 @@ namespace ClinicApp.Users
                         SystemFunctions.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
                     }
                     Console.WriteLine("Information about patient:");
-                    healthRecord.Patient.ViewPatient();
+                    PatientService.ViewPatient(healthRecord.Patient);
                     healthRecord.ShowHealthRecord();
                 }
             }
@@ -572,7 +572,7 @@ namespace ClinicApp.Users
         }
 
         private Doctor AskUsernameDoctor() {
-            Patient.ViewAllDoctors();
+            DoctorService.ViewAllDoctors();
             Console.WriteLine("\n Enter doctor username: ");
             Console.Write(">> ");
             string userName = Console.ReadLine();

@@ -52,15 +52,11 @@ public static class EquipmentService
     public static void AddNewToStorage()
     {
         string name;
-        EquipmentType type;
         int amount = CLI.CLIEnterNumber();
         List<string> exsistingNames = new List<string>();
-        foreach (Equipment item in EquipmentRepo.ClinicEquipmentList)
+        foreach (Equipment item in GetEquipmentFromRoom(0))
         {
-            if (item.RoomId == 0)
-            {
-                exsistingNames.Add(item.Name);
-            }
+            exsistingNames.Add(item.Name);
         }
         CLI.CLIWrite("Name: ");
         name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -70,7 +66,7 @@ public static class EquipmentService
             name = CLI.CLIEnterStringWithoutDelimiter("|");
         }
         CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-        type = ChooseEquipmentType();
+        EquipmentType type = ChooseEquipmentType();
         Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
         EquipmentRepo.Add(eq);
     }
@@ -85,10 +81,9 @@ public static class EquipmentService
     public static void ListAllEquipmentInRoom(int id)
     {
         Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-        foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
+        foreach (Equipment eq in GetEquipmentFromRoom(id))
         {
-            if (eq.RoomId == id)
-                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
         }
     }
     public static int GetValidEquipmentId()
@@ -106,15 +101,15 @@ public static class EquipmentService
     }
     public static List<Equipment> GetEquipmentFromRoom(int id)
     {
-        List<Equipment> movements = new List<Equipment>();
+        List<Equipment> items = new List<Equipment>();
         foreach (var eq in EquipmentRepo.ClinicEquipmentList)
         {
             if (eq.RoomId == id)
             {
-                movements.Add(eq);
+                items.Add(eq);
             }
         }
-        return movements;
+        return items;
     }
     public static EquipmentType ChooseEquipmentType()
     {
