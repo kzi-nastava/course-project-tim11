@@ -84,6 +84,7 @@ namespace ClinicApp.Clinic
             {
                 id = 1;
             }
+            //napravi posebnu funkciju za ovaj deo koda
             Examination examination = new Examination(id, dateTime, doctor, this, false, 0, 0);
             InsertAppointment(examination);
             doctor.InsertAppointment(examination);
