@@ -70,7 +70,7 @@ namespace ClinicApp.AdminFunctions
                     {
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
                             "\nDoctor's comment: " + request.Comment);
                         CLI.CLIWriteLine("----------------------------------------------------------");
                     }
@@ -86,7 +86,7 @@ namespace ClinicApp.AdminFunctions
                     {
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
                         CLI.CLIWriteLine("----------------------------------------------------------");
                     }
                 }
@@ -99,12 +99,21 @@ namespace ClinicApp.AdminFunctions
                     CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
                             "\nDoctor's comment: " + request.Comment);
                     CLI.CLIWriteLine("----------------------------------------------------------");
 
                 }
             }
+        }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
         }
 
         public static void ReviewMedicineRequests()
@@ -118,7 +127,7 @@ namespace ClinicApp.AdminFunctions
                 {
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                         "\nMedicine name: " + request.Medicine.Name +
-                        "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
+                        "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
                     CLI.CLIWriteLine("----------------------------------------------------------");
                 }
 
