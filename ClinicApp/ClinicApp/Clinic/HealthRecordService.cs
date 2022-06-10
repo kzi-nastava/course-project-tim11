@@ -18,7 +18,7 @@ namespace ClinicApp.Clinic
             {
                 CLI.CLIWriteLine("No health record found, creating a new record");
                 healthRecord = new HealthRecord(patient);
-                HealthRecordRepo.HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
+                HealthRecordRepo.Add(healthRecord);
             }
             return healthRecord;
         }
@@ -85,7 +85,9 @@ namespace ClinicApp.Clinic
             if (!HealthRecordRepo.HealthRecords.TryAdd(healthRecord.Patient.UserName, healthRecord))
             {
                 HealthRecordRepo.HealthRecords[healthRecord.Patient.UserName] = healthRecord;
+                
             }
+            HealthRecordRepo.PersistChanges();
         }
     }
 }

@@ -26,15 +26,18 @@ namespace ClinicApp.Clinic
         public static void Add(Medicine medicine)
         {
             Medicine.Add(medicine.Name, medicine);
+            PersistChanges();
         }
         public static void Update(Medicine medicine)
         {
             Medicine[medicine.Name] = medicine;
+            PersistChanges();
         }
 
         public static void Delete(Medicine medicine)
         {
             Medicine.Remove(medicine.Name);
+            PersistChanges();
         }
 
         public static void PersistChanges()

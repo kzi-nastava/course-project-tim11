@@ -44,8 +44,7 @@ namespace ClinicApp.Clinic
 
             DoctorService.InsertAppointment(appointment, ref doctor);
             PatientService.InsertAppointmentPatient(ref patient, appointment);
-            AppointmentRepo.AllAppointments.Add(id, appointment);
-            AppointmentRepo.CurrentAppointments.Add(id, appointment);
+            AppointmentRepo.Add(appointment);
             CLI.CLIWriteLine("\nNew appointment successfully created\n");
 
         }
@@ -91,9 +90,7 @@ namespace ClinicApp.Clinic
                 CLI.CLIWriteLine("\nNo future appointments\n");
                 return;
             }
-
             int i = 1;
-            DateTime now = DateTime.Now;
             string type;
             foreach (Appointment appointment in doctor.Appointments)
             {
@@ -218,6 +215,7 @@ namespace ClinicApp.Clinic
                         Examination deletedExamination = new Examination(last.ID + 1, appointment.DateTime, doctor, appointment.Patient, appointment.Finished, appointment.ID, appointment.Edited);
                         AppointmentRepo.AllAppointments.Add(deletedExamination.ID, deletedExamination);
                         AppointmentRepo.CurrentAppointments.Remove(appointment.ID);
+                        AppointmentRepo.PresistChanges();
                     }
                     break;
                 }

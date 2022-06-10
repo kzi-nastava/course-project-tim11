@@ -12,7 +12,8 @@ namespace ClinicApp.AdminFunctions
             MedicineRequest toApprove = MedicineRequestRepo.Get(id);
             if (toApprove is null)
                 return;
-            MedicineRepo.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
+            MedicineRepo.Add(toApprove.Medicine);
+           
             MedicineRequestRepo.Delete(id);
             MedicineRequestRepo.PersistChanges();
         }
@@ -122,7 +123,8 @@ namespace ClinicApp.AdminFunctions
         {
             string choice;
             CLI.CLIWriteLine("Medicine requests: ");
-            foreach (var request in MedicineRequestRepo.GetAll())
+            List<MedicineRequest> allRequests = MedicineRequestRepo.LoadMedicineRequests();
+            foreach (var request in allRequests)
             {
                 
                 if (request.Comment == "")
@@ -132,26 +134,27 @@ namespace ClinicApp.AdminFunctions
                         "\nMedicine name: " + request.Medicine.Name +
                         "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
                     CLI.CLIWriteLine("----------------------------------------------------------");
-                }
-
-                CLI.CLIWriteLine("Do you want to approve this medicine(y/n)");
-                choice = CLI.CLIEnterString();
-                if (choice.ToUpper() == "Y")
-                {
-                    Approve(request.Id);
-                }
-                else
-                {
-                    CLI.CLIWriteLine("Do you want to reject this medicine(y/n)");
+                    CLI.CLIWriteLine("Do you want to approve this medicine(y/n)");
                     choice = CLI.CLIEnterString();
                     if (choice.ToUpper() == "Y")
                     {
-                        CLI.CLIWriteLine("Why do you want to reject this medicine? Write a short comment.");
-                        string comment = CLI.CLIEnterString();
-                        Reject(request.Id, comment);
+                        Approve(request.Id);
                     }
-                    
+                    else
+                    {
+                        CLI.CLIWriteLine("Do you want to reject this medicine(y/n)");
+                        choice = CLI.CLIEnterString();
+                        if (choice.ToUpper() == "Y")
+                        {
+                            CLI.CLIWriteLine("Why do you want to reject this medicine? Write a short comment.");
+                            string comment = CLI.CLIEnterString();
+                            Reject(request.Id, comment);
+                        }
+
+                    }
                 }
+
+                
 
             }
 

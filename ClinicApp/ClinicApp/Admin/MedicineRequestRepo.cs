@@ -60,7 +60,7 @@ namespace ClinicApp.AdminFunctions
             return medicineRequest;
         }
 
-        static List<MedicineRequest> LoadMedicineRequests()
+        public static List<MedicineRequest> LoadMedicineRequests()
         {
             List<MedicineRequest> lista = new List<MedicineRequest>();
             using (StreamReader reader = new StreamReader("../../../Admin/Data/medicineRequests.txt"))
