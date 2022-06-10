@@ -35,7 +35,7 @@ namespace ClinicApp.Users
             Blocked = blocked;
             Appointments = new List<Appointment>();
             Referrals = new List<Referral>();
-            //ActivityHistory = new Dictionary<DateTime, string>();
+            ActivityHistory = new Dictionary<DateTime, string>();
             //LoadActivityHistory();
             Prescriptions = new List<Prescription>();
         }

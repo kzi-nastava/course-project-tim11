@@ -38,14 +38,14 @@ namespace ClinicApp
 
         }      
 
-        public static User FindUser(Roles role = Roles.Nobody)
+        public static User FindUser(string text, Roles role = Roles.Nobody)
         {
             User user;
             int option = 1;
 
             while (option != 0)
             {
-                CLI.CLIWriteLine("\nWrite the username of the patient who's account you want updated:");
+                CLI.CLIWriteLine(text);
                 string userName = CLI.CLIEnterString();
                 if (UserRepository.Users.TryGetValue(userName, out user))
                 {
