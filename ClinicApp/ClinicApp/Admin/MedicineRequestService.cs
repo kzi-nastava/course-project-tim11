@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicApp.Clinic;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,7 @@ namespace ClinicApp.AdminFunctions
             MedicineRequest toApprove = MedicineRequestRepo.Get(id);
             if (toApprove is null)
                 return;
-            SystemFunctions.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
+            MedicineRepo.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
             MedicineRequestRepo.Delete(id);
             MedicineRequestRepo.PersistChanges();
         }
@@ -27,7 +28,7 @@ namespace ClinicApp.AdminFunctions
         {
             CLI.CLIWriteLine("Enter medicine name");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");
-            while (SystemFunctions.Medicine.ContainsKey(name))
+            while (MedicineRepo.Medicine.ContainsKey(name))
             {
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -60,7 +61,7 @@ namespace ClinicApp.AdminFunctions
             string name;
             CLI.CLIWriteLine("Enter medicine name");
             name = CLI.CLIEnterStringWithoutDelimiter("|");
-            while (SystemFunctions.Medicine.ContainsKey(name))
+            while (MedicineRepo.Medicine.ContainsKey(name))
             {
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -115,9 +116,7 @@ namespace ClinicApp.AdminFunctions
                     {
                         CLI.CLIWriteLine("Request ID: " + request.Id +
                             "\nMedicine name: " + request.Medicine.Name +
-                            "\nMedicine ingrediants: " + request.Medicine.Ingredients +
-                            "\nDoctor's comment: " + request.Comment);
-                        CLI.CLIWriteLine("----------------------------------------------------------");
+                            "\nMedicine ingrediants: " + request.Medicine.Ingredients + "\n");
                     }
                 }
             }
@@ -135,6 +134,12 @@ namespace ClinicApp.AdminFunctions
 
                 }
             }
+        }
+
+        public static void ReviewMedicineRequests()
+        {
+
+
         }
     }
 }

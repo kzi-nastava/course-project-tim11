@@ -14,28 +14,7 @@ namespace ClinicApp.Clinic
         public List<string> MedicalHistory { get; set; }
         public List<Anamnesis> Anamneses { get; set; }
         public List<string> Alergies { get; set; }
-        public void ShowHealthRecord() {
-            Console.WriteLine($"Patient {Patient.Name} {Patient.LastName}'s health record\n");
-            Console.WriteLine($"Weight: {Weight}\nHeight: {Height}\n");
-            Console.Write("Medical history: ");
-            foreach (string illness in MedicalHistory)
-            {
-                Console.Write(illness + ", ");
-            }
-            Console.Write("\nKnown alergies: ");
-            foreach (string alergy in Alergies)
-            {
-                Console.Write(alergy + ", ");
-            }
-            int i = 1;
-            Console.WriteLine("\nPrevious anamnesis: ");
-            foreach (Anamnesis anamnesis in Anamneses)
-            {
-                Console.WriteLine("\n\n" + i + ". Anamnesis");
-                anamnesis.ShowAnamnesis();
-                i++;
-            }
-        }
+        
 
         
         public HealthRecord(Patient patient) {
@@ -102,6 +81,6 @@ namespace ClinicApp.Clinic
             return Patient.UserName + "|" + Weight + "|" + Height + "|" + allIlnesses + "|" + anamneses + "|" + allAlergies;
         }
 
-
+        
     }
 }

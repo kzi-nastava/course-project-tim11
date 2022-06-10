@@ -187,5 +187,46 @@ namespace ClinicApp
             }
             return false;
         }
+
+        public static bool ValidateDateTime(DateTime date) {
+            if(date < DateTime.Now)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static Patient AskUsernamePatient()
+        {
+            CLI.CLIWriteLine("Enter the username of the patient. Do you want to view the list of all patients first (y/n)");
+            CLI.CLIWrite(">> ");
+            string choice = CLI.CLIEnterString();
+            if (choice.ToUpper() == "Y")
+            {
+                PatientService.ViewAllPatients();
+            }
+            CLI.CLIWrite("\nEnter the username: ");
+            string userName = CLI.CLIEnterString();
+            Patient patient = null;
+            if (!UserRepository.Patients.TryGetValue(userName, out patient))
+            {
+                CLI.CLIWriteLine("Patient with that username does not exist.");
+            }
+            return patient;
+        }
+
+        public static Doctor AskUsernameDoctor()
+        {
+            DoctorService.ViewAllDoctors();
+            CLI.CLIWriteLine("\n Enter doctor username: ");
+            CLI.CLIWrite(">> ");
+            string userName = CLI.CLIEnterString();
+            Doctor doctor = null;
+            if (!UserRepository.Doctors.TryGetValue(userName, out doctor))
+            {
+                CLI.CLIWriteLine("Doctor with that username does not exist.");
+            }
+            return doctor;
+        }
     }
 }

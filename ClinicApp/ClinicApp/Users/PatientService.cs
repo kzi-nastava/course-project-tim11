@@ -109,7 +109,7 @@ namespace ClinicApp.Users
             return true;
         }
 
-        public static void InsertAppointmentPatient(Patient patient, Appointment newExamination)
+        public static void InsertAppointmentPatient(ref Patient patient, Appointment newExamination)
         {
             if (patient.Appointments.Count() == 0)
             {

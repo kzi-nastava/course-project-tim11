@@ -21,14 +21,13 @@ namespace ClinicApp.Clinic
         public int Duration { get; set; }
 
         public abstract string Compress();
-        public abstract void ToFile();
         public abstract void View();
         public abstract DateTime NextAvailable();
 
         public static int GetLastID()
         {
             int id = 0;
-            foreach (int appointmentID in SystemFunctions.AllAppointments.Keys)
+            foreach (int appointmentID in AppointmentRepo.AllAppointments.Keys)
             {
                 if (appointmentID > id)
                 {

@@ -29,22 +29,18 @@ namespace ClinicApp
     {
         //Dictionaries
 
-        public static Dictionary<string, HealthRecord> HealthRecords { get; set; } = new Dictionary<string, HealthRecord>();
-        public static Dictionary<int, Appointment> AllAppointments { get; set; } = new Dictionary<int, Appointment>();
-        public static Dictionary<int, Appointment> CurrentAppointments { get; set; } = new Dictionary<int, Appointment>();
-
-        public static Dictionary<string, Medicine> Medicine { get; set; } = new Dictionary<string, Medicine>();
-        public static List<Referral> Referrals { get; set; } = new List<Referral>();
+        
+        
+        
         static public List<EquipmentRequest> EquipmentRequests { get; set; } = new List<EquipmentRequest>();
 
         // File paths
 
-        public static string AppointmentsFilePath = "../../../Data/appointments.txt";
-        public static string HealthRecordsFilePath = "../../../Data/health_records.txt";
+        
+        
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
-        public static string ReferralsFilePath = "../../../Data/referrals.txt";
-        public static string MedicineFilePath = "../../../Data/medicine.txt";
-        public static string PrescriptionsFilePath = "../../../Data/prescriptions.txt";
+        
+       
         public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
 
 
@@ -59,93 +55,20 @@ namespace ClinicApp
             MessageBoxRepository.Load();
 
             //Loads the health records.
-            using (StreamReader reader = new StreamReader(HealthRecordsFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    HealthRecord healthRecord = new HealthRecord(line);
-                    HealthRecords.Add(healthRecord.Patient.UserName, healthRecord);
-                }
-            }
+            HealthRecordRepo.Load();
 
             //Loads medicine.
-            using (StreamReader reader = new StreamReader(MedicineFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Medicine medicine = new Medicine(line);
-                    Medicine.Add(medicine.Name, medicine);
-                }
-            }
+            MedicineRepo.Load();
 
             //Loads perscriptions.
-            using (StreamReader reader = new StreamReader(PrescriptionsFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Prescription prescription = new Prescription(line);
-                    prescription.Patient.Prescriptions.Add(prescription);
-                    prescription.Patient.MessageBox.AddMessage(prescription.PresrciptionToMessage());
-
-                }
-            }
+            PrescriptionRepo.Load();
 
             //Loads referrals.
-            using (StreamReader reader = new StreamReader(ReferralsFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Referral referral = new Referral(line);
-                    referral.Patient.Referrals.Add(referral);
-                    Referrals.Add(referral);
-                }
-            }
+            ReferralRepo.Load();
 
 
             //Loads the examinations.
-            using (StreamReader reader = new StreamReader(AppointmentsFilePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Appointment appointment = ParseAppointment(line);
-                    if (!AllAppointments.TryAdd(appointment.ID, appointment))
-                    {
-                        AllAppointments[appointment.ID] = appointment;
-                    }
-                    if (appointment.DateTime.AddMinutes(15) > DateTime.Now)
-                    {
-                        if (appointment.Tombstone != 0)
-                        {
-                            CurrentAppointments.Remove(appointment.Tombstone);
-                        }
-                        else if (appointment.Edited != 0)
-                        {
-                            CurrentAppointments.Remove(appointment.Edited);
-                            if (!appointment.Finished)
-                            {
-                                CurrentAppointments.Add(appointment.ID, appointment);
-                            }
-
-                        }
-                        else if (!appointment.Finished)
-                        {
-                            CurrentAppointments.Add(appointment.ID, appointment);
-                        }
-                    }
-
-                }
-                foreach (int ID in CurrentAppointments.Keys)
-                {
-                    Appointment currentAppointment = CurrentAppointments[ID];
-                    currentAppointment.Doctor.Appointments.Add(currentAppointment);
-                    currentAppointment.Patient.Appointments.Add(currentAppointment);
-                }
-            }
+            AppointmentRepo.LoadAppointments();
 
             //Loads the equipment requests.
             using (StreamReader reader = new StreamReader(EquipmentRequestsFilePath))
@@ -160,18 +83,7 @@ namespace ClinicApp
             }
         }
 
-        private static Appointment ParseAppointment(string line)
-        {
-            string[] data = line.Split('|');
-            if (data[8] == "o")
-            {
-                return new Operation(line);
-            }
-            else
-            {
-                return new Examination(line);
-            }
-        }
+        
 
 
         //Updates certain information that depends on date and time
@@ -210,42 +122,18 @@ namespace ClinicApp
             //Uploads the messages.
             MessageBoxRepository.Upload();
 
-            //Uploads the examinations.
-            using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
-            {
-                foreach (KeyValuePair<int, Appointment> pair in AllAppointments)
-                {
-                    newLine = pair.Value.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
             //Uploads the health records.
-            using (StreamWriter sw = File.CreateText(HealthRecordsFilePath))
-            {
-                foreach (KeyValuePair<string, HealthRecord> pair in HealthRecords)
-                {
-                    newLine = pair.Value.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
-            //Uploads the examinations.
-            using (StreamWriter sw = File.CreateText(AppointmentsFilePath))
-            {
-                foreach (KeyValuePair<int, Appointment> pair in AllAppointments)
-                {
-                    newLine = pair.Value.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
+            HealthRecordRepo.PersistChanges();
+
+            //Uploads the appointments.
+            AppointmentRepo.PresistChanges();
+
+            //Uploads the medicine.
+            MedicineRepo.PersistChanges();
+
             //Uploads the referrals.
-            using (StreamWriter sw = File.CreateText(ReferralsFilePath))
-            {
-                foreach (Referral referral in Referrals)
-                {
-                    newLine = referral.Compress();
-                    sw.WriteLine(newLine);
-                }
-            }
+            ReferralRepo.PersistChanges();
+
             //Uploads the equipment requests.
             using (StreamWriter sw = File.CreateText(EquipmentRequestsFilePath))
             {
@@ -255,15 +143,7 @@ namespace ClinicApp
                     sw.WriteLine(newLine);
                 }
             }
-            using (StreamWriter sw = File.CreateText(MedicineFilePath))
-            {
-                foreach (KeyValuePair<string, Medicine> pair in Medicine)
-                {
-                    newLine = pair.Value.Compress();
-                    if (newLine != null)
-                        sw.WriteLine(newLine);
-                }
-            }
+            
         }
     }
 }

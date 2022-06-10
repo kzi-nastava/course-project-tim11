@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ClinicApp.Users;
 
 namespace ClinicApp.Clinic
@@ -48,7 +49,7 @@ namespace ClinicApp.Clinic
             Console.WriteLine();
             if (choice.ToUpper() == "Y")
             {
-                ViewAllDoctors();
+                DoctorService.ViewAllDoctors();
             }
             Console.WriteLine("\nEnter the username:");
             string userName = Console.ReadLine();
@@ -64,14 +65,14 @@ namespace ClinicApp.Clinic
             string priority = Console.ReadLine();
             //first check preferred doctor and preferred time
             DateTime initial_appointment = DateTime.Today + preferredTime.TimeOfDay;
-            bool available = doctor.CheckAppointment(initial_appointment, duration);
+            bool available = DoctorService.CheckAppointment(initial_appointment, duration, ref doctor);
             if (available)
             {
                 Console.WriteLine("Your doctor is available, congrats you made appointment.");
                 int id;
                 try
                 {
-                    id = SystemFunctions.AllAppointments.Values.Last().ID + 1;
+                    id = AppointmentRepo.AllAppointments.Values.Last().ID + 1;
                 }
                 catch
                 {

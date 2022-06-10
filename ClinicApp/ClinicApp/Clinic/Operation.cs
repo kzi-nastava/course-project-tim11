@@ -42,20 +42,10 @@ namespace ClinicApp.Clinic
             return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Finished + "|" + Tombstone + "|" + Edited + "|o|" + Duration;
         }
 
-        public override void ToFile()
-        {
-            string line = this.Compress();
-            using (StreamWriter sw = File.AppendText(SystemFunctions.AppointmentsFilePath))
-            {
-                sw.WriteLine(line);
-            };
-        }
 
         public override void View()
         {
-            Console.WriteLine($"OPERATION ID: {ID}\nDate and time:{DateTime}\nDuration: {Duration}min\nPatient name: {Patient.Name}; ");
-            Console.WriteLine($"Patient last name: {Patient.LastName};");
-            Console.WriteLine($"Date of birth {Patient.DateOfBirth.ToShortDateString()}");
+            OperationService.View(this);
         }
 
         public override DateTime NextAvailable()
@@ -65,10 +55,11 @@ namespace ClinicApp.Clinic
             bool hasFoundTime = false;
             while (hasFoundTime == false)
             {
+                Doctor doctor = this.Doctor;
                 nextAvailable = nextAvailable.AddMinutes(1);
                 DateRange dateRange = new DateRange(nextAvailable, nextAvailable.AddMinutes(Duration));
-                if (Patient.CheckAppointment(nextAvailable, Duration) &&
-                    Doctor.CheckAppointment(nextAvailable, Duration) &&
+                if (PatientService.CheckAppointment(Patient, nextAvailable, Duration) &&
+                    DoctorService.CheckAppointment(nextAvailable, Duration, ref doctor) &&
                     !OtherFunctions.CheckForRenovations(dateRange, Doctor.RoomId) &&
                     !OtherFunctions.CheckForExaminations(dateRange, Doctor.RoomId))
                 {

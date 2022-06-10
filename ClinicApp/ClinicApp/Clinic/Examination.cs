@@ -43,14 +43,6 @@ namespace ClinicApp.Clinic
             return ID + "|" + DateTime + "|" + Doctor.UserName + "|" + Patient.UserName + "|" + Finished + "|" + Tombstone + "|" + Edited + "|e|" + Duration;
         }
 
-        public override void ToFile()
-        {
-            string line = this.Compress();
-            using (StreamWriter sw = File.AppendText(SystemFunctions.AppointmentsFilePath))
-            {
-                sw.WriteLine(line);
-            };
-        }
 
         public override void View()
         {
@@ -66,10 +58,11 @@ namespace ClinicApp.Clinic
             bool hasFoundTime = false;
             while (hasFoundTime == false)
             {
+                Doctor doctor = this.Doctor;
                 nextAvailable = nextAvailable.AddMinutes(1);
                 DateRange dateRange = new DateRange(nextAvailable, nextAvailable.AddMinutes(15));
-                if (Patient.CheckAppointment(nextAvailable, 15) &&
-                    Doctor.CheckAppointment(nextAvailable, 15) &&
+                if (PatientService.CheckAppointment(Patient, nextAvailable, 15) &&
+                    DoctorService.CheckAppointment(nextAvailable, 15, ref doctor) &&
                     !OtherFunctions.CheckForRenovations(dateRange, Doctor.RoomId) &&
                     !OtherFunctions.CheckForExaminations(dateRange, Doctor.RoomId))
                 {
