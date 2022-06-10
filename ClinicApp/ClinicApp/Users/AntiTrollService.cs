@@ -15,6 +15,7 @@ namespace ClinicApp.Users
             int make = 0;
             DateTime today = DateTime.Now;
             DateTime monthBefore = DateTime.Now - TimeSpan.FromDays(30);
+            /*
             foreach (KeyValuePair<DateTime, string> activity in ActivityHistory)
             {
                 DateTime date = activity.Key;
@@ -40,6 +41,8 @@ namespace ClinicApp.Users
                     return;
                 }
             }
+            */
         }
+            
     }
 }

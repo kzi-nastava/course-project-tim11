@@ -191,6 +191,7 @@ namespace ClinicApp
             return 9;
         }
 
+        /*
         public static void PatientMenuDo(User patient, int option)
         {
             switch (option)
@@ -218,6 +219,7 @@ namespace ClinicApp
                     break;
             }
         }
+        */
 
         //======================================================================================================
         //Other Menus

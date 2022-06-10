@@ -86,7 +86,7 @@ namespace ClinicApp.Users
 
         public override void MenuDo(int option)
         {
-            Menu.PatientMenuDo(this, option);
+            //Menu.PatientMenuDo(this, option);
         }
 //==================================================================================================
 

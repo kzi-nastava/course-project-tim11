@@ -10,7 +10,7 @@ namespace ClinicApp.Clinic
         {
         }
 
-        private void SuggestAppointment()
+        private void SuggestAppointment(Patient patient)
         {
             int duration = 15;
             //todo take user input for doctor and time for examination, also time period for appoinment to be done and priority(doctor or time of examination)
@@ -70,7 +70,7 @@ namespace ClinicApp.Clinic
             bool available = DoctorService.CheckAppointment(initial_appointment, duration, ref doctor);
             if (available)
             {
-                Console.WriteLine("Your doctor is available, congrats you made appointment.");
+                Console.WriteLine("Your doctor is available, congrats you made an appointment.");
                 int id;
                 try
                 {
@@ -80,19 +80,19 @@ namespace ClinicApp.Clinic
                 {
                     id = 1;
                 }
-                Examination examination = new Examination(id, initial_appointment, doctor, this, false, 0, 0);
-                InsertAppointment(examination);
-                doctor.InsertAppointment(examination);
-                SystemFunctions.AllAppointments.Add(id, examination);
-                SystemFunctions.CurrentAppointments.Add(id, examination);
+                Examination examination = new Examination(id, initial_appointment, doctor, patient, false, 0, 0);
+                PatientService.InsertAppointmentPatient(ref patient, examination);
+                DoctorService.InsertAppointment(examination, ref doctor);
+                AppointmentRepo.AllAppointments.Add(id, examination);
+                AppointmentRepo.CurrentAppointments.Add(id, examination);
                 //Console.WriteLine("\nNew examination successfully created\n");
-                ActivityHistory.Add(DateTime.Now, "CREATE");
+                //ActivityHistory.Add(DateTime.Now, "CREATE");
                 return;
             }
             if (priority.ToUpper() == "D")
             {
                 //todo doctor priority
-                bool availableDoctor = SuggestDoctorPriority(ref doctor, lastAppointment, preferredTime);
+                bool availableDoctor = SuggestDoctorPriority(ref doctor, ref patient, lastAppointment, preferredTime);
                 if (!availableDoctor)
                 {
                     Console.WriteLine("Sorry your doctor is not available in this period of time.");
@@ -102,7 +102,7 @@ namespace ClinicApp.Clinic
             else if (priority.ToUpper() == "A")
             {
                 //todo appointment priority
-                bool availableAppointment = SuggestAppointmentPriority(preferredTime, lastAppointment);
+                bool availableAppointment = SuggestAppointmentPriority(ref patient, preferredTime, lastAppointment);
                 if (!availableAppointment)
                 {
                     Console.WriteLine("Sorry your prefered appointment is not available in requested time span.");
@@ -118,14 +118,14 @@ namespace ClinicApp.Clinic
 
 
         //suggest appointment doctor priority
-        private bool SuggestDoctorPriority(ref Doctor doctor, DateTime lastAppointment, DateTime preferredTime)
+        private bool SuggestDoctorPriority(ref Doctor doctor, ref Patient patient, DateTime lastAppointment, DateTime preferredTime)
         {
             int duration = 15;
             bool appointmentFound = false;
             DateTime today = DateTime.Today + preferredTime.TimeOfDay;
             while (today < lastAppointment)
             {
-                bool available = doctor.CheckAppointment(today, duration);
+                bool available = DoctorService.CheckAppointment(today, duration, ref doctor);
                 today = today + TimeSpan.FromMinutes(15);
                 if (available)
                 {
@@ -140,13 +140,13 @@ namespace ClinicApp.Clinic
                     {
                         id = 1;
                     }
-                    Examination examination = new Examination(id, today, doctor, this, false, 0, 0);
-                    InsertAppointment(examination);
-                    doctor.InsertAppointment(examination);
+                    Examination examination = new Examination(id, today, doctor, patient, false, 0, 0);
+                    PatientService.InsertAppointmentPatient(ref patient,examination);
+                    DoctorService.InsertAppointment(examination, ref doctor);
                     AppointmentRepo.AllAppointments.Add(id, examination);
-                    SystemFunctions.CurrentAppointments.Add(id, examination);
+                    AppointmentRepo.CurrentAppointments.Add(id, examination);
                     //Console.WriteLine("\nNew examination successfully created\n");
-                    ActivityHistory.Add(DateTime.Now, "CREATE");
+                    //ActivityHistory.Add(DateTime.Now, "CREATE");
                     return true;
                 }
             }
@@ -154,7 +154,7 @@ namespace ClinicApp.Clinic
         }
 
         //suggest appointment appointment priority
-        private bool SuggestAppointmentPriority(DateTime preferredTime, DateTime lastAppointment)
+        private bool SuggestAppointmentPriority(ref Patient patient,DateTime preferredTime, DateTime lastAppointment)
         {
             int duration = 15;
             bool appoinmentFound = false;
@@ -163,7 +163,8 @@ namespace ClinicApp.Clinic
             {
                 foreach (Doctor doctor in UserRepository.Doctors.Values)
                 {
-                    bool check = doctor.CheckAppointment(preferredAppointment, duration);
+                    Doctor doctortmp = doctor;
+                    bool check = DoctorService.CheckAppointment(preferredAppointment, duration, ref doctortmp);
                     if (check)
                     {
                         Console.WriteLine("Your preferred appointment is available in your requested timespan.");
@@ -176,13 +177,13 @@ namespace ClinicApp.Clinic
                         {
                             id = 1;
                         }
-                        Examination examination = new Examination(id, preferredAppointment, doctor, this, false, 0, 0);
-                        InsertAppointment(examination);
-                        doctor.InsertAppointment(examination);
+                        Examination examination = new Examination(id, preferredAppointment, doctor, patient, false, 0, 0);
+                        PatientService.InsertAppointmentPatient(ref patient,examination);
+                        DoctorService.InsertAppointment(examination, ref doctortmp);
                         AppointmentRepo.AllAppointments.Add(id, examination);
                         AppointmentRepo.CurrentAppointments.Add(id, examination);
                         //Console.WriteLine("\nNew examination successfully created\n");
-                        ActivityHistory.Add(DateTime.Now, "CREATE");
+                        //ActivityHistory.Add(DateTime.Now, "CREATE");
                         return true;
                     }
                 }

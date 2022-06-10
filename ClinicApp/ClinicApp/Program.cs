@@ -41,7 +41,7 @@ namespace ClinicApp
                             case Roles.Patient:
                                 UserRepository.Patients.Add(currentUser.UserName, (Patient)currentUser);
                                 Patient patient = (Patient)currentUser;
-                                patient.AntiTroll();
+                                //patient.AntiTroll();
                                 break;
                             case Roles.Doctor:
                                 UserRepository.Doctors.Add(currentUser.UserName, (Doctor)currentUser);
