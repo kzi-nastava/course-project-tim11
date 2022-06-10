@@ -54,7 +54,7 @@ namespace ClinicApp.AdminFunctions
         public static List<string> ChooseIngrediants()
         {
             List<string> chosenIngrediants = new List<string>();
-            List<string> offeredIngrediants = IngrediantRepo.GetAll();
+            List<string> offeredIngrediants = new List<string>(IngrediantRepo.GetAll());
             CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
             while (true)
             {
@@ -63,7 +63,7 @@ namespace ClinicApp.AdminFunctions
                     CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
                 }
                 var choice = CLI.CLIEnterNumberWithLimit(0, offeredIngrediants.Count);
-                if (choice == 0)
+                if (choice == 0 && chosenIngrediants.Count > 0)
                 {
                     break;
                 }
