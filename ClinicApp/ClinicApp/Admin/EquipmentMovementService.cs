@@ -34,7 +34,6 @@ namespace ClinicApp.AdminFunctions
             }
             if (newRoomEqNames.ContainsKey(EquipmentRepo.Get(item.EquipmentId).Name)) 
             {
-
                 int eqId = newRoomEqNames[EquipmentRepo.Get(item.EquipmentId).Name];
                 EquipmentRepo.Update(eqId, EquipmentRepo.Get(eqId).Amount + item.Amount);
             }
@@ -45,7 +44,8 @@ namespace ClinicApp.AdminFunctions
                     Name = EquipmentRepo.Get(item.EquipmentId).Name,
                     Amount = item.Amount,
                     RoomId = item.NewRoomId,
-                    Type = EquipmentRepo.Get(item.EquipmentId).Type
+                    Type = EquipmentRepo.Get(item.EquipmentId).Type,
+                    Dynamic = EquipmentRepo.Get(item.EquipmentId).Dynamic
                 };
 
                 EquipmentRepo.Add(newEq);

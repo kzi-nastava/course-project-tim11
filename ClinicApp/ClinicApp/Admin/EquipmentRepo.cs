@@ -50,7 +50,7 @@ namespace ClinicApp.AdminFunctions
             File.Delete(Path);
             foreach (Equipment eq in ClinicEquipmentList)
             {
-                string newLine = Convert.ToString(eq.Id) + "|" + eq.Name + "|" + Convert.ToString(eq.Amount) + "|" + Convert.ToString(eq.RoomId) + "|" + Convert.ToString(eq.Type);
+                string newLine = Convert.ToString(eq.Id) + "|" + eq.Name + "|" + Convert.ToString(eq.Amount) + "|" + Convert.ToString(eq.RoomId) + "|" + Convert.ToString(eq.Type)+"|"+Convert.ToString(eq.Dynamic);
                 using (StreamWriter sw = File.AppendText(Path))
                 {
                     sw.WriteLine(newLine);
@@ -109,7 +109,8 @@ namespace ClinicApp.AdminFunctions
                 Name = parameteres[1],
                 Amount = Convert.ToInt32(parameteres[2]),
                 RoomId = Convert.ToInt32(parameteres[3]),
-                Type = type
+                Type = type,
+                Dynamic = Convert.ToBoolean(parameteres[4])
             };
 
             return eq;

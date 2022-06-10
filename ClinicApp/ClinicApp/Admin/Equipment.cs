@@ -7,6 +7,7 @@ namespace ClinicApp.AdminFunctions
         public int Amount { get; set; }
         public int RoomId { get; set; }
         public EquipmentType Type { get; set; }
+        public bool Dynamic { get; set; }
 
     }
     public enum EquipmentType { Operations, RoomFurniture, Hallway, Examinations, Gauzes, Stiches, Vaccines, Bandages }

@@ -67,23 +67,29 @@ public static class EquipmentService
         }
         CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
         EquipmentType type = ChooseEquipmentType();
-        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
+        bool dynamic = false;
+        CLI.CLIWriteLine("Is this equipment dynamic (y/n)");
+        if (CLI.CLIEnterString().ToLower() == "y")
+        {
+            dynamic = true;
+        }
+        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type, Dynamic = dynamic };
         EquipmentRepo.Add(eq);
     }
     public static void ListAllEquipment()
     {
-        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
         foreach (Equipment eq in EquipmentRepo.ClinicEquipmentList)
         {
-            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type + " "+ eq.Dynamic);
         }
     }
     public static void ListAllEquipmentInRoom(int id)
     {
-        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
         foreach (Equipment eq in GetEquipmentFromRoom(id))
         {
-            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type);
+            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepo.Get(eq.RoomId).Name + " " + RoomRepo.Get(eq.RoomId).Type + " " + eq.Type + " " + eq.Dynamic);
         }
     }
     public static int GetValidEquipmentId()
