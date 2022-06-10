@@ -25,6 +25,8 @@ namespace ClinicApp.Clinic
 
             Console.Write("\nenter the time for the last possible Examination (e.g. 14:30)\n>> ");
 
+
+            //TODO ask for nonpasttime
             DateTime time;
             do
             {
