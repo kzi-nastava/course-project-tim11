@@ -5,24 +5,24 @@ using System.Linq;
 
 namespace ClinicApp.AdminFunctions
 {
-    class RoomRepo
+    class RoomRepository
     {
         static string Path { get; set; } = "../../../Admin/Data/rooms.txt";
-        public static List<Room> ClinicRooms { get; set; }
+        public static List<Room> Rooms { get; set; }
 
-        static RoomRepo()
+        static RoomRepository()
         {
-            ClinicRooms = Load();
+            Rooms = Load();
         }
-        public static List<Room> GetAll() => ClinicRooms;
+        public static List<Room> GetAll() => Rooms;
 
-        public static Room? Get(int id) => ClinicRooms.FirstOrDefault(p => p.Id == id);
+        public static Room? Get(int id) => Rooms.FirstOrDefault(p => p.Id == id);
 
         public static void Add(Room room)
         {
-            room.Id = ClinicRooms.Last().Id + 1;
-            ClinicRooms.Add(room);
-            RoomRepo.PersistChanges();
+            room.Id = Rooms.Last().Id + 1;
+            Rooms.Add(room);
+            RoomRepository.PersistChanges();
         }
         public static void Delete(int id)
         {
@@ -33,7 +33,7 @@ namespace ClinicApp.AdminFunctions
             {
                 return;
             }
-            ClinicRooms.Remove(room);
+            Rooms.Remove(room);
             PersistChanges();
         }
         public static void Update(int id, string newName, RoomType newType)
@@ -63,7 +63,7 @@ namespace ClinicApp.AdminFunctions
         public static void PersistChanges()
         {
             File.Delete(Path);
-            foreach (Room room in ClinicRooms)
+            foreach (Room room in Rooms)
             {
                 string newLine = Convert.ToString(room.Id) + "|" + room.Name + "|" + Convert.ToString(room.Type);
                 using (StreamWriter sw = File.AppendText(Path))

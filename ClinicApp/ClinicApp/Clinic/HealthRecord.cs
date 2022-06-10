@@ -14,72 +14,9 @@ namespace ClinicApp.Clinic
         public List<string> MedicalHistory { get; set; }
         public List<Anamnesis> Anamneses { get; set; }
         public List<string> Alergies { get; set; }
-        public void ShowHealthRecord() {
-            Console.WriteLine($"Patient {Patient.Name} {Patient.LastName}'s health record\n");
-            Console.WriteLine($"Weight: {Weight}\nHeight: {Height}\n");
-            Console.Write("Medical history: ");
-            foreach (string illness in MedicalHistory)
-            {
-                Console.Write(illness + ", ");
-            }
-            Console.Write("\nKnown alergies: ");
-            foreach (string alergy in Alergies)
-            {
-                Console.Write(alergy + ", ");
-            }
-            int i = 1;
-            Console.WriteLine("\nPrevious anamnesis: ");
-            foreach (Anamnesis anamnesis in Anamneses)
-            {
-                Console.WriteLine("\n\n" + i + ". Anamnesis");
-                anamnesis.ShowAnamnesis();
-                i++;
-            }
-        }
+        
 
-        public void AnamnesisSortedDoctor()
-        {
-            Anamneses.Sort(delegate (Anamnesis a1, Anamnesis a2)
-            {
-                return a1.Doctor.UserName.CompareTo(a2.Doctor.UserName);
-            });
-            Console.WriteLine("Sorted anamnesis list by doctors username.");
-            foreach(Anamnesis temp in Anamneses)
-            {
-                temp.ShowAnamnesis();
-            }
-        }
-
-        public void AnamnesisSortedDate()
-        {
-            Anamneses.Sort(delegate (Anamnesis a1, Anamnesis a2)
-            {
-                return a1.Date.CompareTo(a2.Date);
-            });
-            Console.WriteLine("Sorted anamnesis list by date.");
-            foreach(Anamnesis temp in Anamneses)
-            {
-                temp.ShowAnamnesis();
-            }
-        }
-
-        public void SearchAnamnesis(string keyword)
-        {
-            bool found = false;
-            foreach(Anamnesis temp in Anamneses)
-            {
-                if (temp.Report.Contains(keyword) == true)
-                {
-                    temp.ShowAnamnesis();
-                    found = true;
-                }
-            }
-            if(found == false)
-            {
-                Console.WriteLine("There is no amnesis with specified keyword.");
-            }
-        }
-
+        
         public HealthRecord(Patient patient) {
             Patient = patient;
             Weight = 0;
@@ -91,7 +28,7 @@ namespace ClinicApp.Clinic
         public HealthRecord(string text) {
             string[] data = text.Split('|');
 
-            Patient = SystemFunctions.Patients[data[0]];
+            Patient = UserRepository.Patients[data[0]];
             Weight = Convert.ToDouble(data[1]);
             Height = Convert.ToDouble(data[2]);
             MedicalHistory = new List<string>();
@@ -144,6 +81,6 @@ namespace ClinicApp.Clinic
             return Patient.UserName + "|" + Weight + "|" + Height + "|" + allIlnesses + "|" + anamneses + "|" + allAlergies;
         }
 
-
+        
     }
 }

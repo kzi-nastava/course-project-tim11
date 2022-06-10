@@ -19,7 +19,7 @@ namespace ClinicApp
                 SystemFunctions.Update();
                 numberOfOptions = currentUser.MenuWrite();
                 Console.Write(">> ");
-                option = OtherFunctions.EnterNumberWithLimit(0, numberOfOptions);
+                option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                 Console.WriteLine();
                 if (option == 1)
                 {
@@ -32,19 +32,19 @@ namespace ClinicApp
                 }
                 else if (option == 2 && currentUser.Role == Roles.Nobody)
                 {
-                    currentUser = OtherFunctions.Register();
+                    currentUser = Registration.Register();
                     if(currentUser.Role != Roles.Nobody)
                     {
-                        SystemFunctions.Users.Add(currentUser.UserName, currentUser);
+                        UserRepository.Users.Add(currentUser.UserName, currentUser);
                         switch(currentUser.Role)
                         {
                             case Roles.Patient:
-                                SystemFunctions.Patients.Add(currentUser.UserName, (Patient)currentUser);
+                                UserRepository.Patients.Add(currentUser.UserName, (Patient)currentUser);
                                 Patient patient = (Patient)currentUser;
-                                patient.AntiTroll();
+                                //patient.AntiTroll();
                                 break;
                             case Roles.Doctor:
-                                SystemFunctions.Doctors.Add(currentUser.UserName, (Doctor)currentUser);
+                                UserRepository.Doctors.Add(currentUser.UserName, (Doctor)currentUser);
                                 break;
                         }
                         Console.WriteLine($"\nWelcome {currentUser.UserName}\n");

@@ -1,23 +1,114 @@
 using ClinicApp.AdminFunctions;
 using System;
 using System.Collections.Generic;
+using ClinicApp;
+using ClinicApp.Users;
 
 public static class EquipmentService
 {
-    public static void AddToRoom(int eqId, int roomId)
+    public static void StorageSubmenu()
     {
-        var eq = EquipmentRepo.Get(eqId);
-        if (eq is null)
-            return;
-        eq.RoomId = roomId;
-        EquipmentRepo.PersistChanges();
+        CLI.CLIWriteLine("1. Add new Equipment");
+        CLI.CLIWriteLine("2. Edit amount of existing Equipment");
+        int answer = CLI.CLIEnterNumberWithLimit(0, 2);
+        switch (answer)
+        {
+            case 1:
+                AddNewToStorage();
+                break;
+            case 2:
+                EditExisting();
+                break;
+            case 0:
+                return;
+        }
     }
-
-
+    public static void AddEqToStorage()
+    {
+        CLI.CLIWriteLine("List Equipment in Storage? (y/n): ");
+        string answer = CLI.CLIEnterString();
+        if (answer.ToLower() == "y")
+        {
+            ListAllEquipmentInRoom(0); //zero for storage
+        }
+        StorageSubmenu();
+    }
+    public static void EditExisting()
+    {
+        CLI.CLIWriteLine("Enter ID of equipment to change:");
+        int id = GetValidEquipmentId();
+        Equipment eq = EquipmentRepository.Get(id);
+        if (eq.RoomId != 0)
+        {
+            CLI.CLIWriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in the Manage Equipment menu");
+            return;
+        }
+        else
+        {
+            CLI.CLIWriteLine("Enter new amount: ");
+            int amount = CLI.CLIEnterNumberWithLimit(1, 99999999);
+            EquipmentRepository.Update(eq.Id, amount);
+        }
+    }
+    public static void AddNewToStorage()
+    {
+        string name;
+        EquipmentType type;
+        int amount = CLI.CLIEnterNumber();
+        List<string> exsistingNames = new List<string>();
+        foreach (Equipment item in EquipmentRepository.EquipmentList)
+        {
+            if (item.RoomId == 0)
+            {
+                exsistingNames.Add(item.Name);
+            }
+        }
+        CLI.CLIWrite("Name: ");
+        name = CLI.CLIEnterStringWithoutDelimiter("|");
+        while (exsistingNames.Contains(name))
+        {
+            CLI.CLIWrite("Name already in use! Enter name: ");
+            name = CLI.CLIEnterStringWithoutDelimiter("|");
+        }
+        CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
+        type = ChooseEquipmentType();
+        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
+        EquipmentRepository.Add(eq);
+    }
+    public static void ListAllEquipment()
+    {
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        foreach (Equipment eq in EquipmentRepository.EquipmentList)
+        {
+            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
+        }
+    }
+    public static void ListAllEquipmentInRoom(int id)
+    {
+        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+        foreach (Equipment eq in EquipmentRepository.EquipmentList)
+        {
+            if (eq.RoomId == id)
+                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
+        }
+    }
+    public static int GetValidEquipmentId()
+    {
+        Equipment eq;
+        int id = CLI.CLIEnterNumber();
+        eq = EquipmentRepository.Get(id);
+        while (eq is null)
+        {
+            CLI.CLIWriteLine("Invalid ID");
+            id = CLI.CLIEnterNumber();
+            eq = EquipmentRepository.Get(id);
+        }
+        return id;
+    }
     public static List<Equipment> GetEquipmentFromRoom(int id)
     {
         List<Equipment> movements = new List<Equipment>();
-        foreach (var eq in EquipmentRepo.ClinicEquipmentList)
+        foreach (var eq in EquipmentRepository.EquipmentList)
         {
             if (eq.RoomId == id)
             {
@@ -26,54 +117,265 @@ public static class EquipmentService
         }
         return movements;
     }
-    //---------------SEARCH AND FILTERING-------------------------------------------------------------
-    public static List<Equipment> Search(string searchTerm)
+    public static EquipmentType ChooseEquipmentType()
     {
-        searchTerm = searchTerm.ToLower();
-        var results = new List<Equipment>();
-        foreach (var item in EquipmentRepo.ClinicEquipmentList)
+        EquipmentType type;
+        int input = CLI.CLIEnterNumberWithLimit(1, 4);
+        switch (input)
         {
-            if (item.Name.ToLower().Contains(searchTerm) || item.Type.ToString().ToLower().Contains(searchTerm) || RoomRepo.Get(item.RoomId).Name.ToLower().Contains(searchTerm))
-            {
-                results.Add(item);
-            }
+            case 1:
+                type = EquipmentType.Operations;
+                break;
+            case 2:
+                type = EquipmentType.RoomFurniture;
+                break;
+            case 3:
+                type = EquipmentType.Hallway;
+                break;
+            default:
+                type = EquipmentType.Examinations;
+                break;
         }
-        return results;
+        return type;
     }
-    public static List<Equipment> FilterByEqType(List<Equipment> inputList, EquipmentType type)
+
+    //Makes an order for dynamic equipment.
+    public static void OrderDynamiicEquipment()
     {
-        var results = new List<Equipment>();
-        foreach (var item in inputList)
+        bool gauzes = false, stiches = false, vaccines = false, bandages = false;
+        foreach (Equipment equipment in EquipmentRepository.EquipmentList)
         {
-            if (item.Type == type)
+            if (equipment.Amount > 0 && equipment.Type == EquipmentType.Gauzes && equipment.RoomId == 0)
+                gauzes = true;
+            if (equipment.Amount > 0 && equipment.Type == EquipmentType.Stiches && equipment.RoomId == 0)
+                stiches = true;
+            if (equipment.Amount > 0 && equipment.Type == EquipmentType.Vaccines && equipment.RoomId == 0)
+                vaccines = true;
+            if (equipment.Amount > 0 && equipment.Type == EquipmentType.Bandages && equipment.RoomId == 0)
+                bandages = true;
+        }
+        if (gauzes == true && stiches == true && vaccines == true && bandages == true)
+            CLI.CLIWriteLine("\nWe don't lack any equipment at the moment.");
+        else
+        {
+            int numberOfOptions, option = 1;
+            while (option != 0)
             {
-                results.Add(item);
+                numberOfOptions = 0;
+                CLI.CLIWriteLine("\nWhich of the following equipment would you like to order?");
+                if (gauzes == false)
+                {
+                    numberOfOptions++;
+                    CLI.CLIWriteLine(numberOfOptions + ": Gauzes");
+                }
+                if (stiches == false)
+                {
+                    numberOfOptions++;
+                    CLI.CLIWriteLine(numberOfOptions + ": Stiches");
+                }
+                if (vaccines == false)
+                {
+                    numberOfOptions++;
+                    CLI.CLIWriteLine(numberOfOptions + ": Vaccines");
+                }
+                if (bandages == false)
+                {
+                    numberOfOptions++;
+                    CLI.CLIWriteLine(numberOfOptions + ": Bandages");
+                }
+                CLI.CLIWriteLine("0: Back to menu");
+                option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
+                if (option != 0)
+                {
+                    CLI.CLIWriteLine("");
+                    if (gauzes == false)
+                    {
+                        option--;
+                        if (option == 0)
+                        {
+                            CLI.CLIWriteLine("How many gauzes would you like to order?");
+                            option = CLI.CLIEnterNumberWithLimit(1, 1000);
+                            EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Gauzes, option, DateTime.Now.Date);
+                            SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                        }
+                    }
+                    if (stiches == false)
+                    {
+                        option--;
+                        if (option == 0)
+                        {
+                            CLI.CLIWriteLine("How many stiches would you like to order?");
+                            option = CLI.CLIEnterNumberWithLimit(1, 1000);
+                            EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Stiches, option, DateTime.Now.Date);
+                            SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                        }
+                    }
+                    if (vaccines == false)
+                    {
+                        option--;
+                        if (option == 0)
+                        {
+                            CLI.CLIWriteLine("How many vaccines would you like to order?");
+                            option = CLI.CLIEnterNumberWithLimit(1, 1000);
+                            EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Vaccines, option, DateTime.Now.Date);
+                            SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                        }
+                    }
+                    if (bandages == false)
+                    {
+                        option--;
+                        if (option == 0)
+                        {
+                            CLI.CLIWriteLine("How many bandages would you like to order?");
+                            option = CLI.CLIEnterNumberWithLimit(1, 1000);
+                            EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Bandages, option, DateTime.Now.Date);
+                            SystemFunctions.EquipmentRequests.Add(equipmentRequest);
+                        }
+                    }
+                    //In the end, option will still be greater than 0
+                }
             }
         }
-        return results;
     }
-    public static List<Equipment> FilterByRoomType(List<Equipment> inputList, RoomType type)
+
+    //Redistributes dynamic equipment
+    public static void RedistributeDynamiicEquipment()
     {
-        var results = new List<Equipment>();
-        foreach (var item in inputList)
+        foreach (Room room in RoomRepository.Rooms)
         {
-            if (RoomRepo.Get(item.RoomId).Type == type)
+            int gauzes = 0, stiches = 0, vaccines = 0, bandages = 0;
+            foreach (Equipment equipment in EquipmentRepository.EquipmentList)
             {
-                results.Add(item);
+                if (equipment.Type == EquipmentType.Gauzes && equipment.RoomId == room.Id)
+                    gauzes += equipment.Amount;
+                if (equipment.Type == EquipmentType.Stiches && equipment.RoomId == room.Id)
+                    stiches += equipment.Amount;
+                if (equipment.Type == EquipmentType.Vaccines && equipment.RoomId == room.Id)
+                    vaccines += equipment.Amount;
+                if (equipment.Type == EquipmentType.Bandages && equipment.RoomId == room.Id)
+                    bandages += equipment.Amount;
+            }
+            if (gauzes < 5 || stiches < 5 || vaccines < 5 || bandages < 5)
+            {
+                CLI.CLIWriteLine("\nRoom id: " + room.Id);
+                CLI.CLIWriteLine("Room name: " + room.Name);
+                if (gauzes == 0)
+                    CLI.CLIWriteLine("-Gauzes: " + gauzes);
+                else if (gauzes < 5)
+                    CLI.CLIWriteLine(" Gauzes: " + gauzes);
+                if (stiches == 0)
+                    CLI.CLIWriteLine("-Stiches: " + stiches);
+                else if (stiches < 5)
+                    CLI.CLIWriteLine(" Stiches: " + stiches);
+                if (vaccines == 0)
+                    CLI.CLIWriteLine("-Vaccines: " + vaccines);
+                else if (vaccines < 5)
+                    CLI.CLIWriteLine(" Vaccines: " + vaccines);
+                if (bandages == 0)
+                    CLI.CLIWriteLine("-Bandages: " + bandages);
+                else if (bandages < 5)
+                    CLI.CLIWriteLine(" Bandages: " + bandages);
             }
         }
-        return results;
+
+        int option = 1;
+        while (option != 0)
+        {
+            CLI.CLIWriteLine("\nDo you want to move equipment?");
+            CLI.CLIWriteLine("1: Yes");
+            CLI.CLIWriteLine("0: No");
+            option = CLI.CLIEnterNumberWithLimit(0, 1);
+            if (option == 1)
+            {
+                int idFrom, idTo, amount, totalEquipment = 0;
+                EquipmentType type;
+                Room roomFrom, roomTo;
+                CLI.CLIWriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
+                idFrom = CLI.CLIEnterNumber();
+                idTo = CLI.CLIEnterNumber();
+                amount = CLI.CLIEnterNumber();
+                CLI.CLIWriteLine("\nWhich of the following equipment would you like to move?");
+                CLI.CLIWriteLine("1: Gauzes");
+                CLI.CLIWriteLine("2: Stiches");
+                CLI.CLIWriteLine("3: Vaccines");
+                CLI.CLIWriteLine("4: Bandages");
+                option = CLI.CLIEnterNumberWithLimit(1, 4);
+                switch (option)
+                {
+                    case 1:
+                        type = EquipmentType.Gauzes;
+                        break;
+                    case 2:
+                        type = EquipmentType.Stiches;
+                        break;
+                    case 3:
+                        type = EquipmentType.Vaccines;
+                        break;
+                    default:
+                        type = EquipmentType.Bandages;
+                        break;
+                }
+                roomFrom = RoomRepository.Get(idFrom);
+                if (roomFrom == default)
+                    roomFrom = RoomRepository.Get(0);
+                roomTo = RoomRepository.Get(idTo);
+                if (roomTo == default)
+                    roomTo = RoomRepository.Get(0);
+                foreach (Equipment equipment in EquipmentRepository.EquipmentList)
+                {
+                    if (equipment.Type == type && equipment.RoomId == roomFrom.Id)
+                        totalEquipment += equipment.Amount;
+                }
+                if (amount > totalEquipment)
+                    amount = totalEquipment;
+                Equipment equipmentNew = new Equipment
+                {
+                    Id = 0,
+                    Name = type.ToString(),
+                    Amount = amount,
+                    RoomId = roomTo.Id,
+                    Type = type
+                };
+                EquipmentRepository.Add(equipmentNew);
+                foreach (Equipment equipment in EquipmentRepository.EquipmentList)
+                    if (equipment.Type == type && equipment.RoomId == roomTo.Id && amount > 0)
+                        if (amount < equipment.Amount)
+                        {
+                            equipment.Amount -= amount;
+                            amount = 0;
+                        }
+                        else
+                        {
+                            amount -= equipment.Amount;
+                            EquipmentRepository.EquipmentList.Remove(equipment);
+                        }
+                EquipmentRepository.PersistChanges();
+            }
+        }
+
     }
-    public static List<Equipment> FilterByNumbers(List<Equipment> inputList, int lowerBound, int upperBound)
+    public static void UpdateRoomEquipment(Doctor doctor)
     {
-        var results = new List<Equipment>();
-        foreach (var item in inputList)
+        CLI.CLIWriteLine($"\nThe state of equipment in room {doctor.RoomId} before the appointment: ");
+        CLI.CLIWriteLine();
+        List<Equipment> equipmentList = GetEquipmentFromRoom(doctor.RoomId);
+        foreach (Equipment equipment in equipmentList)
         {
-            if (item.Amount >= lowerBound && item.Amount <= upperBound)
-            {
-                results.Add(item);
-            }
+            CLI.CLIWriteLine($"{equipment.Name} : {equipment.Amount}");
         }
-        return results;
+        CLI.CLIWriteLine($"Please enter the quantity of the equipment that was used during the appointment: ");
+        CLI.CLIWriteLine();
+        foreach (Equipment equipment in equipmentList)
+        {
+
+            var clinicEquipment = EquipmentRepository.Get(equipment.Id);
+            CLI.CLIWrite($"{equipment.Name} : ");
+            int quantity = CLI.CLIEnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
+            int newQuantity = clinicEquipment.Amount - quantity;
+            EquipmentRepository.Update(equipment.Id, newQuantity);
+            CLI.CLIWriteLine();
+        }
+        CLI.CLIWriteLine("Succesfully updated equipment.");
+
     }
 }

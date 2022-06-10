@@ -1,3 +1,4 @@
 Vicodin|Hydrocodone Bitartrate/Acetaminophen/Colloidal silicon dioxide/pregelatinized starch/magnesium stearate/roscarmellose sodium/povidone/stearic acid
 Albuterol|albuterol sulfate
 Lisinopril|Lisinopril/corn starch/croscarmellose sodium
+zahnseidesticks|stearic acid/magnesium stearate/Acetaminophen

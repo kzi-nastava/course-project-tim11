@@ -21,7 +21,7 @@ namespace ClinicApp.Clinic
         public Anamnesis(string text) {
             string[] data = text.Split(';');
             Report = data[1];
-            Doctor = SystemFunctions.Doctors[data[0]];
+            Doctor = UserRepository.Doctors[data[0]];
             Date = DateTime.Parse(data[2]);
         }
 

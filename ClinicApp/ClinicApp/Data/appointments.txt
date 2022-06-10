@@ -1,0 +1,2 @@
+1|10-Jun-22 14:30:00|marko_markovic|danilo_babic|True|0|0|e|15
+2|10-Jun-22 14:30:00|marko_markovic|danilo_jevtic|False|0|0|o|40

@@ -6,12 +6,12 @@ using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    class EquipmentMovementRepo
+    class EquipmentMovementRepository
     {
         static string Path { get; set; } = "../../../Admin/Data/equipmentMovement.txt";
         static public List<EquipmentMovement> EquipmentMovementList { get; set; }
 
-        static EquipmentMovementRepo()
+        static EquipmentMovementRepository()
         {
             EquipmentMovementList = Load();
         }

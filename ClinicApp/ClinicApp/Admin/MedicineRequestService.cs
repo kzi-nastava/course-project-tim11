@@ -1,108 +1,163 @@
-﻿using System;
+﻿using ClinicApp.Clinic;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace ClinicApp.AdminFunctions
 {
-    public static class MedicineRequestService
+    class MedicineRequestService
     {
-        public static List<MedicineRequest> MedicineRequests;
-        static MedicineRequestService()
-        {
-            MedicineRequests = LoadMedicineRequests();
-        }
-
-        public static List<MedicineRequest> GetAll() => MedicineRequests;
-
-        public static MedicineRequest? Get(int id) => MedicineRequests.FirstOrDefault(p => p.Id == id);
-        public static void Add(MedicineRequest item)
-        {
-            if (MedicineRequests.Count == 0)
-            {
-                item.Id = 1;
-            }
-            else
-            {
-                item.Id = MedicineRequests.Last().Id + 1;
-            }
-            MedicineRequests.Add(item);
-            PersistChanges();
-        }
-        public static void Delete(int id)
-        {
-            var item = Get(id);
-            if (item is null)
-                return;
-            MedicineRequests.Remove(item);
-            PersistChanges();
-        }
-        public static void Update(int id, MedicineRequest newMedicineRequest)
-        {
-            MedicineRequest toUpdate = Get(id);
-            if (toUpdate is null)
-                return;
-            toUpdate.Medicine = newMedicineRequest.Medicine;
-            toUpdate.Comment = newMedicineRequest.Comment;
-            PersistChanges();
-        }
         public static void Approve(int id)
         {
-            MedicineRequest toApprove = Get(id);
+            MedicineRequest toApprove = MedicineRequestRepository.Get(id);
             if (toApprove is null)
                 return;
-            SystemFunctions.Medicine.Add(toApprove.Medicine.Name, toApprove.Medicine);
-            Delete(id);
-            PersistChanges();
+            MedicineRepo.Add(toApprove.Medicine);
+           
+            MedicineRequestRepository.Delete(id);
+            MedicineRequestRepository.PersistChanges();
         }
         public static void Reject(int id, string comment)
         {
-            MedicineRequest toReject = Get(id);
+            MedicineRequest toReject = MedicineRequestRepository.Get(id);
             if (toReject is null)
                 return;
             toReject.Comment = comment;
-            PersistChanges();
+            MedicineRequestRepository.PersistChanges();
         }
-
-        //files stuff
-
-        static MedicineRequest ParseMedicineRequest(string line)
+        public static void CreateMedicineRequest()
         {
-            string[] parameters = line.Split("|");
-            MedicineRequest medicineRequest = new MedicineRequest {
-                Id = Convert.ToInt32(parameters[0]),
-                Medicine = new Clinic.Medicine(parameters[1], parameters[2].Split("/").ToList()),
-                Comment = parameters[3]
-            };
-            return medicineRequest;
-        }
-
-        static List<MedicineRequest> LoadMedicineRequests()
-        {
-            List<MedicineRequest> lista = new List<MedicineRequest>();
-            using (StreamReader reader = new StreamReader("../../../Admin/Data/medicineRequests.txt"))
+            CLI.CLIWriteLine("Enter medicine name");
+            string name = CLI.CLIEnterStringWithoutDelimiter("|");
+            while (MedicineRepo.Medicine.ContainsKey(name))
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                CLI.CLIWriteLine("Name already taken, enter another name");
+                name = CLI.CLIEnterStringWithoutDelimiter("|");
+            }
+            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
+            Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
+            MedicineRequest mr = new MedicineRequest { Medicine = medicine, Comment = "" };
+            MedicineRequestRepository.Add(mr);
+        }
+        public static void ReviewedMedsMenu()
+        {
+            ListMedicineRequests();
+            CLI.CLIWriteLine("Enter ID of the request, 0 to return");
+            int id = CLI.CLIEnterNumber();
+            if (id == 0)
+                return;
+            string name;
+            CLI.CLIWriteLine("Enter medicine name");
+            name = CLI.CLIEnterStringWithoutDelimiter("|");
+            while (MedicineRepo.Medicine.ContainsKey(name))
+            {
+                CLI.CLIWriteLine("Name already taken, enter another name");
+                name = CLI.CLIEnterStringWithoutDelimiter("|");
+            }
+            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
+            Clinic.Medicine medicine = new Clinic.Medicine(name, chosenIngrediants);
+            MedicineRequest newRequest = new MedicineRequest { Medicine = medicine, Comment = "" };
+            MedicineRequestRepository.Update(id, newRequest);
+        }
+
+        
+        public static void ListMedicineRequests(string parameter = "rbd") //rbd = reviewed by doctor (default), sba = sent by admin, all = all requests 
+        {
+            if (parameter == "rbd")
+            {
+                CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
+                foreach (var request in MedicineRequestRepository.GetAll())
                 {
-                    MedicineRequest mr = ParseMedicineRequest(line);
-                    lista.Add(mr);
+                    if (request.Comment != "")
+                    {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
                 }
             }
-            return lista;
-        }
-        public static void PersistChanges()
-        {
-            File.Delete("../../../Admin/Data/medicineRequests.txt");
-            foreach (MedicineRequest medicineRequest in MedicineRequests)
+            else if (parameter == "sba")
             {
-                string newLine = Convert.ToString(medicineRequest.Id) + "|" + medicineRequest.Medicine.Compress() + "|" + medicineRequest.Comment;
-                using (StreamWriter sw = File.AppendText("../../../Admin/Data/medicineRequests.txt"))
+                CLI.CLIWriteLine("These requests have been sent by an admin and should be reviewed");
+                foreach (var request in MedicineRequestRepository.GetAll())
                 {
-                    sw.WriteLine(newLine);
+                    if (request.Comment == "")
+                    {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
                 }
             }
+            else if (parameter == "all")
+            {
+                CLI.CLIWriteLine("All medicine requests");
+                foreach (var request in MedicineRequestRepository.GetAll())
+                {
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                    CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+
+                }
+            }
+        }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
+        }
+
+        public static void ReviewMedicineRequests()
+        {
+            string choice;
+            CLI.CLIWriteLine("Medicine requests: ");
+            List<MedicineRequest> allRequests = MedicineRequestRepository.LoadMedicineRequests();
+            foreach (var request in allRequests)
+            {
+                
+                if (request.Comment == "")
+                {
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                    CLI.CLIWriteLine("Request ID: " + request.Id +
+                        "\nMedicine name: " + request.Medicine.Name +
+                        "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
+                    CLI.CLIWriteLine("----------------------------------------------------------");
+                    CLI.CLIWriteLine("Do you want to approve this medicine(y/n)");
+                    choice = CLI.CLIEnterString();
+                    if (choice.ToUpper() == "Y")
+                    {
+                        Approve(request.Id);
+                    }
+                    else
+                    {
+                        CLI.CLIWriteLine("Do you want to reject this medicine(y/n)");
+                        choice = CLI.CLIEnterString();
+                        if (choice.ToUpper() == "Y")
+                        {
+                            CLI.CLIWriteLine("Why do you want to reject this medicine? Write a short comment.");
+                            string comment = CLI.CLIEnterString();
+                            Reject(request.Id, comment);
+                        }
+
+                    }
+                }
+
+                
+
+            }
+
         }
     }
 }
