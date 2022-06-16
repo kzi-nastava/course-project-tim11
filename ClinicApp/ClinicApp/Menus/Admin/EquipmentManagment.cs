@@ -86,7 +86,7 @@ namespace ClinicApp.Menus.Admin
             {
                 STerms.FilterByEqTypeBool = true;
                 CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-                STerms.FilterByEq = EquipmentService.ChooseEquipmentType();
+                STerms.FilterByEq = OtherFunctions.ChooseEquipmentType();
             }
             CLI.CLIWriteLine("Filter by room type? (y/n): ");
             answer = CLI.CLIEnterString();
@@ -94,7 +94,7 @@ namespace ClinicApp.Menus.Admin
             {
                 STerms.FilterByRoomTypeBool = true;
                 CLI.CLIWriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
-                STerms.FilterByRoom = RoomService.ChooseRoomType();
+                STerms.FilterByRoom = OtherFunctions.ChooseRoomType();
             }
             CLI.CLIWriteLine("Filter by amount?(y/n): ");
             answer = CLI.CLIEnterString();
@@ -177,7 +177,7 @@ namespace ClinicApp.Menus.Admin
             CLI.CLIWriteLine("Enter amount");
             int amount = CLI.CLIEnterNumber();
             CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-            EquipmentType type = EquipmentService.ChooseEquipmentType();
+            EquipmentType type = OtherFunctions.ChooseEquipmentType();
             EquipmentService.AddNew(name, amount, type);
         }
         public static void ListAllEquipment()

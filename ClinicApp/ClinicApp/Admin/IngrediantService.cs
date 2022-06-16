@@ -6,7 +6,10 @@ namespace ClinicApp.AdminFunctions
 {
     class IngrediantService
     {
-        
+        public static void Update(string ingr, string newIng)
+        {
+            IngrediantRepository.Update(ingr, newIng);
+        }
         public static List<string> ChooseIngrediants()
         {
             List<string> chosenIngrediants = new List<string>();

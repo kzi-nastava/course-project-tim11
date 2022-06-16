@@ -257,5 +257,48 @@ namespace ClinicApp
             }
             return output;
         }
+        public static RoomType ChooseRoomType()
+        {
+            RoomType type;
+            int input = CLI.CLIEnterNumberWithLimit(1, 3);
+            switch (input)
+            {
+                case 1:
+                    type = RoomType.Operations;
+                    break;
+                case 2:
+                    type = RoomType.Examinations;
+                    break;
+                case 3:
+                    type = RoomType.Waiting;
+                    break;
+                default:
+                    type = RoomType.STORAGE;
+                    break;
+            }
+            return type;
+        }
+        public static EquipmentType ChooseEquipmentType()
+        {
+            EquipmentType type;
+            int input = CLI.CLIEnterNumberWithLimit(1, 4);
+            switch (input)
+            {
+                case 1:
+                    type = EquipmentType.Operations;
+                    break;
+                case 2:
+                    type = EquipmentType.RoomFurniture;
+                    break;
+                case 3:
+                    type = EquipmentType.Hallway;
+                    break;
+                default:
+                    type = EquipmentType.Examinations;
+                    break;
+            }
+            return type;
+        }
+
     }
 }
