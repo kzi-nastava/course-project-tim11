@@ -6,75 +6,7 @@ using ClinicApp.Users;
 
 public static class EquipmentService
 {
-    public static void StorageSubmenu()
-    {
-        CLI.CLIWriteLine("1. Add new Equipment");
-        CLI.CLIWriteLine("2. Edit amount of existing Equipment");
-        int answer = CLI.CLIEnterNumberWithLimit(0, 2);
-        switch (answer)
-        {
-            case 1:
-                AddNewToStorage();
-                break;
-            case 2:
-                EditExisting();
-                break;
-            case 0:
-                return;
-        }
-    }
-    public static void AddEqToStorage()
-    {
-        CLI.CLIWriteLine("List Equipment in Storage? (y/n): ");
-        string answer = CLI.CLIEnterString();
-        if (answer.ToLower() == "y")
-        {
-            ListAllEquipmentInRoom(0); //zero for storage
-        }
-        StorageSubmenu();
-    }
-    public static void EditExisting()
-    {
-        CLI.CLIWriteLine("Enter ID of equipment to change:");
-        int id = CLI.GetValidEquipmentId();
-        Equipment eq = EquipmentRepository.Get(id);
-        if (eq.RoomId != 0)
-        {
-            CLI.CLIWriteLine("Equipment not in Storage cannot be edited directly, use the option 1. in the Manage Equipment menu");
-            return;
-        }
-        else
-        {
-            CLI.CLIWriteLine("Enter new amount: ");
-            int amount = CLI.CLIEnterNumberWithLimit(1, 99999999);
-            EquipmentRepository.Update(eq.Id, amount);
-        }
-    }
-    public static void AddNewToStorage()
-    {
-        string name;
-        EquipmentType type;
-        int amount = CLI.CLIEnterNumber();
-        List<string> exsistingNames = new List<string>();
-        foreach (Equipment item in EquipmentRepository.EquipmentList)
-        {
-            if (item.RoomId == 0)
-            {
-                exsistingNames.Add(item.Name);
-            }
-        }
-        CLI.CLIWrite("Name: ");
-        name = CLI.CLIEnterStringWithoutDelimiter("|");
-        while (exsistingNames.Contains(name))
-        {
-            CLI.CLIWrite("Name already in use! Enter name: ");
-            name = CLI.CLIEnterStringWithoutDelimiter("|");
-        }
-        CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
-        type = ChooseEquipmentType();
-        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
-        EquipmentRepository.Add(eq);
-    }
+    
     public static void ListAllEquipment()
     {
         Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
@@ -91,6 +23,11 @@ public static class EquipmentService
             if (eq.RoomId == id)
                 CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
         }
+    }
+    public static void AddNew(string name, int amount, EquipmentType type)
+    {
+        Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
+        EquipmentRepository.Add(eq);
     }
     
     public static List<Equipment> GetEquipmentFromRoom(int id)

@@ -13,19 +13,6 @@ namespace ClinicApp.AdminFunctions
             EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = room.Id, MovementDate = date, Done = false };
             EquipmentMovementRepository.Add(movement);
         }
-        public static void Menu()
-        {
-            CLI.CLIWriteLine("Enter ID of equipment to change:");
-            int id = EquipmentService.GetValidEquipmentId();
-            CLI.CLIWriteLine("Enter amount to move");
-            int amount = CLI.CLIEnterNumberWithLimit(1, 100);
-            CLI.CLIWriteLine("Enter the Id of the room where the equipment is going to");
-            int roomId = RoomService.GetValidRoomId();
-            CLI.CLIWriteLine("Enter date on which the equipment is being moved");
-            DateTime date = CLI.CLIEnterDate();
-
-            EquipmentMovementService.MoveEquipment(id, amount, roomId, date);
-        }
 
         public static void CommitChanges(EquipmentMovement item)   //actually moves the equipment
         {

@@ -153,11 +153,7 @@ namespace ClinicApp.AdminFunctions
 
                     }
                 }
-
-                
-
             }
-
         }
     }
 }
