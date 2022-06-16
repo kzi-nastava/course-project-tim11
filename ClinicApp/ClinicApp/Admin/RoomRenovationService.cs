@@ -7,6 +7,10 @@ namespace ClinicApp.AdminFunctions
 {
     public static class RoomRenovationService
     {
+        public static List<RoomRenovation> GetAll()
+        {
+            return RoomRenovationRepository.GetAll();
+        }
         public static void CreateComplexSplit(string name, RoomType roomType, int id, DateRange duration)
         {
             Room newRoom = new Room { Name = name, Type = roomType };

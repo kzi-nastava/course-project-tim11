@@ -24,10 +24,10 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     case 1:
-                        SimpleRoomRenovation();
+                        SimpleRoomRenovation.Dialog();
                         break;
                     case 2:
-                        ComplexRoomRenovationMenu();
+                        ComplexRoomRenovation.Menu();
                         break;
                     case 3:
                         ListAllRenovations();
@@ -38,32 +38,11 @@ namespace ClinicApp.Menus.Admin
                 }
             }
         }
-        public static void ComplexRoomRenovationMenu()
-        {
-
-            CLI.CLIWriteLine("1. Split room");
-            CLI.CLIWriteLine("2. Join 2 rooms");
-            CLI.CLIWriteLine("0. Return");
-            int answer = CLI.CLIEnterNumberWithLimit(0, 2);
-            switch (answer)
-            {
-                case 0:
-                    return;
-                case 1:
-                    CreateComplexSplitRenovation();
-                    return;
-                case 2:
-                    CreateComplexJoinRenovation();
-                    return;
-                default:
-                    CLI.CLIWriteLine("Invalid option, try again");
-                    break;
-            }
-        }
+        
         public static void ListAllRenovations()
         {
             string newLine;
-            foreach (RoomRenovation renovation in RoomRenovationRepository.GetAll())
+            foreach (RoomRenovation renovation in RoomRenovationService.GetAll())
             {
                 switch (renovation.Type)
                 {
@@ -99,59 +78,8 @@ namespace ClinicApp.Menus.Admin
                 CLI.CLIWriteLine("You have entered invalid dates, there is an examination during the date range!");
             }
         }
-        public static void CreateComplexSplitRenovation()
-        {
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int id = CLI.GetValidRoomId();
-            if (id == 0)
-            {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
-                return;
-            }
-            DateRange duration = GetUninterruptedDateRange(id);
-            CLI.CLIWrite("Name of new room: ");
-            string name = CLI.CLIEnterStringWithoutDelimiter("|");
-            CLI.CLIWrite("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
-            RoomType roomType = RoomService.ChooseRoomType();
-            RoomRenovationService.CreateComplexSplit(name, roomType, id, duration);
-        }
-        public static void CreateComplexJoinRenovation()
-        {
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int id = CLI.GetValidRoomId();
-            if (id == 0)
-            {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
-                return;
-            }
-            DateRange duration = GetUninterruptedDateRange(id);
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int otherRoomId = CLI.GetValidRoomId();
-            if (otherRoomId == 0)
-            {
-                CLI.CLIWriteLine("You cannot delete Storage!");
-                return;
-            }
-            if (OtherFunctions.CheckForExaminations(duration, otherRoomId))
-            {
-                CLI.CLIWriteLine("This room has an appointment at the given time, discarding");
-                return;
-            }
-
-            RoomRenovationService.CreateComplexJoin(id, duration, otherRoomId);
-        }
-        public static void SimpleRoomRenovation()
-        {
-
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
-            int id = CLI.GetValidRoomId();
-            if (id == 0)
-            {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
-                return;
-            }
-            DateRange duration = GetUninterruptedDateRange(id);
-            RoomRenovationService.CreateSimpleRenovation(id, duration);
-        }
+        
+        
+        
     }
 }

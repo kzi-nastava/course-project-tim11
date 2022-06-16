@@ -5,7 +5,7 @@ namespace ClinicApp.Menus.Admin
 {
     internal class CreateMedicineRequest
     {
-        public static void Menu()
+        public static void Dialog()
         {
             CLI.CLIWriteLine("Enter medicine name");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -14,7 +14,7 @@ namespace ClinicApp.Menus.Admin
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");
             }
-            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
+            List<string> chosenIngrediants = OtherFunctions.ChooseIngrediants();
 
             MedicineRequestService.CreateNew(name, chosenIngrediants);
         }

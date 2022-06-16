@@ -5,11 +5,11 @@ using ClinicApp.AdminFunctions;
 
 namespace ClinicApp.Menus.Admin
 {
-    class DeleteIngrediant
+    class UpdateIngrediant
     {
-        public static void Menu()
+        public static void Dialog()
         {
-            CLI.CLIWriteLine("Select the ingrediant to delete, 0 to return");
+            CLI.CLIWriteLine("Select the ingrediant to update, 0 to continue");
             List<string> offeredIngrediants = IngrediantRepository.GetAll();
             foreach (var ingrediant in offeredIngrediants)
             {
@@ -21,7 +21,10 @@ namespace ClinicApp.Menus.Admin
                 return;
             }
             string selected = offeredIngrediants[indexOfSelected - 1];
-            IngrediantRepository.Delete(selected);
+            CLI.CLIWriteLine("Enter the new ingrediant");
+            string newIngr = CLI.CLIEnterStringWithoutDelimiter("|");
+
+            IngrediantService.Update(selected, newIngr);
         }
     }
 }

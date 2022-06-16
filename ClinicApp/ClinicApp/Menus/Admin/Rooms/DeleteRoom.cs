@@ -4,7 +4,7 @@ namespace ClinicApp.Menus.Admin
 {
     internal class DeleteRoom
     {
-        public static void Menu()
+        public static void Dialog()
         {
             CLI.CLIWriteLine("Enter ID of the room you want to Delete");
             int id = CLI.GetValidRoomId();

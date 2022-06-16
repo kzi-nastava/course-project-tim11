@@ -18,13 +18,13 @@ namespace ClinicApp.Menus.Admin
             switch (answer)
             {
                 case 1:
-                    CreateIngrediant.Menu();
+                    CreateIngrediant.Dialog();
                     break;
                 case 2:
-                    UpdateIngrediant.Menu();
+                    UpdateIngrediant.Dialog();
                     break;
                 case 3:
-                    DeleteIngrediant.Menu();
+                    DeleteIngrediant.Dialog();
                     break;
                 case 0:
                     return;

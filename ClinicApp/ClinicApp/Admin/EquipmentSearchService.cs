@@ -10,7 +10,7 @@ namespace ClinicApp.AdminFunctions
         {
             searchTerm.SearchTerm = searchTerm.SearchTerm.ToLower();
             var results = new List<Equipment>();
-            foreach (var item in EquipmentRepository.EquipmentList)
+            foreach (var item in EquipmentRepository.GetAll())
             {
                 if (item.Name.ToLower().Contains(searchTerm.SearchTerm) || item.Type.ToString().ToLower().Contains(searchTerm.SearchTerm) || RoomRepository.Get(item.RoomId).Name.ToLower().Contains(searchTerm.SearchTerm))
                 {

@@ -21,13 +21,13 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     case 1:
-                        CreateMedicineRequest.Menu();
+                        CreateMedicineRequest.Dialog();
                         return;
                     case 2:
                         IngrediantsMenu.Menu();
                         return;
                     case 3:
-                        ReviewedMeds.Menu();
+                        ReviewedMeds.Dialog();
                         return;
                     default:
                         Console.WriteLine("Invalid option, try again");

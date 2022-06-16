@@ -7,7 +7,7 @@ namespace ClinicApp.Menus.Admin
 {
     class ReviewedMeds
     {
-        public static void Menu()
+        public static void Dialog()
         {
             OtherFunctions.ListMedicineRequests();
             CLI.CLIWriteLine("Enter ID of the request, 0 to return");
@@ -20,7 +20,8 @@ namespace ClinicApp.Menus.Admin
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");
             }
-            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
+            List<string> chosenIngrediants = OtherFunctions.ChooseIngrediants();
+
             MedicineRequestService.UpdateReviewed(id, name, chosenIngrediants);
         }
     }

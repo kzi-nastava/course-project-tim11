@@ -7,7 +7,7 @@ namespace ClinicApp.Menus.Admin
 {
     class CreateIngrediant
     {
-        public static void Menu()
+        public static void Dialog()
         {
             CLI.CLIWriteLine("Enter the new ingrediant");
             string ingrediant = CLI.CLIEnterStringWithoutDelimiter("|");
@@ -16,7 +16,7 @@ namespace ClinicApp.Menus.Admin
                 CLI.CLIWriteLine("Ingrediant already in database");
                 return;
             }
-            IngrediantRepository.Add(ingrediant);
+            IngrediantService.Add(ingrediant);
         }
     }
 }

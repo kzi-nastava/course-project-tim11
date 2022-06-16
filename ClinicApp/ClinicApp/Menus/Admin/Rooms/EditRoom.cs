@@ -7,7 +7,7 @@ namespace ClinicApp.Menus.Admin
 {
     class EditRoom
     {
-        public static void Menu()
+        public static void Dialog()
         {
             string name;
             RoomType roomType;

@@ -7,7 +7,7 @@ namespace ClinicApp.Menus.Admin
 {
     class AddNewRoom
     {
-        public static void Menu()
+        public static void Dialog()
         {
             CLI.CLIWriteLine("Enter name: ");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");

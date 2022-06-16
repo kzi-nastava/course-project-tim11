@@ -26,28 +26,18 @@ public static class EquipmentService
         }
         return movements;
     }
-    public static EquipmentType ChooseEquipmentType()
+    public static Equipment Get(int id)
     {
-        EquipmentType type;
-        int input = CLI.CLIEnterNumberWithLimit(1, 4);
-        switch (input)
-        {
-            case 1:
-                type = EquipmentType.Operations;
-                break;
-            case 2:
-                type = EquipmentType.RoomFurniture;
-                break;
-            case 3:
-                type = EquipmentType.Hallway;
-                break;
-            default:
-                type = EquipmentType.Examinations;
-                break;
-        }
-        return type;
+        return EquipmentRepository.Get(id);
     }
-
+    public static List<Equipment> GetAll()
+    {
+        return EquipmentRepository.GetAll();
+    }
+    public static void Update(int id, int amount)
+    {
+        EquipmentRepository.Update(id, amount);
+    }
     //Makes an order for dynamic equipment.
     public static void OrderDynamiicEquipment()
     {
