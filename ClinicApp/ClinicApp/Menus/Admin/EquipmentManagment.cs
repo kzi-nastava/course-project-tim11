@@ -50,7 +50,7 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     case 1:
-                        EquipmentMovementService.MoveEquipment();
+                        CreateMovementMenu();
                         break;
                     case 2:
                         EquipmentService.AddEqToStorage();
@@ -60,6 +60,19 @@ namespace ClinicApp.Menus.Admin
                         break;
                 }
             }
+        }
+        public static void CreateMovementMenu()
+        {
+            CLI.CLIWriteLine("Enter ID of equipment to change:");
+            int id = CLI.GetValidEquipmentId();
+            CLI.CLIWriteLine("Enter amount to move");
+            int amount = CLI.CLIEnterNumberWithLimit(1, 100);
+            CLI.CLIWriteLine("Enter the Id of the room where the equipment is going to");
+            int roomId = CLI.GetValidRoomId();
+            CLI.CLIWriteLine("Enter date on which the equipment is being moved");
+            DateTime date = CLI.CLIEnterDate();
+
+            EquipmentMovementService.MoveEquipment(id, amount, roomId, date);
         }
     }
 }

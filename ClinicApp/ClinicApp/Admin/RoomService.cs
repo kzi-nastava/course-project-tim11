@@ -6,19 +6,7 @@ namespace ClinicApp.AdminFunctions
 {
     public static class RoomService
     {
-        public static int GetValidRoomId()
-        {
-            Room room;
-            int id = CLI.CLIEnterNumber();
-            room = RoomRepository.Get(id);
-            while (room is null)
-            {
-                CLI.CLIWriteLine("Invalid ID");
-                id = CLI.CLIEnterNumber();
-                room = RoomRepository.Get(id);
-            }
-            return id;
-        }
+        
         public static RoomType ChooseRoomType()
         {
             RoomType type;
@@ -62,7 +50,7 @@ namespace ClinicApp.AdminFunctions
             Room room;
             string name;
             RoomType roomType;
-            int id = GetValidRoomId();
+            int id = CLI.GetValidRoomId();
             room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
@@ -90,7 +78,7 @@ namespace ClinicApp.AdminFunctions
         public static void DeleteRoom()
         {
             CLI.CLIWriteLine("Enter ID of the room you want to Delete");
-            int id = GetValidRoomId();
+            int id = CLI.GetValidRoomId();
             if (id == 0)
             {
                 CLI.CLIWriteLine("You cannot delete Storage!");

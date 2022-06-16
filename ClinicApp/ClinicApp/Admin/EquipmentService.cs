@@ -36,7 +36,7 @@ public static class EquipmentService
     public static void EditExisting()
     {
         CLI.CLIWriteLine("Enter ID of equipment to change:");
-        int id = GetValidEquipmentId();
+        int id = CLI.GetValidEquipmentId();
         Equipment eq = EquipmentRepository.Get(id);
         if (eq.RoomId != 0)
         {
@@ -92,19 +92,7 @@ public static class EquipmentService
                 CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
         }
     }
-    public static int GetValidEquipmentId()
-    {
-        Equipment eq;
-        int id = CLI.CLIEnterNumber();
-        eq = EquipmentRepository.Get(id);
-        while (eq is null)
-        {
-            CLI.CLIWriteLine("Invalid ID");
-            id = CLI.CLIEnterNumber();
-            eq = EquipmentRepository.Get(id);
-        }
-        return id;
-    }
+    
     public static List<Equipment> GetEquipmentFromRoom(int id)
     {
         List<Equipment> movements = new List<Equipment>();
