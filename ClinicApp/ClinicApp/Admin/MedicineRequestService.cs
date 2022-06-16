@@ -51,7 +51,7 @@ namespace ClinicApp.AdminFunctions
                     CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Request ID: " + request.Id +
                         "\nMedicine name: " + request.Medicine.Name +
-                        "\nMedicine ingrediants: " + Menus.Admin.Medicines.WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
+                        "\nMedicine ingrediants: " + OtherFunctions.WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
                     CLI.CLIWriteLine("----------------------------------------------------------");
                     CLI.CLIWriteLine("Do you want to approve this medicine(y/n)");
                     choice = CLI.CLIEnterString();

@@ -230,5 +230,32 @@ namespace ClinicApp
             }
             return doctor;
         }
+        public static void ListMedicineRequests()
+        {
+            {
+                CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
+                foreach (var request in MedicineRequestRepository.GetAll())
+                {
+                    if (request.Comment != "")
+                    {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
+                }
+            }
+        }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
+        }
     }
 }

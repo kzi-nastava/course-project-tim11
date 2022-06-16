@@ -7,23 +7,7 @@ using ClinicApp.Users;
 public static class EquipmentService
 {
     
-    public static void ListAllEquipment()
-    {
-        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-        foreach (Equipment eq in EquipmentRepository.EquipmentList)
-        {
-            CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
-        }
-    }
-    public static void ListAllEquipmentInRoom(int id)
-    {
-        Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
-        foreach (Equipment eq in EquipmentRepository.EquipmentList)
-        {
-            if (eq.RoomId == id)
-                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
-        }
-    }
+    
     public static void AddNew(string name, int amount, EquipmentType type)
     {
         Equipment eq = new Equipment { Amount = amount, Name = name, RoomId = 0, Type = type };
