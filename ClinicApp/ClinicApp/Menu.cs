@@ -58,7 +58,7 @@ namespace ClinicApp
                     Menus.Admin.EquipmentManagment.Menu();
                     break;
                 case 5:
-                    Menus.Admin.RoomRenovation.Menu();
+                    Menus.Admin.RoomRenovations.Menu();
                     break;
                 case 6:
                     Menus.Admin.Medicines.Menu();

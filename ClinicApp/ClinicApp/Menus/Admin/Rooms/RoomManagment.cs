@@ -24,13 +24,13 @@ namespace ClinicApp.Menus.Admin
                         RoomService.ListAllRooms();
                         break;
                     case 2:
-                        RoomService.AddNewRoom();
+                        AddNewRoom.Dialog();
                         break;
                     case 3:
-                        RoomService.EditRoom();
+                        EditRoom.Dialog();
                         break;
                     case 4:
-                        RoomService.DeleteRoom();
+                        DeleteRoom.Dialog();
                         break;
                     case 0:
                         return;

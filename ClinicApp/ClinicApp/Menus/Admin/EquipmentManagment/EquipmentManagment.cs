@@ -11,7 +11,6 @@ namespace ClinicApp.Menus.Admin
         {
             while (true)
             {
-                EquipmentMovementService.CheckForMovements();
                 CLI.CLIWriteLine("Manage Equipment");
                 CLI.CLIWriteLine("1. List all");
                 CLI.CLIWriteLine("2. Search");
@@ -21,13 +20,13 @@ namespace ClinicApp.Menus.Admin
                 switch (choice)
                 {
                     case 1:
-                        EquipmentService.ListAllEquipment();
+                        ListAllEquipment();
                         break;
                     case 2:
-                        EquipmentSearchService.SearchEquipment();
+                        SearchEquipment.Dialog();
                         break;
                     case 3:
-                        MoveEquipmentMenu();
+                        MoveEquipment.Menu();
                         break;
                     case 0:
                         return;
@@ -37,28 +36,21 @@ namespace ClinicApp.Menus.Admin
                 }
             }
         }
-        public static void MoveEquipmentMenu()
+        public static void ListAllEquipment()
         {
-            while (true)
+            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+            foreach (Equipment eq in EquipmentRepository.EquipmentList)
             {
-                CLI.CLIWriteLine("1. Move Equipment");
-                CLI.CLIWriteLine("2. Add new Equipment to Storage");
-                CLI.CLIWriteLine("0 to return");
-                int answer = CLI.CLIEnterNumberWithLimit(0, 2);
-                switch (answer)
-                {
-                    case 0:
-                        return;
-                    case 1:
-                        EquipmentMovementService.MoveEquipment();
-                        break;
-                    case 2:
-                        EquipmentService.AddEqToStorage();
-                        break;
-                    default:
-                        CLI.CLIWriteLine("Invalid option, try again");
-                        break;
-                }
+                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
+            }
+        }
+        public static void ListAllEquipmentInRoom(int id)
+        {
+            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE");
+            foreach (Equipment eq in EquipmentRepository.EquipmentList)
+            {
+                if (eq.RoomId == id)
+                    CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type);
             }
         }
     }

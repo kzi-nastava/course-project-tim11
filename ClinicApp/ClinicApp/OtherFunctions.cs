@@ -230,5 +230,95 @@ namespace ClinicApp
             }
             return doctor;
         }
+        public static void ListMedicineRequests()
+        {
+            {
+                CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
+                foreach (var request in MedicineRequestRepository.GetAll())
+                {
+                    if (request.Comment != "")
+                    {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
+                }
+            }
+        }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
+        }
+        public static RoomType ChooseRoomType()
+        {
+            RoomType type;
+            int input = CLI.CLIEnterNumberWithLimit(1, 3);
+            switch (input)
+            {
+                case 1:
+                    type = RoomType.Operations;
+                    break;
+                case 2:
+                    type = RoomType.Examinations;
+                    break;
+                case 3:
+                    type = RoomType.Waiting;
+                    break;
+                default:
+                    type = RoomType.STORAGE;
+                    break;
+            }
+            return type;
+        }
+        public static EquipmentType ChooseEquipmentType()
+        {
+            EquipmentType type;
+            int input = CLI.CLIEnterNumberWithLimit(1, 4);
+            switch (input)
+            {
+                case 1:
+                    type = EquipmentType.Operations;
+                    break;
+                case 2:
+                    type = EquipmentType.RoomFurniture;
+                    break;
+                case 3:
+                    type = EquipmentType.Hallway;
+                    break;
+                default:
+                    type = EquipmentType.Examinations;
+                    break;
+            }
+            return type;
+        }
+        public static List<string> ChooseIngrediants()
+        {
+            List<string> chosenIngrediants = new List<string>();
+            List<string> offeredIngrediants = new List<string>(IngrediantRepository.GetAll());
+            CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
+            while (true)
+            {
+                foreach (var ingrediant in offeredIngrediants)
+                {
+                    CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                }
+                var choice = CLI.CLIEnterNumberWithLimit(0, offeredIngrediants.Count);
+                if (choice == 0 && chosenIngrediants.Count > 0)
+                {
+                    break;
+                }
+                chosenIngrediants.Add(offeredIngrediants[choice - 1]);
+                offeredIngrediants.Remove(offeredIngrediants[choice - 1]);
+            }
+            return chosenIngrediants;
+        }
     }
 }
