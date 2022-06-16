@@ -25,7 +25,7 @@ namespace ClinicApp.AdminFunctions
         {
             eq.Id = EquipmentList.Last().Id + 1;
             EquipmentList.Add(eq);
-            EquipmentRepository.PersistChanges();
+            PersistChanges();
         }
         public static void Delete(int id)
         {
@@ -33,7 +33,7 @@ namespace ClinicApp.AdminFunctions
             if (heq is null)
                 return;
             EquipmentList.Remove(heq);
-            EquipmentRepository.PersistChanges();
+            PersistChanges();
         }
         public static void Update(int id, int newAmount)
         {

@@ -21,13 +21,13 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     case 1:
-                        MedicineRequestService.CreateMedicineRequest();
+                        CreateMedicineRequest();
                         return;
                     case 2:
                         CRUDIngrediants();
                         return;
                     case 3:
-                        MedicineRequestService.ReviewedMedsMenu();
+                        ReviewedMedsMenu();
                         return;
                     default:
                         Console.WriteLine("Invalid option, try again");
@@ -60,6 +60,61 @@ namespace ClinicApp.Menus.Admin
                     Console.WriteLine("Invalid Option");
                     break;
             }
+        }
+        public static void CreateMedicineRequest()
+        {
+            CLI.CLIWriteLine("Enter medicine name");
+            string name = CLI.CLIEnterStringWithoutDelimiter("|");
+            while (Clinic.MedicineRepo.Medicine.ContainsKey(name))
+            {
+                CLI.CLIWriteLine("Name already taken, enter another name");
+                name = CLI.CLIEnterStringWithoutDelimiter("|");
+            }
+            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
+            MedicineRequestService.CreateNew(name, chosenIngrediants);
+        }
+        public static void ReviewedMedsMenu()
+        {
+            ListMedicineRequests();
+            CLI.CLIWriteLine("Enter ID of the request, 0 to return");
+            int id = CLI.CLIEnterNumber();
+            if (id == 0) return;
+            CLI.CLIWriteLine("Enter medicine name");
+            string name = CLI.CLIEnterStringWithoutDelimiter("|");
+            while (Clinic.MedicineRepo.Medicine.ContainsKey(name))
+            {
+                CLI.CLIWriteLine("Name already taken, enter another name");
+                name = CLI.CLIEnterStringWithoutDelimiter("|");
+            }
+            List<string> chosenIngrediants = IngrediantService.ChooseIngrediants();
+            MedicineRequestService.UpdateReviewed(id, name, chosenIngrediants);
+        }
+        public static void ListMedicineRequests()
+        {
+            {
+                CLI.CLIWriteLine("These requests have been reviewed by a doctor and should be fixed up");
+                foreach (var request in MedicineRequestRepository.GetAll())
+                {
+                    if (request.Comment != "")
+                    {
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                        CLI.CLIWriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                        CLI.CLIWriteLine("----------------------------------------------------------");
+                    }
+                }
+            }
+        }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
         }
     }
 }
