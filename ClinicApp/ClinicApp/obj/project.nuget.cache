@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gatyEbal0AnV54vjm/zbwQG8D7/tCt4J5O645M7W6eS+rUOYdLn56RubiKgcqlWP3d2E6aATLmiQUsjgJPHTHQ==",
+  "dgSpecHash": "FNTpDvrV0F2oOwhMJskXcuVHMbbcZP2uQ9xpDkTZYI5dtCEDSGF9OxAnG91967h8hq7OBN+zAd1phOHNFXulkw==",
   "success": true,
-  "projectFilePath": "D:\\Programiranje\\C#\\UVOD U SOFTVERSKO INZENJERSTVO\\ConsoleProject\\ClinicApp\\ClinicApp\\ClinicApp.csproj",
-  "expectedPackageFiles": [
-    "D:\\Users\\aleks\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.24\\microsoft.netcore.app.host.win-x64.3.1.24.nupkg.sha512"
-  ],
+  "projectFilePath": "D:\\Relja\\Факултет\\УСИ\\course-project-tim11\\ClinicApp\\ClinicApp\\ClinicApp.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
