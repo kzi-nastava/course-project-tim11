@@ -5,10 +5,13 @@ namespace ClinicApp.Clinic.Surveys
 {
     public class ClinicSurveyRepo
     {
-        public ClinicSurveyRepo()
-        {
-        }
+        
         public static List<ClinicSurvey> AllSurveys { get; set; }
+        static ClinicSurveyRepo()
+        {
+            AllSurveys = new List<ClinicSurvey>();
+            AllSurveys.Add(new ClinicSurvey(5, 5, 5, 5, "super ste!"));
+        }
         public static string FilePathSurveys = ".. / .. / .. / Data / clinicsurveys.txt";
         public void LoadSurveys()
         {

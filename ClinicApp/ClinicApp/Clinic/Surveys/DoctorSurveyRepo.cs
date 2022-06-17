@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ClinicApp.Users;
 
 namespace ClinicApp.Clinic.Surveys
 {
@@ -8,8 +9,10 @@ namespace ClinicApp.Clinic.Surveys
     {
         public static List<DoctorSurvey> DoctorSurveys { get; set; }
         public static string FilePathDoctorSurveys = "../../../Data/doctorsurveys.txt";
-        public DoctorSurveyRepo()
+        static DoctorSurveyRepo()
         {
+            DoctorSurveys = new List<DoctorSurvey>();
+            DoctorSurveys.Add(new DoctorSurvey(UserRepository.Doctors["stefan_bogdanovic"], 5, true, "super je"));
         }
 
         public static void LoadDoctorSurveys()

@@ -29,7 +29,7 @@ namespace ClinicApp.Clinic.Surveys
         {
             int average = 0;
             int count = 0;
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 average += survey.DoctorsRating;
                 count++;
@@ -41,7 +41,7 @@ namespace ClinicApp.Clinic.Surveys
         {
             int average = 0;
             int count = 0;
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 average += survey.NurssesRating;
                 count++;
@@ -53,7 +53,7 @@ namespace ClinicApp.Clinic.Surveys
         {
             int average = 0;
             int count = 0;
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 average += survey.OtherEmployeesRatings;
                 count++;
@@ -65,7 +65,7 @@ namespace ClinicApp.Clinic.Surveys
         {
             int average = 0;
             int count = 0;
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 average += survey.HygieneRating;
                 count++;
@@ -75,7 +75,7 @@ namespace ClinicApp.Clinic.Surveys
         public static List<string> GetAllComments()
         {
             List<string> comments = new List<string>();
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 if (survey.CustomersComment != "")
                 {
@@ -87,7 +87,7 @@ namespace ClinicApp.Clinic.Surveys
         public static List<int> DoctorRatingHistogram()
         {
             List<int> histogram = new List<int> { 0, 0, 0, 0, 0 };
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 switch (survey.DoctorsRating)
                 {
@@ -113,7 +113,7 @@ namespace ClinicApp.Clinic.Surveys
         public static List<int> NurssesRatingHistogram()
         {
             List<int> histogram = new List<int> { 0, 0, 0, 0, 0 };
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 switch (survey.NurssesRating)
                 {
@@ -139,7 +139,7 @@ namespace ClinicApp.Clinic.Surveys
         public static List<int> OthersRatingHistogram()
         {
             List<int> histogram = new List<int> { 0, 0, 0, 0, 0 };
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 switch (survey.OtherEmployeesRatings)
                 {
@@ -165,7 +165,7 @@ namespace ClinicApp.Clinic.Surveys
         public static List<int> HygieneRatingHistogram()
         {
             List<int> histogram = new List<int> { 0, 0, 0, 0, 0 };
-            foreach (var survey in ClinicSurveyRepo.AllSurveys)
+            foreach (ClinicSurvey survey in ClinicSurveyRepo.AllSurveys)
             {
                 switch (survey.HygieneRating)
                 {

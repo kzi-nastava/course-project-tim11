@@ -9,6 +9,7 @@ namespace ClinicApp.Clinic.Surveys
     {
         public DoctorSurveyService()
         {
+            
         }
 
         public static void RateDoctor(Doctor doctor)
@@ -33,7 +34,10 @@ namespace ClinicApp.Clinic.Surveys
             Dictionary<Doctor, int> averages = new Dictionary<Doctor, int>();
             foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
             {
-                ratings[survey.RatedDoctor].Add(survey.DoctorRating);
+                if (ratings.ContainsKey(survey.RatedDoctor))
+                    ratings[survey.RatedDoctor].Add(survey.DoctorRating);
+                else
+                    ratings[survey.RatedDoctor] = new List<int>() { survey.DoctorRating };
             }
             foreach (var key in ratings.Keys)
             {
@@ -55,7 +59,10 @@ namespace ClinicApp.Clinic.Surveys
             Dictionary<Doctor, List<string>> comments = new Dictionary<Doctor, List<string>>();
             foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
             {
-                comments[survey.RatedDoctor].Add(survey.CustomersComment);
+                if (comments.ContainsKey(survey.RatedDoctor))
+                    comments[survey.RatedDoctor].Add(survey.CustomersComment);
+                else
+                    comments[survey.RatedDoctor] = new List<string>() { survey.CustomersComment };
             }
             return comments;
         }
@@ -67,11 +74,7 @@ namespace ClinicApp.Clinic.Surveys
             {
                 if (!histogram.ContainsKey(survey.RatedDoctor))
                 {
-                    histogram[survey.RatedDoctor].Add(0);
-                    histogram[survey.RatedDoctor].Add(0);
-                    histogram[survey.RatedDoctor].Add(0);
-                    histogram[survey.RatedDoctor].Add(0);
-                    histogram[survey.RatedDoctor].Add(0);
+                    histogram[survey.RatedDoctor] = new List<int> { 0, 0, 0, 0, 0 };
                 }
             }
             foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
