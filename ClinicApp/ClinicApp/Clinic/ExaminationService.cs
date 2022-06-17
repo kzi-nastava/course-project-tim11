@@ -4,6 +4,7 @@ using System.Linq;
 using ClinicApp.Users;
 using System.Collections.Generic;
 using ClinicApp.HelperClasses;
+using ClinicApp.Dialogs;
 
 namespace ClinicApp.Clinic
 {
@@ -56,7 +57,7 @@ namespace ClinicApp.Clinic
                 Console.WriteLine();
                 if (choice.ToUpper() == "Y")
                 {
-                    DoctorService.ViewAllDoctors();
+                    DoctorDialog.ViewAllDoctors();
                 }
                 Console.WriteLine("\nEnter the username:");
                 string userName = Console.ReadLine();
@@ -261,7 +262,7 @@ namespace ClinicApp.Clinic
                 string input = Console.ReadLine();
                 if (input.ToUpper() == "Y")
                 {
-                    DoctorService.ViewAllDoctors();
+                    DoctorDialog.ViewAllDoctors();
                 }
                 Console.WriteLine("Write username of new doctor:");
                 string inputUserName = Console.ReadLine();
@@ -314,14 +315,14 @@ namespace ClinicApp.Clinic
             Patient patient;
             while (option != 0)
             {
-                CLI.CLIWriteLine("\nEnter the patients username:");
-                userName = CLI.CLIEnterString();
+                Console.WriteLine("\nEnter the patients username:");
+                userName = Console.ReadLine();
                 if (UserRepository.Patients.TryGetValue(userName, out patient))
                 {
                     option = 0; //We found the patient. No need to search for him again.
                     if (patient.Referrals.Count() == 0)
                     {
-                        CLI.CLIWriteLine("\nThis patient has no referrals.");
+                        Console.WriteLine("\nThis patient has no referrals.");
                         return;
                     }
                     else
@@ -347,16 +348,16 @@ namespace ClinicApp.Clinic
                         DateTime dateTime, date, time;
                         while (hasTime == false && option2 != 0)
                         {
-                            CLI.CLIWrite("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
+                            Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
                             date = OtherFunctions.GetGoodDate();
 
-                            CLI.CLIWrite("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
+                            Console.Write("\nEnter the time of your Examination (e.g. 14:30)\n>> ");
                             time = CLI.CLIEnterTime();
 
                             dateTime = date.Date + time.TimeOfDay;
                             if (dateTime < DateTime.Now)
                             {
-                                CLI.CLIWriteLine("You can't enter that time, it's in the past");
+                                Console.WriteLine("You can't enter that time, it's in the past");
                             }
                             else
                             {
@@ -364,17 +365,17 @@ namespace ClinicApp.Clinic
                                 if (!DoctorService.CheckAppointment(dateTime, 15, ref doctor))
                                 {
                                     hasTime = false;
-                                    CLI.CLIWriteLine("The doctor is not availible at that time. Try again?");
-                                    CLI.CLIWriteLine("1: Yes");
-                                    CLI.CLIWriteLine("0: No");
+                                    Console.WriteLine("The doctor is not availible at that time. Try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
                                     option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                                 }
                                 else if (!PatientService.CheckAppointment(patient, dateTime, 15))
                                 {
                                     hasTime = false;
-                                    CLI.CLIWriteLine("The patient is not availible at that time. Try again?");
-                                    CLI.CLIWriteLine("1: Yes");
-                                    CLI.CLIWriteLine("0: No");
+                                    Console.WriteLine("The patient is not availible at that time. Try again?");
+                                    Console.WriteLine("1: Yes");
+                                    Console.WriteLine("0: No");
                                     option2 = CLI.CLIEnterNumberWithLimit(0, 1);
                                 }
                                 else
@@ -386,7 +387,7 @@ namespace ClinicApp.Clinic
                                     AppointmentRepo.AllAppointments.Add(id, examination);
                                     AppointmentRepo.CurrentAppointments.Add(id, examination);
                                     patient.Referrals.RemoveAt(0);
-                                    CLI.CLIWriteLine("\nNew examination successfully created\n");
+                                    Console.WriteLine("\nNew examination successfully created\n");
                                 }
                             }
                         }
@@ -394,9 +395,9 @@ namespace ClinicApp.Clinic
                 }
                 else
                 {
-                    CLI.CLIWriteLine("\nThere is no such patient. Try again?");
-                    CLI.CLIWriteLine("1: Yes");
-                    CLI.CLIWriteLine("0: No");
+                    Console.WriteLine("\nThere is no such patient. Try again?");
+                    Console.WriteLine("1: Yes");
+                    Console.WriteLine("0: No");
                     option = CLI.CLIEnterNumberWithLimit(0, 1);
                 }
             }
@@ -411,20 +412,20 @@ namespace ClinicApp.Clinic
             while (option != 0)
             {
                 //Finding the patient.
-                CLI.CLIWriteLine("\nEnter the patients username:");
-                userName = CLI.CLIEnterString();
+                Console.WriteLine("\nEnter the patients username:");
+                userName = Console.ReadLine();
                 if (UserRepository.Patients.TryGetValue(userName, out patient))
                 {
                     option = 0; //We found the patient. No need to search for him again.
 
                     //Finding the doctors field of expertise.
                     int option2, numberOfOptions = 0;
-                    CLI.CLIWriteLine("Which specialty does the doctor need to possess?");
+                    Console.WriteLine("Which specialty does the doctor need to possess?");
                     List<Fields> fields = new List<Fields>();
                     foreach (Fields field in (Fields[])Enum.GetValues(typeof(Fields)))
                     {
                         numberOfOptions++;
-                        CLI.CLIWriteLine(numberOfOptions + ": " + field);
+                        Console.WriteLine(numberOfOptions + ": " + field);
                         fields.Add(field);
                     }
                     option2 = CLI.CLIEnterNumberWithLimit(1, numberOfOptions);
@@ -439,7 +440,7 @@ namespace ClinicApp.Clinic
                     }
                     if (hasSpecialty == false)
                     {
-                        CLI.CLIWriteLine("\nNo doctor has that specialty.");
+                        Console.WriteLine("\nNo doctor has that specialty.");
                         return;
                     }
 
@@ -477,7 +478,7 @@ namespace ClinicApp.Clinic
                                     AppointmentRepo.CurrentAppointments.Add(id, examination);
                                     doctor.Value.MessageBox.AddMessage("You have an emergency examination.");
                                     patient.MessageBox.AddMessage("You have an emergency examination.");
-                                    CLI.CLIWriteLine("The examination has been created successfully.");
+                                    Console.WriteLine("The examination has been created successfully.");
                                     return;
                                 }
                             }
@@ -493,11 +494,11 @@ namespace ClinicApp.Clinic
                         if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || PatientService.CheckAppointment(patient, examinationForDelay.Value.DateTime, 15)))
                         {
                             examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>((Clinic.Examination)examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
-                            CLI.CLIWriteLine(examinationForDelay.Key.ToString());
+                            Console.WriteLine(examinationForDelay.Key.ToString());
                         }
                     if (examinationsForDelaying.Count == 0)
                     {
-                        CLI.CLIWriteLine("\nThere are no examinations available for delaying.");
+                        Console.WriteLine("\nThere are no examinations available for delaying.");
                         return;
                     }
 
@@ -516,14 +517,14 @@ namespace ClinicApp.Clinic
                     }
 
                     //The secretary chooses which one will be delayed.
-                    CLI.CLIWriteLine("\nWhich examination should we delay?");
+                    Console.WriteLine("\nWhich examination should we delay?");
                     for (int i = 0; i < numberOfOptions; i++)
                     {
-                        CLI.CLIWriteLine((i + 1) + ": " + examinationsForDelayingOptions[i].Key.ID + " will be delayed from " + examinationsForDelayingOptions[i].Key.DateTime + " to " + examinationsForDelayingOptions[i].Value);
+                        Console.WriteLine((i + 1) + ": " + examinationsForDelayingOptions[i].Key.ID + " will be delayed from " + examinationsForDelayingOptions[i].Key.DateTime + " to " + examinationsForDelayingOptions[i].Value);
                     }
-                    CLI.CLIWriteLine("0: Back to menu");
+                    Console.WriteLine("0: Back to menu");
                     if (numberOfOptions < 5)
-                        CLI.CLIWriteLine("There are no more examinations left that can be delayed.");
+                        Console.WriteLine("There are no more examinations left that can be delayed.");
 
                     //Finally, we create the examination and delay the other one.
                     option2 = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
@@ -550,7 +551,7 @@ namespace ClinicApp.Clinic
                     AppointmentRepo.CurrentAppointments.Add(id, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("You have an emergency examination.");
                     patient.MessageBox.AddMessage("You have an emergency examination.");
-                    CLI.CLIWriteLine("The examination has been created successfully.");
+                    Console.WriteLine("The examination has been created successfully.");
 
                     //Delays the other examination.
                     examinationForDelaying.Key.Doctor.Appointments.Remove(examinationForDelaying.Key);
@@ -562,13 +563,13 @@ namespace ClinicApp.Clinic
                     PatientService.InsertAppointmentPatient(ref patientTmp, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("Your examination has been delayed.");
                     examinationForDelaying.Key.Patient.MessageBox.AddMessage("Your examination has been delayed.");
-                    CLI.CLIWriteLine("The other examination has been delayed successfully.");
+                    Console.WriteLine("The other examination has been delayed successfully.");
                 }
                 else
                 {
-                    CLI.CLIWriteLine("\nThere is no such patient. Try again?");
-                    CLI.CLIWriteLine("1: Yes");
-                    CLI.CLIWriteLine("0: No");
+                    Console.WriteLine("\nThere is no such patient. Try again?");
+                    Console.WriteLine("1: Yes");
+                    Console.WriteLine("0: No");
                     option = CLI.CLIEnterNumberWithLimit(0, 1);
                 }
             }

@@ -12,11 +12,11 @@ namespace ClinicApp.Menus.Admin
             while (true)
             {
                 RoomRenovationService.CheckForRenovations();
-                CLI.CLIWriteLine("Room Renovation Menu");
-                CLI.CLIWriteLine("1. Simple Renovation");
-                CLI.CLIWriteLine("2. Complex Renovation");
-                CLI.CLIWriteLine("3. List all Renovations");
-                CLI.CLIWriteLine("0. Return");
+                Console.WriteLine("Room Renovation Menu");
+                Console.WriteLine("1. Simple Renovation");
+                Console.WriteLine("2. Complex Renovation");
+                Console.WriteLine("3. List all Renovations");
+                Console.WriteLine("0. Return");
                 int choice = CLI.CLIEnterNumberWithLimit(0, 3);
                 switch (choice)
                 {
@@ -32,7 +32,7 @@ namespace ClinicApp.Menus.Admin
                         RoomRenovationService.ListAllRenovations();
                         break;
                     default:
-                        CLI.CLIWriteLine("Invalid option, try again");
+                        Console.WriteLine("Invalid option, try again");
                         break;
                 }
             }
@@ -40,9 +40,9 @@ namespace ClinicApp.Menus.Admin
         public static void ComplexRoomRenovationMenu()
         {
 
-            CLI.CLIWriteLine("1. Split room");
-            CLI.CLIWriteLine("2. Join 2 rooms");
-            CLI.CLIWriteLine("0. Return");
+            Console.WriteLine("1. Split room");
+            Console.WriteLine("2. Join 2 rooms");
+            Console.WriteLine("0. Return");
             int answer = CLI.CLIEnterNumberWithLimit(0, 2);
             switch (answer)
             {
@@ -55,7 +55,7 @@ namespace ClinicApp.Menus.Admin
                     RoomRenovationService.CreateComplexJoinRenovation();
                     return;
                 default:
-                    CLI.CLIWriteLine("Invalid option, try again");
+                    Console.WriteLine("Invalid option, try again");
                     break;
             }
         }

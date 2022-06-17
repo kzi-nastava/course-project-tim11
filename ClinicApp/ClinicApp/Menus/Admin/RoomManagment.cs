@@ -11,12 +11,12 @@ namespace ClinicApp.Menus.Admin
         {
             while (true)
             {
-                CLI.CLIWriteLine("Manage Rooms");
-                CLI.CLIWriteLine("1. List all rooms");
-                CLI.CLIWriteLine("2. Add new room");
-                CLI.CLIWriteLine("3. Edit an existing room");
-                CLI.CLIWriteLine("4. Delete a room by ID");
-                CLI.CLIWriteLine("0 to return");
+                Console.WriteLine("Manage Rooms");
+                Console.WriteLine("1. List all rooms");
+                Console.WriteLine("2. Add new room");
+                Console.WriteLine("3. Edit an existing room");
+                Console.WriteLine("4. Delete a room by ID");
+                Console.WriteLine("0 to return");
                 int choice = CLI.CLIEnterNumberWithLimit(0, 4);
                 switch (choice)
                 {
@@ -35,7 +35,7 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     default:
-                        CLI.CLIWriteLine("Invalid option, try again");
+                        Console.WriteLine("Invalid option, try again");
                         break;
                 }
             }

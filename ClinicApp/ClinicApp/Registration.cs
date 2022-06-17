@@ -11,13 +11,13 @@ namespace ClinicApp
         {
             string temp;
 
-            CLI.CLIWrite("Username: ");
-            temp = CLI.CLIEnterString();
+            Console.Write("Username: ");
+            temp = Console.ReadLine();
             while (UserRepository.Users.ContainsKey(temp))
             {
-                CLI.CLIWriteLine("This username is taken. Please, try again.");
-                CLI.CLIWrite("Username: ");
-                temp = CLI.CLIEnterString();
+                Console.WriteLine("This username is taken. Please, try again.");
+                Console.Write("Username: ");
+                temp = Console.ReadLine();
             }
 
             return temp;
@@ -27,16 +27,16 @@ namespace ClinicApp
         {
             string password, passwordCheck;
 
-            CLI.CLIWrite("Password: ");
+            Console.Write("Password: ");
             password = CLI.CLIEnterPassword();
-            CLI.CLIWrite("Repeat password: ");
+            Console.Write("Repeat password: ");
             passwordCheck = CLI.CLIEnterPassword();
             while (password != passwordCheck)
             {
-                CLI.CLIWriteLine("Passwords don't match. Please, try again.");
-                CLI.CLIWrite("Password: ");
+                Console.WriteLine("Passwords don't match. Please, try again.");
+                Console.Write("Password: ");
                 password = CLI.CLIEnterPassword();
-                CLI.CLIWrite("Repeat password: ");
+                Console.Write("Repeat password: ");
                 passwordCheck = CLI.CLIEnterPassword();
             }
 
@@ -47,8 +47,8 @@ namespace ClinicApp
         {
             string temp;
 
-            CLI.CLIWrite("Name: ");
-            temp = CLI.CLIEnterString() + "|";
+            Console.Write("Name: ");
+            temp = Console.ReadLine() + "|";
 
             return temp;
         }
@@ -57,8 +57,8 @@ namespace ClinicApp
         {
             string temp;
 
-            CLI.CLIWrite("Last name: ");
-            temp = CLI.CLIEnterString() + "|";
+            Console.Write("Last name: ");
+            temp = Console.ReadLine() + "|";
 
             return temp;
         }
@@ -67,7 +67,7 @@ namespace ClinicApp
         {
             string temp;
 
-            CLI.CLIWrite("Date of birth (e.g. 02/05/1984): ");
+            Console.Write("Date of birth (e.g. 02/05/1984): ");
             temp = CLI.CLIEnterDate().Date.ToString();
 
             return temp;
@@ -77,12 +77,12 @@ namespace ClinicApp
         {
             string temp;
 
-            CLI.CLIWrite("\nGender (m/f/n): ");
-            temp = CLI.CLIEnterString();
+            Console.Write("\nGender (m/f/n): ");
+            temp = Console.ReadLine();
             while (temp != "m" && temp != "f" && temp != "n")
             {
-                CLI.CLIWrite("You didn't enter a valid option. Please, try again (m/f/n): ");
-                temp = CLI.CLIEnterString();
+                Console.Write("You didn't enter a valid option. Please, try again (m/f/n): ");
+                temp = Console.ReadLine();
             }
 
             return temp;
@@ -108,11 +108,11 @@ namespace ClinicApp
             switch (role)
             {
                 case Roles.Nobody:
-                    CLI.CLIWriteLine("Chose your role.");
-                    CLI.CLIWriteLine("1: Admin");
-                    CLI.CLIWriteLine("2: Secretary");
-                    CLI.CLIWriteLine("3: Doctor");
-                    CLI.CLIWriteLine("4: Patient");
+                    Console.WriteLine("Chose your role.");
+                    Console.WriteLine("1: Admin");
+                    Console.WriteLine("2: Secretary");
+                    Console.WriteLine("3: Doctor");
+                    Console.WriteLine("4: Patient");
                     option = CLI.CLIEnterNumberWithLimit(1, 4);
                     switch (option)
                     {

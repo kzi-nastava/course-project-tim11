@@ -57,36 +57,36 @@ namespace ClinicApp.AdminFunctions
         }
         public static void SearchEquipment()
         {
-            CLI.CLIWriteLine("Search");
+            Console.WriteLine("Search");
             EquipmentSearch STerms = new EquipmentSearch();
             List<Equipment> Results;
-            CLI.CLIWrite("Enter search terms: ");
-            STerms.SearchTerm = CLI.CLIEnterString();
+            Console.Write("Enter search terms: ");
+            STerms.SearchTerm = Console.ReadLine();
             Results = Search(STerms.SearchTerm);
-            CLI.CLIWriteLine("\nFilter by Equipment Type? (y/n): ");
-            string answer = CLI.CLIEnterString();
+            Console.WriteLine("\nFilter by Equipment Type? (y/n): ");
+            string answer = Console.ReadLine();
             if (answer.ToLower() == "y")
             {
                 STerms.FilterByEqTypeBool = true;
-                CLI.CLIWriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
+                Console.WriteLine("Choose!\n1. Operations\n2. RoomFurniture\n3. Hallway\n4. Examinations");
                 STerms.FilterByEq = EquipmentService.ChooseEquipmentType();
             }
-            CLI.CLIWriteLine("Filter by room type? (y/n): ");
-            answer = CLI.CLIEnterString();
+            Console.WriteLine("Filter by room type? (y/n): ");
+            answer = Console.ReadLine();
             if (answer.ToLower() == "y")
             {
                 STerms.FilterByRoomTypeBool = true;
-                CLI.CLIWriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
+                Console.WriteLine("Choose!\n1. Operations\n2. Waiting\n3. STORAGE\n4. Examinations");
                 STerms.FilterByRoom = RoomService.ChooseRoomType();
             }
 
 
-            CLI.CLIWriteLine("Filter by amount?(y/n): ");
-            answer = CLI.CLIEnterString();
+            Console.WriteLine("Filter by amount?(y/n): ");
+            answer = Console.ReadLine();
             if (answer.ToLower() == "y")
             {
                 STerms.FilterByAmountBool = true;
-                CLI.CLIWriteLine("Choose!\n1. 0\n2. 1-10\n3. 10+");
+                Console.WriteLine("Choose!\n1. 0\n2. 1-10\n3. 10+");
                 int amount = CLI.CLIEnterNumberWithLimit(1, 3);
                 switch (amount)
                 {
@@ -124,10 +124,10 @@ namespace ClinicApp.AdminFunctions
                         break;
                 }
             }
-            CLI.CLIWriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
+            Console.WriteLine("ID | NAME | AMOUNT | ROOM NAME | ROOM TYPE | EQUIPMENT TYPE | DYNAMIC");
             foreach (Equipment eq in Results)
             {
-                CLI.CLIWriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type + " " + eq.Dynamic);
+                Console.WriteLine(eq.Id + " " + eq.Name + " " + eq.Amount + " " + RoomRepository.Get(eq.RoomId).Name + " " + RoomRepository.Get(eq.RoomId).Type + " " + eq.Type + " " + eq.Dynamic);
             }
 
         }

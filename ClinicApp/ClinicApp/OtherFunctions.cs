@@ -6,6 +6,7 @@ using System.IO;
 using ClinicApp.AdminFunctions;
 using ClinicApp.Clinic;
 using ClinicApp.HelperClasses;
+using ClinicApp.Dialogs;
 
 namespace ClinicApp
 {
@@ -13,8 +14,8 @@ namespace ClinicApp
     {
         public static bool AskQuit()
         {
-            CLI.CLIWriteLine("Do you wish to quit? (y/n)");
-            string choice = CLI.CLIEnterString();
+            Console.WriteLine("Do you wish to quit? (y/n)");
+            string choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
                 return true;
@@ -24,11 +25,11 @@ namespace ClinicApp
 
         public static Fields AskField() {
 
-            CLI.CLIWriteLine("\nChose specialization by number:\n");
+            Console.WriteLine("\nChose specialization by number:\n");
             int i = 1;
             foreach (string field in Enum.GetNames(typeof(Fields)))
             {
-                CLI.CLIWriteLine($"{i}. {field}");
+                Console.WriteLine($"{i}. {field}");
                 i++;
             }
             int choice = CLI.CLIEnterNumberWithLimit(1, Enum.GetNames(typeof(Fields)).Length);
@@ -45,8 +46,8 @@ namespace ClinicApp
 
             while (option != 0)
             {
-                CLI.CLIWriteLine(text);
-                string userName = CLI.CLIEnterString();
+                Console.WriteLine(text);
+                string userName = Console.ReadLine();
                 if (UserRepository.Users.TryGetValue(userName, out user))
                 {
                     if (user.Role == role || role == Roles.Nobody)
@@ -55,17 +56,17 @@ namespace ClinicApp
                     }
                     else
                     {
-                        CLI.CLIWriteLine("\nThis account doesn't belong to a " + role.ToString().ToLower() + ". Want to try again?");
-                        CLI.CLIWriteLine("1: Yes");
-                        CLI.CLIWriteLine("0: No");
+                        Console.WriteLine("\nThis account doesn't belong to a " + role.ToString().ToLower() + ". Want to try again?");
+                        Console.WriteLine("1: Yes");
+                        Console.WriteLine("0: No");
                         option = CLI.CLIEnterNumberWithLimit(0, 1);
                     }
                 }
                 else
                 {
-                    CLI.CLIWriteLine("\nThere is no account with this username. Want to try again?");
-                    CLI.CLIWriteLine("1: Yes");
-                    CLI.CLIWriteLine("0: No");
+                    Console.WriteLine("\nThere is no account with this username. Want to try again?");
+                    Console.WriteLine("1: Yes");
+                    Console.WriteLine("0: No");
                     option = CLI.CLIEnterNumberWithLimit(0, 1);
                 }
             }
@@ -79,31 +80,31 @@ namespace ClinicApp
             User user = new Nobody(), tempUser;
             while (option != 0)
             {
-                CLI.CLIWrite("Username: ");
-                string userName = CLI.CLIEnterString();
-                CLI.CLIWrite("Password: ");
+                Console.Write("Username: ");
+                string userName = Console.ReadLine();
+                Console.Write("Password: ");
                 string password = CLI.CLIEnterPassword();
                 if (UserRepository.Users.TryGetValue(userName, out tempUser))
                 {
                     if (tempUser.Password == password)
                     {
-                        CLI.CLIWriteLine($"\nWelcome {tempUser.UserName}");
+                        Console.WriteLine($"\nWelcome {tempUser.UserName}");
                         user = tempUser;
                         option = 0;
                     }
                     else
                     {
-                        CLI.CLIWriteLine("\nIncorrect password. Want to try again?");
-                        CLI.CLIWriteLine("1: Yes");
-                        CLI.CLIWriteLine("0: No");
+                        Console.WriteLine("\nIncorrect password. Want to try again?");
+                        Console.WriteLine("1: Yes");
+                        Console.WriteLine("0: No");
                         option = CLI.CLIEnterNumberWithLimit(0, 1);
                     }
                 }
                 else
                 {
-                    CLI.CLIWriteLine("\nUser does not exist. Want to try again?");
-                    CLI.CLIWriteLine("1: Yes");
-                    CLI.CLIWriteLine("0: No");
+                    Console.WriteLine("\nUser does not exist. Want to try again?");
+                    Console.WriteLine("1: Yes");
+                    Console.WriteLine("0: No");
                     option = CLI.CLIEnterNumberWithLimit(0, 1);
                 }
             }
@@ -138,18 +139,18 @@ namespace ClinicApp
 
         public static void PrintUsers(bool withRole = false, Roles role = Roles.Nobody)
         {
-            CLI.CLIWriteLine(LineInTable(withRole));
-            CLI.CLIWriteLine(TableHeader(withRole));
-            CLI.CLIWriteLine(LineInTable(withRole));
+            Console.WriteLine(LineInTable(withRole));
+            Console.WriteLine(TableHeader(withRole));
+            Console.WriteLine(LineInTable(withRole));
             foreach(KeyValuePair<string, User> pair in UserRepository.Users)
             {
                 if(role == Roles.Nobody || pair.Value.Role == role)
                 {
-                    CLI.CLIWriteLine(pair.Value.TextInTable(withRole));
-                    CLI.CLIWriteLine(LineInTable(withRole));
+                    Console.WriteLine(pair.Value.TextInTable(withRole));
+                    Console.WriteLine(LineInTable(withRole));
                 }
             }
-            CLI.CLIWriteLine();
+            Console.WriteLine();
         }
 
         public static DateTime GetGoodDate()
@@ -160,7 +161,7 @@ namespace ClinicApp
                 date = CLI.CLIEnterDate();
                 if (date.Date < DateTime.Now.Date)
                 {
-                    CLI.CLIWriteLine("You can't enter a date that's in the past");
+                    Console.WriteLine("You can't enter a date that's in the past");
                 }
             } while (date.Date < DateTime.Now.Date);
             return date;
@@ -200,35 +201,111 @@ namespace ClinicApp
 
         public static Patient AskUsernamePatient()
         {
-            CLI.CLIWriteLine("Enter the username of the patient. Do you want to view the list of all patients first (y/n)");
-            CLI.CLIWrite(">> ");
-            string choice = CLI.CLIEnterString();
+            Console.WriteLine("Enter the username of the patient. Do you want to view the list of all patients first (y/n)");
+            Console.Write(">> ");
+            string choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
                 PatientService.ViewAllPatients();
             }
-            CLI.CLIWrite("\nEnter the username: ");
-            string userName = CLI.CLIEnterString();
+            Console.Write("\nEnter the username: ");
+            string userName = Console.ReadLine();
             Patient patient = null;
             if (!UserRepository.Patients.TryGetValue(userName, out patient))
             {
-                CLI.CLIWriteLine("Patient with that username does not exist.");
+                Console.WriteLine("Patient with that username does not exist.");
             }
             return patient;
         }
 
         public static Doctor AskUsernameDoctor()
         {
-            DoctorService.ViewAllDoctors();
-            CLI.CLIWriteLine("\n Enter doctor username: ");
-            CLI.CLIWrite(">> ");
-            string userName = CLI.CLIEnterString();
+            DoctorDialog.ViewAllDoctors();
+            Console.WriteLine("\n Enter doctor username: ");
+            Console.Write(">> ");
+            string userName = Console.ReadLine();
             Doctor doctor = null;
             if (!UserRepository.Doctors.TryGetValue(userName, out doctor))
             {
-                CLI.CLIWriteLine("Doctor with that username does not exist.");
+                Console.WriteLine("Doctor with that username does not exist.");
             }
             return doctor;
         }
+
+        public static int EnterNumber()
+        {
+            int x = -1;
+            string s;
+            while (true)
+            {
+                s = Console.ReadLine();
+                try
+                {
+                    x = Int32.Parse(s);
+                }
+                catch
+                {
+                    Console.WriteLine("You didn't enter a number. Try again.");
+                }
+                return x;
+            }
+        }
+
+        public static int EnterNumberWithLimit(int lowerLimit, int upperLimit)
+        {
+            if (upperLimit < lowerLimit)
+                upperLimit = lowerLimit;
+            int option = EnterNumber();
+            while (option < lowerLimit || option > upperLimit)
+            {
+                Console.WriteLine("You didn't enter a valid option. Try again.");
+                option = EnterNumber();
+            }
+
+            return option;
+        }
+
+        public static DateTime EnterTime()
+        {
+            DateTime? time = null;
+            string format = "HH:mm";
+            while (time == null)
+            {
+
+                CultureInfo provider = CultureInfo.InvariantCulture;
+                try
+                {
+                    time = DateTime.ParseExact(Console.ReadLine(), format, provider);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("\nIncorrect time format, try again");
+                }
+            }
+            return (DateTime)time;
+        }
+
+        public static bool EnterBool()
+        {
+            string s;
+            while (true)
+            {
+                s = Console.ReadLine();
+                if (s.ToUpper() == "Y")
+                {
+                    return true;
+                }
+                else if (s.ToUpper() == "N")
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("You didn't enter y/n. Try again.");
+
+                }
+            }
+        }
     }
 }
+

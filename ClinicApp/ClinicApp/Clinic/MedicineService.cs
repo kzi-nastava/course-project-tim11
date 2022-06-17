@@ -8,13 +8,13 @@ namespace ClinicApp.Clinic
     {
         public static Medicine GetMedicine()
         {
-            CLI.CLIWrite("Insert the name of Medicine: ");
-            string medicineName = CLI.CLIEnterString();
-            CLI.CLIWriteLine();
+            Console.Write("Insert the name of Medicine: ");
+            string medicineName = Console.ReadLine();
+            Console.WriteLine();
             Medicine medicine;
             if (!MedicineRepo.Medicine.TryGetValue(medicineName, out medicine))
             {
-                CLI.CLIWriteLine("Medicine with that name does not exist.");
+                Console.WriteLine("Medicine with that name does not exist.");
                 return null;
             }
             return medicine;
@@ -30,7 +30,7 @@ namespace ClinicApp.Clinic
                 {
                     if (alergen.ToUpper() == alergy.ToUpper())
                     {
-                        CLI.CLIWriteLine($"Error: Patient alergic to medicine. Alergen: {alergen}");
+                        Console.WriteLine($"Error: Patient alergic to medicine. Alergen: {alergen}");
                         return true;
                     }
                 }

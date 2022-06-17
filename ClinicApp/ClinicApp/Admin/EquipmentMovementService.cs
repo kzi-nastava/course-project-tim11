@@ -8,15 +8,15 @@ namespace ClinicApp.AdminFunctions
     {
         public static void MoveEquipment() //menu for creating a new equipment movement 
         {
-            CLI.CLIWriteLine("Enter ID of equipment to change:");
+            Console.WriteLine("Enter ID of equipment to change:");
             int id = EquipmentService.GetValidEquipmentId();
             Equipment eq = EquipmentRepository.Get(id);
-            CLI.CLIWriteLine("Enter amount to move");
+            Console.WriteLine("Enter amount to move");
             int amount = CLI.CLIEnterNumberWithLimit(1, eq.Amount);
-            CLI.CLIWriteLine("Enter the Id of the room where the equipment is going to");
+            Console.WriteLine("Enter the Id of the room where the equipment is going to");
             id = RoomService.GetValidRoomId();
             Room room = RoomRepository.Get(id);
-            CLI.CLIWriteLine("Enter date on which the equipment is being moved");
+            Console.WriteLine("Enter date on which the equipment is being moved");
             DateTime date = CLI.CLIEnterDate();
             EquipmentMovement movement = new EquipmentMovement { EquipmentId = eq.Id, Amount = amount, NewRoomId = room.Id, MovementDate = date, Done = false };
             EquipmentMovementRepository.Add(movement);

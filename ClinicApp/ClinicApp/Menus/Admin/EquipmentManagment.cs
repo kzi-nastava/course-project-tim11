@@ -12,11 +12,11 @@ namespace ClinicApp.Menus.Admin
             while (true)
             {
                 EquipmentMovementService.CheckForMovements();
-                CLI.CLIWriteLine("Manage Equipment");
-                CLI.CLIWriteLine("1. List all");
-                CLI.CLIWriteLine("2. Search");
-                CLI.CLIWriteLine("3. Move equipment");
-                CLI.CLIWriteLine("0 to return");
+                Console.WriteLine("Manage Equipment");
+                Console.WriteLine("1. List all");
+                Console.WriteLine("2. Search");
+                Console.WriteLine("3. Move equipment");
+                Console.WriteLine("0 to return");
                 int choice = CLI.CLIEnterNumberWithLimit(0, 3);
                 switch (choice)
                 {
@@ -32,7 +32,7 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     default:
-                        CLI.CLIWriteLine("Invalid option, try again");
+                        Console.WriteLine("Invalid option, try again");
                         break;
                 }
             }
@@ -41,9 +41,9 @@ namespace ClinicApp.Menus.Admin
         {
             while (true)
             {
-                CLI.CLIWriteLine("1. Move Equipment");
-                CLI.CLIWriteLine("2. Add new Equipment to Storage");
-                CLI.CLIWriteLine("0 to return");
+                Console.WriteLine("1. Move Equipment");
+                Console.WriteLine("2. Add new Equipment to Storage");
+                Console.WriteLine("0 to return");
                 int answer = CLI.CLIEnterNumberWithLimit(0, 2);
                 switch (answer)
                 {
@@ -56,7 +56,7 @@ namespace ClinicApp.Menus.Admin
                         EquipmentService.AddEqToStorage();
                         break;
                     default:
-                        CLI.CLIWriteLine("Invalid option, try again");
+                        Console.WriteLine("Invalid option, try again");
                         break;
                 }
             }

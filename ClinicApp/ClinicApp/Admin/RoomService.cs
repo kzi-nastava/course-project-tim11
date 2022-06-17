@@ -13,7 +13,7 @@ namespace ClinicApp.AdminFunctions
             room = RoomRepository.Get(id);
             while (room is null)
             {
-                CLI.CLIWriteLine("Invalid ID");
+                Console.WriteLine("Invalid ID");
                 id = CLI.CLIEnterNumber();
                 room = RoomRepository.Get(id);
             }
@@ -42,17 +42,17 @@ namespace ClinicApp.AdminFunctions
         }
         public static void ListAllRooms()
         {
-            CLI.CLIWriteLine("ID | NAME | TYPE");
+            Console.WriteLine("ID | NAME | TYPE");
             foreach (Room room in RoomRepository.Rooms)
             {
-                CLI.CLIWriteLine(room.Id + " " + room.Name + " " + room.Type);
+                Console.WriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
         }
         public static void AddNewRoom()
         {
-            CLI.CLIWriteLine("Enter name: ");
+            Console.WriteLine("Enter name: ");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");
-            CLI.CLIWriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+            Console.WriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
             RoomType roomType = ChooseRoomType();
             Room room = new Room { Name = name, Type = roomType };
             RoomRepository.Add(room);
@@ -66,22 +66,22 @@ namespace ClinicApp.AdminFunctions
             room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
-                CLI.CLIWriteLine("You cannot edit Storage!");
+                Console.WriteLine("You cannot edit Storage!");
                 return;
             }
-            CLI.CLIWriteLine("Do you wish to edit this rooms' name? Y/N");
-            string answer = CLI.CLIEnterString();
+            Console.WriteLine("Do you wish to edit this rooms' name? Y/N");
+            string answer = Console.ReadLine();
             if (answer.ToLower() == "y")
             {
-                CLI.CLIWriteLine("Enter new name: ");
+                Console.WriteLine("Enter new name: ");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");
             }
             else name = room.Name;
-            CLI.CLIWriteLine("Do you wish to edit this rooms' type? Y/N");
-            answer = CLI.CLIEnterString();
+            Console.WriteLine("Do you wish to edit this rooms' type? Y/N");
+            answer = Console.ReadLine();
             if (answer.ToLower() == "y")
             {
-                CLI.CLIWriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+                Console.WriteLine("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
                 roomType = ChooseRoomType();
             }
             else roomType = room.Type;
@@ -89,11 +89,11 @@ namespace ClinicApp.AdminFunctions
         }
         public static void DeleteRoom()
         {
-            CLI.CLIWriteLine("Enter ID of the room you want to Delete");
+            Console.WriteLine("Enter ID of the room you want to Delete");
             int id = GetValidRoomId();
             if (id == 0)
             {
-                CLI.CLIWriteLine("You cannot delete Storage!");
+                Console.WriteLine("You cannot delete Storage!");
             }
             else RoomRepository.Delete(id);
         }

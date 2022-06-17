@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ClinicApp.Dialogs;
 using ClinicApp.Users;
 
 namespace ClinicApp.Clinic
@@ -51,7 +52,7 @@ namespace ClinicApp.Clinic
             Console.WriteLine();
             if (choice.ToUpper() == "Y")
             {
-                DoctorService.ViewAllDoctors();
+                DoctorDialog.ViewAllDoctors();
             }
             Console.WriteLine("\nEnter the username:");
             string userName = Console.ReadLine();

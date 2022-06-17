@@ -16,15 +16,15 @@ namespace ClinicApp.AdminFunctions
                 {
                     case RenovationType.Simple:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type);
-                        CLI.CLIWriteLine(newLine);
+                        Console.WriteLine(newLine);
                         break;
                     case RenovationType.ComplexJoin:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| ID of joined room: " + Convert.ToString(renovation.JoinedRoomId);
-                        CLI.CLIWriteLine(newLine);
+                        Console.WriteLine(newLine);
                         break;
                     case RenovationType.ComplexSplit:
                         newLine = Convert.ToString(renovation.Id) + "|" + Convert.ToString(renovation.RoomId) + "|" + renovation.Duration.StartDate.ToString("d") + "|" + renovation.Duration.EndDate.ToString("d") + "|" + Convert.ToString(renovation.Done) + "|" + Convert.ToString(renovation.Type) + "| new room will be: " + renovation.NewRoom.Name + "|" + Convert.ToString(renovation.NewRoom.Type);
-                        CLI.CLIWriteLine(newLine);
+                        Console.WriteLine(newLine);
                         break;
                 }
             }
@@ -33,7 +33,7 @@ namespace ClinicApp.AdminFunctions
         {
             while (true)
             {
-                CLI.CLIWriteLine("Enter the start date of the renovation");
+                Console.WriteLine("Enter the start date of the renovation");
                 DateTime start = CLI.CLIEnterDate();
                 Console.WriteLine("Enter the end date of the renovation");
                 DateTime end = CLI.CLIEnterDate();
@@ -43,25 +43,25 @@ namespace ClinicApp.AdminFunctions
                 {
                     return duration;
                 }
-                CLI.CLIWriteLine("You have entered invalid dates, there is an examination during the date range!");
+                Console.WriteLine("You have entered invalid dates, there is an examination during the date range!");
             }
         }
         public static void CreateComplexSplitRenovation()
         {
             //get renovated room id
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
+            Console.WriteLine("Enter ID of the room you want to Renovate");
             int id = RoomService.GetValidRoomId();
             Room room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
+                Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
             DateRange duration = GetUninterruptedDateRange(room.Id);
             //create new room
-            CLI.CLIWrite("Name of new room: ");
+            Console.Write("Name of new room: ");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");
-            CLI.CLIWrite("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
+            Console.Write("\nChoose Type (1 for Operations, 2 for Examinations, 3 for Waiting): ");
             RoomType roomType = RoomService.ChooseRoomType();
             Room newRoom = new Room { Name = name, Type = roomType };
             RoomRenovation renovation = new RoomRenovation
@@ -77,33 +77,33 @@ namespace ClinicApp.AdminFunctions
         public static void CreateComplexJoinRenovation()
         {
             //get renovated room id
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
+            Console.WriteLine("Enter ID of the room you want to Renovate");
             int id = RoomService.GetValidRoomId();
             Room room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
+                Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
             DateRange duration = GetUninterruptedDateRange(room.Id);
 
             //get the joined room
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
+            Console.WriteLine("Enter ID of the room you want to Renovate");
             int otherId = RoomService.GetValidRoomId();
             Room otherRoom = RoomRepository.Get(otherId);
             if (room.Id == 0)
             {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
+                Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
             if (otherRoom.Id == 0)
             {
-                CLI.CLIWriteLine("You cannot delete Storage!");
+                Console.WriteLine("You cannot delete Storage!");
                 return;
             }
             if (OtherFunctions.CheckForExaminations(duration, otherRoom.Id))
             {
-                CLI.CLIWriteLine("This room has an appointment at the given time, discarding");
+                Console.WriteLine("This room has an appointment at the given time, discarding");
                 return;
             }
             RoomRenovation renovation = new RoomRenovation
@@ -119,12 +119,12 @@ namespace ClinicApp.AdminFunctions
         public static void SimpleRoomRenovation()
         {
 
-            CLI.CLIWriteLine("Enter ID of the room you want to Renovate");
+            Console.WriteLine("Enter ID of the room you want to Renovate");
             int id = RoomService.GetValidRoomId();
             Room room = RoomRepository.Get(id);
             if (room.Id == 0)
             {
-                CLI.CLIWriteLine("You cannot renovate Storage!");
+                Console.WriteLine("You cannot renovate Storage!");
                 return;
             }
             DateRange duration = GetUninterruptedDateRange(room.Id);

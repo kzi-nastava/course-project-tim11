@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ClinicApp.AdminFunctions;
 using ClinicApp.Clinic;
+using ClinicApp.Dialogs;
 using ClinicApp.Users;
 
 namespace ClinicApp
@@ -15,10 +16,10 @@ namespace ClinicApp
         //Nobody
         public static int NobodyMenuWrite(User nobody)
         {
-            CLI.CLIWriteLine("What would you like to do?");
-            CLI.CLIWriteLine("1: Log in");
-            CLI.CLIWriteLine("2: Register");
-            CLI.CLIWriteLine("0: Exit");
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("1: Log in");
+            Console.WriteLine("2: Register");
+            Console.WriteLine("0: Exit");
 
             return 2;
         }
@@ -32,14 +33,14 @@ namespace ClinicApp
         //Admin
         public static int AdminMenuWrite(User admin)
         {
-            CLI.CLIWriteLine("What would you like to do?");
-            CLI.CLIWriteLine("1: Log out");
-            CLI.CLIWriteLine("2: Display new messages (" + admin.MessageBox.NumberOfMessages + ")");
-            CLI.CLIWriteLine("3: Manage Clinic Rooms");
-            CLI.CLIWriteLine("4: Manage Clinic Equipment");
-            CLI.CLIWriteLine("5: Manage Room Renovations");
-            CLI.CLIWriteLine("6: Manage Medicines");
-            CLI.CLIWriteLine("0: Exit");
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("1: Log out");
+            Console.WriteLine("2: Display new messages (" + admin.MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage Clinic Rooms");
+            Console.WriteLine("4: Manage Clinic Equipment");
+            Console.WriteLine("5: Manage Room Renovations");
+            Console.WriteLine("6: Manage Medicines");
+            Console.WriteLine("0: Exit");
 
             return 6;
         }
@@ -69,17 +70,17 @@ namespace ClinicApp
         //Secretary
         public static int SecretaryMenuWrite(User secretary)
         {
-            CLI.CLIWriteLine("\nWhat would you like to do?");
-            CLI.CLIWriteLine("1: Log out");
-            CLI.CLIWriteLine("2: Display new messages (" + secretary.MessageBox.NumberOfMessages + ")");
-            CLI.CLIWriteLine("3: Manage patient accounts");
-            CLI.CLIWriteLine("4: Block or unbolck patient accounts");
-            CLI.CLIWriteLine("5: Manage examination requests");
-            CLI.CLIWriteLine("6: Create examinations based upon referrals");
-            CLI.CLIWriteLine("7: Create an emergency examination");
-            CLI.CLIWriteLine("8: Make an order of dynamic equipment");
-            CLI.CLIWriteLine("9: Redistribute dynamic equipment");
-            CLI.CLIWriteLine("0: Exit");
+            Console.WriteLine("\nWhat would you like to do?");
+            Console.WriteLine("1: Log out");
+            Console.WriteLine("2: Display new messages (" + secretary.MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage patient accounts");
+            Console.WriteLine("4: Block or unbolck patient accounts");
+            Console.WriteLine("5: Manage examination requests");
+            Console.WriteLine("6: Create examinations based upon referrals");
+            Console.WriteLine("7: Create an emergency examination");
+            Console.WriteLine("8: Make an order of dynamic equipment");
+            Console.WriteLine("9: Redistribute dynamic equipment");
+            Console.WriteLine("0: Exit");
 
             return 9;
         }
@@ -118,14 +119,14 @@ namespace ClinicApp
         //Doctor
         public static int DoctorMenuWrite(User doctor)
         {
-            CLI.CLIWriteLine("\nWhat would you like to do?");
-            CLI.CLIWriteLine("1: Log out");
-            CLI.CLIWriteLine("2: Display new messages (" + doctor.MessageBox.NumberOfMessages + ")");
-            CLI.CLIWriteLine("3: Manage examinations");
-            CLI.CLIWriteLine("4: View schedule");
-            CLI.CLIWriteLine("5: Manage medicine");
+            Console.WriteLine("\nWhat would you like to do?");
+            Console.WriteLine("1: Log out");
+            Console.WriteLine("2: Display new messages (" + doctor.MessageBox.NumberOfMessages + ")");
+            Console.WriteLine("3: Manage examinations");
+            Console.WriteLine("4: View schedule");
+            Console.WriteLine("5: Manage medicine");
             Console.WriteLine("6: Request free days");
-            CLI.CLIWriteLine("0: Exit");
+            Console.WriteLine("0: Exit");
 
             return 6;
         }
@@ -142,12 +143,13 @@ namespace ClinicApp
                     AppointmentsMenu(ref doctorTemp);
                     break;
                 case 4:
-                    DoctorService.ViewSchedule(ref doctorTemp);
+                    DoctorDialog.ViewSchedule(ref doctorTemp);
                     break;
                 case 5:
-                    MedicineRequestService.ReviewMedicineRequests();
+                    DoctorDialog.ReviewMedicineRequests();
                     break;
                 case 6:
+                    DoctorDialog.GatherInfoFreeDayRequest(ref doctorTemp);
                     break;
                 default:
                     break;
@@ -155,23 +157,23 @@ namespace ClinicApp
         }
         public static void AppointmentsMenu(ref Doctor doctor)
         {
-            CLI.CLIWriteLine("Chose how you wish to manage your appointments: ");
+            Console.WriteLine("Chose how you wish to manage your appointments: ");
             string options = "\n1. Create\n2. View\n3. Edit(by ID)\n4. Delete(by ID)\n";
             CLI.CLIWrite($"{options}Write the number of your choice\n>> ");
             int choice = CLI.CLIEnterNumberWithLimit(1, 4);
             switch (choice)
             {
                 case 1:
-                    AppointmentService.CreateAppointment(ref doctor);
+                    AppointmentDialog.CreateAppointment(ref doctor);
                     break;
                 case 2:
-                    AppointmentService.ViewAppointments(ref doctor);
+                    AppointmentDialog.ViewAppointments(ref doctor);
                     break;
                 case 3:
-                    AppointmentService.EditAppointment(ref doctor);
+                    AppointmentDialog.EditAppointment(ref doctor);
                     break;
                 case 4:
-                    AppointmentService.DeleteAppointment(ref doctor);
+                    AppointmentDialog.DeleteAppointment(ref doctor);
                     break;
             }
         }
@@ -233,14 +235,14 @@ namespace ClinicApp
 
             while (option != 0)
             {
-                CLI.CLIWriteLine("\nWhat would you like to do?");
-                CLI.CLIWriteLine("1: Create a patient account");
-                CLI.CLIWriteLine("2: View all patient accounts");
-                CLI.CLIWriteLine("3: Update a patient account");
-                CLI.CLIWriteLine("4: Delete a patient account");
-                CLI.CLIWriteLine("0: Back to menu");
+                Console.WriteLine("\nWhat would you like to do?");
+                Console.WriteLine("1: Create a patient account");
+                Console.WriteLine("2: View all patient accounts");
+                Console.WriteLine("3: Update a patient account");
+                Console.WriteLine("4: Delete a patient account");
+                Console.WriteLine("0: Back to menu");
                 option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
-                CLI.CLIWriteLine();
+                Console.WriteLine();
                 switch (option)
                 {
                     //Create

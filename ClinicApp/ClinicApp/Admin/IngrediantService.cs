@@ -8,22 +8,22 @@ namespace ClinicApp.AdminFunctions
     {
         public static void CreateIngrediant()
         {
-            CLI.CLIWriteLine("Enter the new ingrediant");
+            Console.WriteLine("Enter the new ingrediant");
             string ingrediant = CLI.CLIEnterStringWithoutDelimiter("|");
             if (IngrediantRepository.GetAll().Contains(ingrediant))
             {
-                CLI.CLIWriteLine("Ingrediant already in database");
+                Console.WriteLine("Ingrediant already in database");
                 return;
             }
             IngrediantRepository.Add(ingrediant);
         }
         public static void UpdateIngrediant()
         {
-            CLI.CLIWriteLine("Select the ingrediant to update, 0 to continue");
+            Console.WriteLine("Select the ingrediant to update, 0 to continue");
             List<string> offeredIngrediants = IngrediantRepository.GetAll();
             foreach (var ingrediant in offeredIngrediants)
             {
-                CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                Console.WriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
             }
             int indexOfSelected = CLI.CLIEnterNumberWithLimit(1, offeredIngrediants.Count);
             if (indexOfSelected == 0)
@@ -31,17 +31,17 @@ namespace ClinicApp.AdminFunctions
                 return;
             }
             string selected = offeredIngrediants[indexOfSelected - 1];
-            CLI.CLIWriteLine("Enter the new ingrediant");
+            Console.WriteLine("Enter the new ingrediant");
             string newIngr = CLI.CLIEnterStringWithoutDelimiter("|");
             IngrediantRepository.Update(selected, newIngr);
         }
         public static void DeleteIngrediant()
         {
-            CLI.CLIWriteLine("Select the ingrediant to delete, 0 to return");
+            Console.WriteLine("Select the ingrediant to delete, 0 to return");
             List<string> offeredIngrediants = IngrediantRepository.GetAll();
             foreach (var ingrediant in offeredIngrediants)
             {
-                CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                Console.WriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
             }
             int indexOfSelected = CLI.CLIEnterNumberWithLimit(1, offeredIngrediants.Count);
             if (indexOfSelected == 0)
@@ -55,12 +55,12 @@ namespace ClinicApp.AdminFunctions
         {
             List<string> chosenIngrediants = new List<string>();
             List<string> offeredIngrediants = new List<string>(IngrediantRepository.GetAll());
-            CLI.CLIWriteLine("Choose ingrediants, 0 to finish choosing");
+            Console.WriteLine("Choose ingrediants, 0 to finish choosing");
             while (true)
             {
                 foreach (var ingrediant in offeredIngrediants)
                 {
-                    CLI.CLIWriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
+                    Console.WriteLine(offeredIngrediants.IndexOf(ingrediant) + 1 + ". " + ingrediant);
                 }
                 var choice = CLI.CLIEnterNumberWithLimit(0, offeredIngrediants.Count);
                 if (choice == 0 && chosenIngrediants.Count > 0)

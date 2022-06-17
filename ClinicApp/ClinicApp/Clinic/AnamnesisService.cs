@@ -14,22 +14,22 @@ namespace ClinicApp.Clinic
             HealthRecord healthRecord = null;
             if (!HealthRecordRepo.HealthRecords.TryGetValue(patient.UserName, out healthRecord))
             {
-                CLI.CLIWriteLine("Health record with that username does not exist");
+                Console.WriteLine("Health record with that username does not exist");
                 return;
             }
             healthRecord = HealthRecordRepo.HealthRecords[patient.UserName];
 
-            CLI.CLIWriteLine("Patient health record.");
+            Console.WriteLine("Patient health record.");
             HealthRecordService.ShowHealthRecord(healthRecord);
-            CLI.CLIWriteLine("");
-            CLI.CLIWriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++");
-            CLI.CLIWriteLine("1.Sort amnesis list by date.");
-            CLI.CLIWriteLine("2.Sort amnesis list by doctor.");
-            CLI.CLIWriteLine("3.Find amnesis that contains specific word.");
-            CLI.CLIWriteLine("4.Return to home page.");
-            CLI.CLIWriteLine();
-            CLI.CLIWriteLine();
-            string user_input = CLI.CLIEnterString();
+            Console.WriteLine("");
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++");
+            Console.WriteLine("1.Sort amnesis list by date.");
+            Console.WriteLine("2.Sort amnesis list by doctor.");
+            Console.WriteLine("3.Find amnesis that contains specific word.");
+            Console.WriteLine("4.Return to home page.");
+            Console.WriteLine();
+            Console.WriteLine();
+            string user_input = Console.ReadLine();
             if (user_input == "1")
             {
                 //sort by date
@@ -42,7 +42,7 @@ namespace ClinicApp.Clinic
             }
             else if (user_input == "3")
             {
-                CLI.CLIWriteLine("Enter the specific word for amnesis search:");
+                Console.WriteLine("Enter the specific word for amnesis search:");
                 string specific_word = Console.ReadLine();
                 SearchAnamnesis(HealthRecordRepo.HealthRecords[patient.UserName],specific_word);
             }
@@ -52,7 +52,7 @@ namespace ClinicApp.Clinic
             }
             else
             {
-                CLI.CLIWriteLine("Invalid input.");
+                Console.WriteLine("Invalid input.");
                 return;
             }
         }
@@ -63,7 +63,7 @@ namespace ClinicApp.Clinic
             {
                 return a1.Doctor.UserName.CompareTo(a2.Doctor.UserName);
             });
-            CLI.CLIWriteLine("Sorted anamnesis list by doctors username.");
+            Console.WriteLine("Sorted anamnesis list by doctors username.");
             foreach (Anamnesis temp in healthRecord.Anamneses)
             {
                 temp.ShowAnamnesis();
@@ -76,7 +76,7 @@ namespace ClinicApp.Clinic
             {
                 return a1.Date.CompareTo(a2.Date);
             });
-            CLI.CLIWriteLine("Sorted anamnesis list by date.");
+            Console.WriteLine("Sorted anamnesis list by date.");
             foreach (Anamnesis temp in healthRecord.Anamneses)
             {
                 temp.ShowAnamnesis();
@@ -96,17 +96,17 @@ namespace ClinicApp.Clinic
             }
             if (found == false)
             {
-                CLI.CLIWriteLine("There is no amnesis with specified keyword.");
+                Console.WriteLine("There is no amnesis with specified keyword.");
             }
         }
 
         public static void WriteAnamnesis(ref HealthRecord healthRecord, ref Doctor doctor)
         {
-            CLI.CLIWriteLine("\nWrite you Anamnesis: ");
-            string anamnesisText = CLI.CLIEnterString();
+            Console.WriteLine("\nWrite you Anamnesis: ");
+            string anamnesisText = Console.ReadLine();
             Anamnesis anamnesis = new Anamnesis(anamnesisText, doctor);
             healthRecord.Anamneses.Add(anamnesis);
-            CLI.CLIWriteLine("Anamnesis added");
+            Console.WriteLine("Anamnesis added");
         }
 
 

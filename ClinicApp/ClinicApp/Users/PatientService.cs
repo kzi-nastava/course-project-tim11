@@ -32,14 +32,14 @@ namespace ClinicApp.Users
             while (option != 0)
             {
                 patient.Print();
-                CLI.CLIWriteLine("\nWhat would you like to change?");
-                CLI.CLIWriteLine("1: Username");
-                CLI.CLIWriteLine("2: Password");
-                CLI.CLIWriteLine("3: Name");
-                CLI.CLIWriteLine("4: Last name");
-                CLI.CLIWriteLine("5: Gender");
-                CLI.CLIWriteLine("6: Date of birth");
-                CLI.CLIWriteLine("0: Back to menu");
+                Console.WriteLine("\nWhat would you like to change?");
+                Console.WriteLine("1: Username");
+                Console.WriteLine("2: Password");
+                Console.WriteLine("3: Name");
+                Console.WriteLine("4: Last name");
+                Console.WriteLine("5: Gender");
+                Console.WriteLine("6: Date of birth");
+                Console.WriteLine("0: Back to menu");
                 option = CLI.CLIEnterNumberWithLimit(0, 6);
 
                 switch (option)
@@ -87,15 +87,15 @@ namespace ClinicApp.Users
 
         public static void VievAllPatientsWithBlockedStatus()
         {
-            CLI.CLIWriteLine(OtherFunctions.LineInTable() + "-----------------+");
-            CLI.CLIWriteLine(OtherFunctions.TableHeader() + " Blocked by      |");
-            CLI.CLIWriteLine(OtherFunctions.LineInTable() + "-----------------+");
+            Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
+            Console.WriteLine(OtherFunctions.TableHeader() + " Blocked by      |");
+            Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
             foreach (KeyValuePair<string, Patient> pair in UserRepository.Patients)
             {
-                CLI.CLIWriteLine(pair.Value.TextInTable() + " " + pair.Value.Blocked.ToString() + OtherFunctions.Space(15, pair.Value.Blocked.ToString()) + " |");
-                CLI.CLIWriteLine(OtherFunctions.LineInTable() + "-----------------+");
+                Console.WriteLine(pair.Value.TextInTable() + " " + pair.Value.Blocked.ToString() + OtherFunctions.Space(15, pair.Value.Blocked.ToString()) + " |");
+                Console.WriteLine(OtherFunctions.LineInTable() + "-----------------+");
             }
-            CLI.CLIWriteLine();
+            Console.WriteLine();
         }
 
         public static void ViewPatient(Patient patient)
@@ -149,13 +149,13 @@ namespace ClinicApp.Users
             Patient patient;
             while (option != 0)
             {
-                CLI.CLIWriteLine("\nWhat would you like to do?");
-                CLI.CLIWriteLine("1: List patient accounts");
-                CLI.CLIWriteLine("2: Block patient accounts");
-                CLI.CLIWriteLine("3: Unblock patient accounts");
-                CLI.CLIWriteLine("0: Back to menue");
+                Console.WriteLine("\nWhat would you like to do?");
+                Console.WriteLine("1: List patient accounts");
+                Console.WriteLine("2: Block patient accounts");
+                Console.WriteLine("3: Unblock patient accounts");
+                Console.WriteLine("0: Back to menue");
                 option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
-                CLI.CLIWriteLine();
+                Console.WriteLine();
                 switch (option)
                 {
                     //List all
@@ -169,7 +169,7 @@ namespace ClinicApp.Users
                             if (patient.Blocked == Blocked.Unblocked)
                                 patient.Blocked = Blocked.Secretary;
                             else
-                                CLI.CLIWriteLine("This patient's account is already blocked.");
+                                Console.WriteLine("This patient's account is already blocked.");
                         break;
                     //Unblock
                     case 3:
@@ -178,7 +178,7 @@ namespace ClinicApp.Users
                             if (patient.Blocked != Blocked.Unblocked)
                                 patient.Blocked = Blocked.Unblocked;
                             else
-                                CLI.CLIWriteLine("This patient's account is already unblocked.");
+                                Console.WriteLine("This patient's account is already unblocked.");
                         break;
                 }
             }
@@ -190,15 +190,15 @@ namespace ClinicApp.Users
             int id, option;
             Clinic.Appointment appointment;
 
-            CLI.CLIWriteLine();
+            Console.WriteLine();
             using (StreamReader reader = new StreamReader(SystemFunctions.PatientRequestsFilePath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    CLI.CLIWriteLine(line);
-                    CLI.CLIWriteLine("1: Approve");
-                    CLI.CLIWriteLine("2: Deny");
+                    Console.WriteLine(line);
+                    Console.WriteLine("1: Approve");
+                    Console.WriteLine("2: Deny");
                     option = CLI.CLIEnterNumberWithLimit(1, 2);
                     if (option == 1)
                     {
@@ -236,7 +236,7 @@ namespace ClinicApp.Users
                     }
                 }
             }
-            CLI.CLIWriteLine();
+            Console.WriteLine();
         }
     }
 }

@@ -9,10 +9,10 @@ namespace ClinicApp.Menus.Admin
     {
         public static void Menu()
         {
-            CLI.CLIWriteLine("1. Create medicine");
-            CLI.CLIWriteLine("2. CRUD ingrediants");
-            CLI.CLIWriteLine("3. Reviewed medicine requests");
-            CLI.CLIWriteLine("0. Return");
+            Console.WriteLine("1. Create medicine");
+            Console.WriteLine("2. CRUD ingrediants");
+            Console.WriteLine("3. Reviewed medicine requests");
+            Console.WriteLine("0. Return");
             int answer = CLI.CLIEnterNumber();
             while (true)
             {
@@ -37,11 +37,11 @@ namespace ClinicApp.Menus.Admin
         }
         public static void CRUDIngrediants()
         {
-            CLI.CLIWriteLine("Ingrediants Menu");
-            CLI.CLIWriteLine("1. Add new Ingrediant");
-            CLI.CLIWriteLine("2. Update Ingrediant");
-            CLI.CLIWriteLine("3. Delete Ingrediant");
-            CLI.CLIWriteLine("0. to return");
+            Console.WriteLine("Ingrediants Menu");
+            Console.WriteLine("1. Add new Ingrediant");
+            Console.WriteLine("2. Update Ingrediant");
+            Console.WriteLine("3. Delete Ingrediant");
+            Console.WriteLine("0. to return");
             int answer = CLI.CLIEnterNumberWithLimit(0, 3);
             switch (answer)
             {
