@@ -186,12 +186,13 @@ namespace ClinicApp
             Console.WriteLine("7: Appointment suggestion");
             Console.WriteLine("8: View health record history");
             Console.WriteLine("9: Search doctors");
+            Console.WriteLine("10: Do a survey");
             Console.WriteLine("0: Exit");
 
-            return 9;
+            return 10;
         }
 
-        /*public static void PatientMenuDo(User patient, int option)
+        public static void PatientMenuDo(User patient, int option)
         {
             switch (option)
             {
@@ -199,25 +200,31 @@ namespace ClinicApp
                     patient.MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    CreateExamination();
+                    ExaminationService.CreateExamination();
                     break;
                 case 4:
-                    EditExamination();
+                    ExaminationService.EditExamination();
                     break;
                 case 5:
-                    DeleteExamination();
+                    ExaminationService.DeleteExamination();
                     break;
                 case 6:
                     ExaminationService.ViewExaminations((Patient)patient);
                     break;
                 case 7:
-                    SuggestAppointment();
+                    ExaminationService.SuggestAppointment();
                     break;
                 case 8:
-                    ViewAnamnesis();
+                    AnamnesisService.ViewAnamnesis();
+                    break;
+                case 9:
+                    SearchDoctorService.SearchUI();
+                    break;
+                case 10:
+                    ClinicSurveyService.DoClinicSurvey();
                     break;
             }
-        }*/
+        }
 
         //======================================================================================================
         //Other Menus

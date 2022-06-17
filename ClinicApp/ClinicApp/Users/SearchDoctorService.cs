@@ -10,7 +10,7 @@ namespace ClinicApp.Users
         {
         }
 
-        public void SearchUI()
+        public static void SearchUI()
         {
             SearchDoctors search = new SearchDoctors();
             CLI.CLIWriteLine("Do you want to search doctors by their first name? y/n");
@@ -40,7 +40,7 @@ namespace ClinicApp.Users
             //TODO sort i ili ispis
         }
 
-        public List<Doctor> Search(SearchDoctors search)
+        public static List<Doctor> Search(SearchDoctors search)
         {
             List<Doctor> results = UserRepository.Doctors.Values.ToList();
             if (search.FilterByName == true)
@@ -59,7 +59,7 @@ namespace ClinicApp.Users
             
         }
 
-        public List<Doctor> FilterByName(List<Doctor> doctors, string name)
+        public static List<Doctor> FilterByName(List<Doctor> doctors, string name)
         {
             var results = new List<Doctor>();
             foreach(Doctor doctor in doctors)
@@ -72,7 +72,7 @@ namespace ClinicApp.Users
             return results;
         }
 
-        public List<Doctor> FilterByLastName(List<Doctor> doctors, string lastName)
+        public static List<Doctor> FilterByLastName(List<Doctor> doctors, string lastName)
         {
             var results = new List<Doctor>();
             foreach (Doctor doctor in doctors)
@@ -85,7 +85,7 @@ namespace ClinicApp.Users
             return results;
         }
 
-        public List<Doctor> FilterByField(List<Doctor> doctors, string field)
+        public static List<Doctor> FilterByField(List<Doctor> doctors, string field)
         {
             var results = new List<Doctor>();
             foreach (Doctor doctor in doctors)
