@@ -1,10 +1,6 @@
 ﻿using ClinicApp.Clinic;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using ClinicApp.AdminFunctions;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
@@ -57,12 +53,12 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            return Menu.DoctorMenuWrite(this);
+            return Menus.Doctors.Menu.Write(this);
         }
 
         public override void MenuDo(int option)
         {
-            Menu.DoctorMenuDo(this, option);
+            Menus.Doctors.Menu.Do(this, option);
         }
        
 

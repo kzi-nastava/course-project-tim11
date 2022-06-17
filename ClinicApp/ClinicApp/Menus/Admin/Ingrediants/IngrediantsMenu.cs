@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using ClinicApp.Clinic;
+
+namespace ClinicApp.Menus.Admin
+{
+    class IngrediantsMenu
+    {
+        public static void Menu()
+        {
+            CLI.CLIWriteLine("Ingrediants Menu");
+            CLI.CLIWriteLine("1. Add new Ingrediant");
+            CLI.CLIWriteLine("2. Update Ingrediant");
+            CLI.CLIWriteLine("3. Delete Ingrediant");
+            CLI.CLIWriteLine("0. to return");
+            int answer = CLI.CLIEnterNumberWithLimit(0, 3);
+            switch (answer)
+            {
+                case 1:
+                    CreateIngrediant.Dialog();
+                    break;
+                case 2:
+                    UpdateIngrediant.Dialog();
+                    break;
+                case 3:
+                    DeleteIngrediant.Dialog();
+                    break;
+                case 0:
+                    return;
+                default:
+                    Console.WriteLine("Invalid Option");
+                    break;
+            }
+        }
+    }
+}

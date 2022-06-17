@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
+using ClinicApp.Clinic;
 
 namespace ClinicApp
 {
@@ -11,12 +10,10 @@ namespace ClinicApp
         {
             Console.Write(text);
         }
-
         public static void CLIWriteLine(string text = "")
         {
             Console.WriteLine(text);
         }
-
         public static string CLIEnterString()
         {
             string input = Console.ReadLine();
@@ -119,7 +116,32 @@ namespace ClinicApp
                 return x;
             }
         }
-
+        public static int GetValidEquipmentId()
+        {
+            Equipment eq;
+            int id = CLI.CLIEnterNumber();
+            eq = EquipmentRepository.Get(id);
+            while (eq is null)
+            {
+                CLI.CLIWriteLine("Invalid ID");
+                id = CLI.CLIEnterNumber();
+                eq = EquipmentRepository.Get(id);
+            }
+            return id;
+        }
+        public static int GetValidRoomId()
+        {
+            Room room;
+            int id = CLI.CLIEnterNumber();
+            room = RoomRepository.Get(id);
+            while (room is null)
+            {
+                CLI.CLIWriteLine("Invalid ID");
+                id = CLI.CLIEnterNumber();
+                room = RoomRepository.Get(id);
+            }
+            return id;
+        }
         public static DateTime CLIEnterDate()
         {
             DateTime date;

@@ -1,9 +1,6 @@
 using ClinicApp.Clinic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
@@ -81,12 +78,12 @@ namespace ClinicApp.Users
         //========================== MENU KLASA ZA PACIJENTA????? ==============================================
         public override int MenuWrite()
         {
-            return Menu.PatientMenuWrite(this);
+            return Menus.Patients.Menu.Write(this);
         }
 
         public override void MenuDo(int option)
         {
-            //Menu.PatientMenuDo(this, option);
+            Menus.Patients.Menu.Do(this, option);
         }
 //==================================================================================================
 

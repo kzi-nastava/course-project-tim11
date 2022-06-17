@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
@@ -26,12 +24,12 @@ namespace ClinicApp.Users
 
         public override int MenuWrite()
         {
-            return Menu.NobodyMenuWrite(this);
+            return Menus.Nobody.Menu.Write(this);
         }
 
         public override void MenuDo(int option)
         {
-            Menu.NobodyMenuDo(this, option);
+            Menus.Nobody.Menu.Do(this, option);
         }
     }
 }

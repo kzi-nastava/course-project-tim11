@@ -2,9 +2,7 @@
 using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp
@@ -41,7 +39,7 @@ namespace ClinicApp
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         
        
-        public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
+        public static string EquipmentRequestsFilePath = "../../../Data/equipmentRequests.txt";
 
 
 
@@ -66,6 +64,8 @@ namespace ClinicApp
             //Loads referrals.
             ReferralRepo.Load();
 
+            //Loads requests for free days.
+            FreeDaysRequestRepo.Load();
 
             //Loads the examinations.
             AppointmentRepo.LoadAppointments();
@@ -89,7 +89,7 @@ namespace ClinicApp
         //Updates certain information that depends on date and time
         public static void Update()
         {
-            AdminFunctions.EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
+            EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
             UpdateEquipmentRequests();
         }
 
@@ -133,6 +133,9 @@ namespace ClinicApp
 
             //Uploads the referrals.
             ReferralRepo.PersistChanges();
+
+            //Uploads the free days request.
+            FreeDaysRequestRepo.PersistChanges();
 
             //Uploads the equipment requests.
             using (StreamWriter sw = File.CreateText(EquipmentRequestsFilePath))

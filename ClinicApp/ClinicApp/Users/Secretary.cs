@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ClinicApp.AdminFunctions;
-using ClinicApp.Clinic;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users
@@ -44,13 +40,13 @@ namespace ClinicApp.Users
         //Writes all the options a secretary has once he logs in.
         public override int MenuWrite()
         {
-            return Menu.SecretaryMenuWrite(this);
+            return Menus.Secretary.Menu.Write(this);
         }
 
         //Executes the chosen command.
         public override void MenuDo(int option)
         {
-            Menu.SecretaryMenuDo(this, option);
+            Menus.Secretary.Menu.Do(this, option);
         }
     }
 }
