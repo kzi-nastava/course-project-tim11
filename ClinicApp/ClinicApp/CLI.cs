@@ -12,14 +12,10 @@ namespace ClinicApp
         {
             Console.Write(text);
         }
-
-
-
         public static void CLIWriteLine(string text = "")
         {
             Console.WriteLine(text);
         }
-
         public static string CLIEnterString()
         {
             string input = Console.ReadLine();
