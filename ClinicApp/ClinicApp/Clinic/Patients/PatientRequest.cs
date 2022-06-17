@@ -1,7 +1,4 @@
-﻿using System;
-using ClinicApp.Users;
-
-namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic
 {
     public class PatientRequest
     {

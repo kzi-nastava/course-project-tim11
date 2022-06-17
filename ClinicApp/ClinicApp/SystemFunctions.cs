@@ -2,9 +2,7 @@
 using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp
@@ -91,7 +89,7 @@ namespace ClinicApp
         //Updates certain information that depends on date and time
         public static void Update()
         {
-            Clinic.EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
+            EquipmentMovementService.CheckForMovements(); //load to check if there is any equipment to move today
             UpdateEquipmentRequests();
         }
 

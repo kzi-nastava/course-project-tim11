@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic
 {
     public class EquipmentSearch  //small helper class to ease searching equipment
     {

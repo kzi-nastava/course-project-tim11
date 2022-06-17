@@ -1,5 +1,4 @@
-﻿using System;
-namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic
 {
     public class PatienRequestService
     {

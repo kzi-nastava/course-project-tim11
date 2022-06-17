@@ -1,9 +1,6 @@
-﻿using ClinicApp.Dialogs;
-using ClinicApp.Users;
+﻿using ClinicApp.Users;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ClinicApp.Clinic
 {
