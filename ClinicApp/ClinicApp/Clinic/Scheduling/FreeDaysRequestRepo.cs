@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Scheduling
 {
     public class FreeDaysRequestRepo
     {

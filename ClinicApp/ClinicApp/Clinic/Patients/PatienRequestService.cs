@@ -1,4 +1,4 @@
-﻿namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic.Patients
 {
     public class PatienRequestService
     {

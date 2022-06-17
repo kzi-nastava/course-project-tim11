@@ -1,8 +1,10 @@
 ﻿using ClinicApp.Clinic;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Scheduling;
 using ClinicApp.Users;
 using System;
 
-namespace ClinicApp.Dialogs
+namespace ClinicApp.Menus.Doctors.Dialogs
 {
     class AppointmentDialog
     {

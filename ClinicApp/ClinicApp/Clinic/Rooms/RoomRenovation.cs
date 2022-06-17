@@ -1,4 +1,4 @@
-﻿namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic.Rooms
 {
     public class RoomRenovation
     {

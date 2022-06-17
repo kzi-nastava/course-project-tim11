@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using ClinicApp.Clinic;
+using ClinicApp.Clinic.Medicine;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.MedicineRequest
 {
     internal class CreateMedicineRequest
     {
@@ -9,7 +10,7 @@ namespace ClinicApp.Menus.Admin
         {
             CLI.CLIWriteLine("Enter medicine name");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");
-            while (Clinic.MedicineRepo.Medicine.ContainsKey(name))
+            while (MedicineRepo.Medicine.ContainsKey(name))
             {
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");

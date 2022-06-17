@@ -1,4 +1,6 @@
-﻿namespace ClinicApp.Clinic
+﻿using ClinicApp.Clinic.Appointmens;
+
+namespace ClinicApp.Clinic.Patients
 {
     public class PatientRequest
     {

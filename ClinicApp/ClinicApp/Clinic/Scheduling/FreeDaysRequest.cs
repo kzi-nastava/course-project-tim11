@@ -2,7 +2,7 @@
 using System;
 
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Scheduling
 {
     public enum FreeDaysState
     {

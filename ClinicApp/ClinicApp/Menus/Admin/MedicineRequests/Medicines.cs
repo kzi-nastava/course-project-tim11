@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.Clinic;
+using ClinicApp.Menus.Admin.Ingrediants;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.MedicineRequest
 {
     class Medicines
     {

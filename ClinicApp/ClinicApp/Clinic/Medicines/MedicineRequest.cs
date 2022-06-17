@@ -1,9 +1,9 @@
-﻿namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic.Medicine
 {
     public class MedicineRequest
     {
         public int Id { get; set; }
-        public Clinic.Medicine Medicine { get; set; }
+        public Medicine Medicine { get; set; }
         public string Comment { get; set; }
     }
 }

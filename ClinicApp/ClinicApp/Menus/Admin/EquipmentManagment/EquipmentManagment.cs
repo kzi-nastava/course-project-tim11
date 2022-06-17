@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.Clinic;
+using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Rooms;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.EquipmentManagment
 {
     class EquipmentManagment
     {

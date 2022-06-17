@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.Clinic;
+using ClinicApp.Clinic.Equipments;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.EquipmentManagment
 {
     class CreateMovement
     {

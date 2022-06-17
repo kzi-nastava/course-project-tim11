@@ -4,7 +4,9 @@ using System.Linq;
 using ClinicApp.Users;
 using System.Collections.Generic;
 using ClinicApp.HelperClasses;
-using ClinicApp.Dialogs;
+using ClinicApp.Menus.Doctors.Dialogs;
+using ClinicApp.Clinic.Patients;
+using System.Xml.Linq;
 
 namespace ClinicApp.Clinic.Appointmens
 {
@@ -328,7 +330,7 @@ namespace ClinicApp.Clinic.Appointmens
                     else
                     {
                         //Finds the doctor.
-                        Clinic.Referral referral = patient.Referrals[0];
+                        Referral referral = patient.Referrals[0];
                         Doctor doctor = referral.DoctorSpecialist;
 
                         //Finds the id.
@@ -381,7 +383,7 @@ namespace ClinicApp.Clinic.Appointmens
                                 else
                                 {
                                     //Creates the examination.
-                                    Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor, patient, false, 0, 0);
+                                    Examination examination = new Examination(id, dateTime, doctor, patient, false, 0, 0);
                                     AppointmentService.InsertAppointment(examination, ref doctor);
                                     PatientService.InsertAppointmentPatient(ref patient, examination);
                                     AppointmentRepo.AllAppointments.Add(id, examination);
@@ -471,7 +473,7 @@ namespace ClinicApp.Clinic.Appointmens
                                         }
                                     }
                                     id++;
-                                    Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor.Value, patient, false, 0, 0);
+                                    Examination examination = new Examination(id, dateTime, doctor.Value, patient, false, 0, 0);
                                     AppointmentService.InsertAppointment(examination, ref doctorTmp);
                                     PatientService.InsertAppointmentPatient(ref patient, examination);
                                     AppointmentRepo.AllAppointments.Add(id, examination);
@@ -489,11 +491,11 @@ namespace ClinicApp.Clinic.Appointmens
                     //If there is no time available, we search for another examiantion to delay.
 
                     //First, we make a list of all the examinations that can be delayed and by how much can they be delayed.
-                    List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelaying = new List<KeyValuePair<Clinic.Examination, DateTime>>();
-                    foreach (KeyValuePair<int, Clinic.Appointment> examinationForDelay in AppointmentRepo.AllAppointments)
+                    List<KeyValuePair<Examination, DateTime>> examinationsForDelaying = new List<KeyValuePair<Examination, DateTime>>();
+                    foreach (KeyValuePair<int, Appointment> examinationForDelay in AppointmentRepo.AllAppointments)
                         if (examinationForDelay.Value.DateTime > DateTime.Now && examinationForDelay.Value.DateTime < DateTime.Now.AddMinutes(120) && examinationForDelay.Value.Doctor.Field == fieldOfDoctor && (examinationForDelay.Value.Patient == patient || PatientService.CheckAppointment(patient, examinationForDelay.Value.DateTime, 15)))
                         {
-                            examinationsForDelaying.Add(new KeyValuePair<Clinic.Examination, DateTime>((Clinic.Examination)examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
+                            examinationsForDelaying.Add(new KeyValuePair<Examination, DateTime>((Examination)examinationForDelay.Value, examinationForDelay.Value.NextAvailable()));
                             Console.WriteLine(examinationForDelay.Key.ToString());
                         }
                     if (examinationsForDelaying.Count == 0)
@@ -504,11 +506,11 @@ namespace ClinicApp.Clinic.Appointmens
 
                     //Then, we make a list of 5 options.
                     numberOfOptions = 0;
-                    List<KeyValuePair<Clinic.Examination, DateTime>> examinationsForDelayingOptions = new List<KeyValuePair<Clinic.Examination, DateTime>>();
+                    List<KeyValuePair<Examination, DateTime>> examinationsForDelayingOptions = new List<KeyValuePair<Examination, DateTime>>();
                     while (numberOfOptions < 5 && examinationsForDelaying.Count() > 0)
                     {
-                        KeyValuePair<Clinic.Examination, DateTime> temp = examinationsForDelaying[0];
-                        foreach (KeyValuePair<Clinic.Examination, DateTime> pair in examinationsForDelaying)
+                        KeyValuePair<Examination, DateTime> temp = examinationsForDelaying[0];
+                        foreach (KeyValuePair<Examination, DateTime> pair in examinationsForDelaying)
                             if (pair.Value < temp.Value)
                                 temp = pair;
                         numberOfOptions++;
@@ -530,7 +532,7 @@ namespace ClinicApp.Clinic.Appointmens
                     option2 = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                     if (option2 == 0)
                         return;
-                    KeyValuePair<Clinic.Examination, DateTime> examinationForDelaying = examinationsForDelayingOptions[option2 - 1]; //-1 because it starts from zero and options start from 1.
+                    KeyValuePair<Examination, DateTime> examinationForDelaying = examinationsForDelayingOptions[option2 - 1]; //-1 because it starts from zero and options start from 1.
                     //Finds the id.
                     id = 0;
                     foreach (int examinationID in AppointmentRepo.AllAppointments.Keys)
@@ -543,7 +545,7 @@ namespace ClinicApp.Clinic.Appointmens
                     id++;
 
                     //Creates the examination.
-                    Clinic.Examination examination2 = new Clinic.Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
+                    Examination examination2 = new Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
                     Doctor doctorTmp2 = examinationForDelaying.Key.Doctor;
                     AppointmentService.InsertAppointment(examination2, ref doctorTmp2);
                     PatientService.InsertAppointmentPatient(ref patient, examination2);

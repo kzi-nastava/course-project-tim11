@@ -1,6 +1,7 @@
 ﻿using ClinicApp.Clinic;
+using ClinicApp.Clinic.Rooms;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.Rooms
 {
     internal class DeleteRoom
     {

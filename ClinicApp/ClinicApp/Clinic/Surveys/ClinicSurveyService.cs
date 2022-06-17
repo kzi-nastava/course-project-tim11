@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Surveys
 {
     public class ClinicSurveyService
     {

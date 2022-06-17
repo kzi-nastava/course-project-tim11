@@ -1,9 +1,10 @@
-﻿using ClinicApp.Users;
+﻿using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Users;
 using System;
 using System.Linq;
 
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Scheduling
 {
     public class FreeDaysRequestService
     {

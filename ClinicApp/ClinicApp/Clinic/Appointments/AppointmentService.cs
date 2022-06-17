@@ -1,6 +1,9 @@
-﻿using ClinicApp.Users;
+﻿using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Patients;
+using ClinicApp.Users;
 using System;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace ClinicApp.Clinic.Appointmens
 {

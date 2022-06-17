@@ -1,9 +1,12 @@
 ﻿using ClinicApp.Clinic;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Medicine;
+using ClinicApp.Clinic.Patients;
 using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
 
-namespace ClinicApp.Dialogs
+namespace ClinicApp.Menus.Doctors.Dialogs
 {
     class DoctorDialog
     {

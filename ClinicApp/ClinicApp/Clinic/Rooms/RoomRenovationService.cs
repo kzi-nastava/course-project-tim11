@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ClinicApp.HelperClasses;
+using ClinicApp.Clinic.Equipments;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Rooms
 {
     public static class RoomRenovationService
     {

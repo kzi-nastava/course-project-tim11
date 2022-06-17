@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ClinicApp.Users
+namespace ClinicApp.Clinic.Patients
 {
     public class AntiTrollService
     {

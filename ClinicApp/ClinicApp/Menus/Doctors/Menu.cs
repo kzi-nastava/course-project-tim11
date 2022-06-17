@@ -1,6 +1,5 @@
 ﻿using System;
 using ClinicApp.Users;
-using ClinicApp.Dialogs;
 
 namespace ClinicApp.Menus.Doctors
 {

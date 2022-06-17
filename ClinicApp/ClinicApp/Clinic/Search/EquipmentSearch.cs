@@ -1,4 +1,7 @@
-﻿namespace ClinicApp.Clinic
+﻿using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Rooms;
+
+namespace ClinicApp.Clinic.Search
 {
     public class EquipmentSearch  //small helper class to ease searching equipment
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ClinicApp.Users
+namespace ClinicApp.Clinic.Patients
 {
     public class AntiTroll
     {

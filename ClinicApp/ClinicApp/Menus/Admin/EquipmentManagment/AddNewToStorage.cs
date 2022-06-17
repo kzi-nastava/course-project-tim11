@@ -1,9 +1,7 @@
-﻿using System;
+﻿using ClinicApp.Clinic.Equipments;
 using System.Collections.Generic;
-using System.Text;
-using ClinicApp.Clinic;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.EquipmentManagment
 {
     class AddNewToStorage
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Surveys
 {
     public class DoctorSurveyRepo
     {

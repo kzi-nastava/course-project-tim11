@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Patients
 {
     public class HealthRecordRepo
     {

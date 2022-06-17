@@ -1,7 +1,7 @@
 ﻿using System;
 using ClinicApp.Users;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Surveys
 {
     public class DoctorSurvey
     {

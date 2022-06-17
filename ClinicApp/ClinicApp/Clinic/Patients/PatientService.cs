@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ClinicApp.Clinic;
 using System.IO;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Users;
 
-namespace ClinicApp.Users
+namespace ClinicApp.Clinic.Patients
 {
     public class PatientService
     {
@@ -188,7 +190,7 @@ namespace ClinicApp.Users
         public static void ManageExaminationRequests()
         {
             int id, option;
-            Clinic.Appointment appointment;
+            Appointment appointment;
 
             Console.WriteLine();
             using (StreamReader reader = new StreamReader(SystemFunctions.PatientRequestsFilePath))
@@ -210,7 +212,7 @@ namespace ClinicApp.Users
                             appointment.Doctor.Appointments.Remove(appointment);
                             appointment.Patient.Appointments.Remove(appointment);
                             var last = AppointmentRepo.AllAppointments.Values.Last();
-                            Clinic.Examination deletedExamination = new Clinic.Examination(last.ID + 1, appointment.DateTime, appointment.Doctor, appointment.Patient, appointment.Finished, appointment.ID, appointment.Edited);
+                            Examination deletedExamination = new Examination(last.ID + 1, appointment.DateTime, appointment.Doctor, appointment.Patient, appointment.Finished, appointment.ID, appointment.Edited);
                             AppointmentRepo.AllAppointments.Add(deletedExamination.ID, deletedExamination);
                             AppointmentRepo.CurrentAppointments.Remove(appointment.ID);
                         }
@@ -224,7 +226,7 @@ namespace ClinicApp.Users
                                 appointment.Doctor.Appointments.Remove(appointment);
                                 appointment.Patient.Appointments.Remove(appointment);
                                 var last = AppointmentRepo.AllAppointments.Values.Last();
-                                Clinic.Examination editedExamination = new Clinic.Examination(last.ID + 1, appointment.DateTime, doctor, appointment.Patient, appointment.Finished, 0, appointment.ID);
+                                Examination editedExamination = new Examination(last.ID + 1, appointment.DateTime, doctor, appointment.Patient, appointment.Finished, 0, appointment.ID);
                                 AppointmentRepo.AllAppointments.Add(editedExamination.ID, editedExamination);
                                 AppointmentRepo.CurrentAppointments.Remove(appointment.ID);
                                 AppointmentRepo.CurrentAppointments.Add(editedExamination.ID, editedExamination);

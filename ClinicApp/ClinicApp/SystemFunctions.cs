@@ -4,6 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ClinicApp.HelperClasses;
+using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Patients;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Medicine;
+using ClinicApp.Clinic.Scheduling;
 
 namespace ClinicApp
 {

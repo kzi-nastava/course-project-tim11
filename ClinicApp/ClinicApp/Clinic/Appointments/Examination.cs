@@ -1,6 +1,7 @@
 ﻿using ClinicApp.Users;
 using System;
 using ClinicApp.HelperClasses;
+using ClinicApp.Clinic.Patients;
 
 namespace ClinicApp.Clinic.Appointmens
 {

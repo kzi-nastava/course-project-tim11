@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ClinicApp.Clinic.Rooms;
+using System;
 using System.Collections.Generic;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Equipments
 {
     public static class EquipmentMovementService
     {

@@ -1,4 +1,4 @@
-﻿namespace ClinicApp.Clinic
+﻿namespace ClinicApp.Clinic.Medicine
 {
     class IngrediantService
     {

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.Clinic;
+using ClinicApp.Clinic.Medicine;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.MedicineRequest
 {
     class ReviewedMeds
     {
@@ -15,7 +16,7 @@ namespace ClinicApp.Menus.Admin
             if (id == 0) return;
             CLI.CLIWriteLine("Enter medicine name");
             string name = CLI.CLIEnterStringWithoutDelimiter("|");
-            while (Clinic.MedicineRepo.Medicine.ContainsKey(name))
+            while (MedicineRepo.Medicine.ContainsKey(name))
             {
                 CLI.CLIWriteLine("Name already taken, enter another name");
                 name = CLI.CLIEnterStringWithoutDelimiter("|");

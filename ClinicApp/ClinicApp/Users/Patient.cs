@@ -2,6 +2,8 @@ using ClinicApp.Clinic;
 using System;
 using System.Collections.Generic;
 using ClinicApp.HelperClasses;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Medicine;
 
 namespace ClinicApp.Users
 {

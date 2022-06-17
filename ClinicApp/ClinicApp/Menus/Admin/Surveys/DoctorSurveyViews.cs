@@ -1,14 +1,15 @@
-﻿using System;
+﻿using ClinicApp.Clinic.Surveys;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.Surveys
 {
     class DoctorSurveyViews
     {
         public static void Averages()
         {
-            Dictionary<Users.Doctor, int> averages = Clinic.DoctorSurveyService.GetDoctorAverages();
+            Dictionary<Users.Doctor, int> averages = DoctorSurveyService.GetDoctorAverages();
             foreach (var key in averages.Keys)
             {
                 Console.WriteLine("Average for " + key.Name + " " + key.LastName + ": " + averages[key]);
@@ -16,7 +17,7 @@ namespace ClinicApp.Menus.Admin
         }
         public static void Comments()
         {
-            Dictionary<Users.Doctor, List<string>> comments = Clinic.DoctorSurveyService.GetComments();
+            Dictionary<Users.Doctor, List<string>> comments = DoctorSurveyService.GetComments();
             foreach (var key in comments.Keys)
             {
                 Console.WriteLine("Comments for: " + key.Name + " " + key.LastName);
@@ -28,7 +29,7 @@ namespace ClinicApp.Menus.Admin
         }
         public static void Histograms()
         {
-            Dictionary<Users.Doctor, List<int>> histogram = Clinic.DoctorSurveyService.GetHstograms();
+            Dictionary<Users.Doctor, List<int>> histogram = DoctorSurveyService.GetHstograms();
             foreach (var key in histogram.Keys)
             {
                 Console.WriteLine("Ratings for: " + key.Name + " " + key.LastName);
@@ -40,7 +41,7 @@ namespace ClinicApp.Menus.Admin
         }
         public static void BestThree()
         {
-            List<Users.Doctor> doctors = Clinic.DoctorSurveyService.SortedByAverageRating();
+            List<Users.Doctor> doctors = DoctorSurveyService.SortedByAverageRating();
             Console.WriteLine("Top 3 rated doctors");
             for (int i = 0; i < 3; i++)
             {
@@ -49,7 +50,7 @@ namespace ClinicApp.Menus.Admin
         }
         public static void BottomThree()
         {
-            List<Users.Doctor> doctors = Clinic.DoctorSurveyService.SortedByAverageRating();
+            List<Users.Doctor> doctors = DoctorSurveyService.SortedByAverageRating();
             Console.WriteLine("Bottom 3 rated doctors");
             for (int i = doctors.Count - 1; i > doctors.Count - 4; i--)
             {

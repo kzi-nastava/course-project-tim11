@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClinicApp.Users;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Surveys
 {
     public class DoctorSurveyService
     {
@@ -53,7 +53,7 @@ namespace ClinicApp.Clinic
         public static Dictionary<Doctor, List<string>> GetComments()
         {
             Dictionary<Doctor, List<string>> comments = new Dictionary<Doctor, List<string>>();
-            foreach (var survey in Clinic.DoctorSurveyRepo.DoctorSurveys)
+            foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
             {
                 comments[survey.RatedDoctor].Add(survey.CustomersComment);
             }
@@ -63,7 +63,7 @@ namespace ClinicApp.Clinic
         public static Dictionary<Doctor, List<int>> GetHstograms()
         {
             Dictionary<Doctor, List<int>> histogram = new Dictionary<Doctor, List<int>>();
-            foreach (var survey in Clinic.DoctorSurveyRepo.DoctorSurveys)
+            foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
             {
                 if (!histogram.ContainsKey(survey.RatedDoctor))
                 {
@@ -74,7 +74,7 @@ namespace ClinicApp.Clinic
                     histogram[survey.RatedDoctor].Add(0);
                 }
             }
-            foreach (var survey in Clinic.DoctorSurveyRepo.DoctorSurveys)
+            foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
             {
                 switch (survey.DoctorRating)
                 {

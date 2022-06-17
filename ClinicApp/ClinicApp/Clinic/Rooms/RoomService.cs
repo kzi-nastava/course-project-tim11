@@ -1,6 +1,6 @@
 using System;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Rooms
 {
     public static class RoomService
     {

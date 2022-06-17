@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Medicine
 {
     public static class MedicineRequestRepository
     {
@@ -53,7 +53,7 @@ namespace ClinicApp.Clinic
             string[] parameters = line.Split("|");
             MedicineRequest medicineRequest = new MedicineRequest {
                 Id = Convert.ToInt32(parameters[0]),
-                Medicine = new Clinic.Medicine(parameters[1], parameters[2].Split("/").ToList()),
+                Medicine = new Medicine(parameters[1], parameters[2].Split("/").ToList()),
                 Comment = parameters[3]
             };
             return medicineRequest;

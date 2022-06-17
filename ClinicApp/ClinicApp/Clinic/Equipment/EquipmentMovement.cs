@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Equipments
 {
     public class EquipmentMovement
     {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using ClinicApp.HelperClasses;
 using ClinicApp.Clinic;
+using ClinicApp.Clinic.Rooms;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.RoomRenovations
 {
     class SimpleRoomRenovation
     {

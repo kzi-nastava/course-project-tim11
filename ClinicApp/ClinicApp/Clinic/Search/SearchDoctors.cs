@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using ClinicApp.Users;
+using System.Collections.Generic;
 
-namespace ClinicApp.Users
+namespace ClinicApp.Clinic.Search
 {
     public class SearchDoctors
     {

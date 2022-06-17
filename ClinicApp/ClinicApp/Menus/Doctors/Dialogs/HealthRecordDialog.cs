@@ -1,7 +1,9 @@
 ﻿using ClinicApp.Clinic;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Patients;
 using System;
 
-namespace ClinicApp.Dialogs
+namespace ClinicApp.Menus.Doctors.Dialogs
 {
     public static class HealthRecordDialog
     {

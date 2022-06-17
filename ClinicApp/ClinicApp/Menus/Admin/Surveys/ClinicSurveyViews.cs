@@ -1,46 +1,47 @@
-﻿using System;
+﻿using ClinicApp.Clinic.Surveys;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.Surveys
 {
     class ClinicSurveyViews
     {
         public static void Averages()
         {
-            Console.WriteLine("Average doctors rating: " + Clinic.ClinicSurveyService.GetAverageDoctorsScore());
-            Console.WriteLine("Average nurses rating: " + Clinic.ClinicSurveyService.GetAverageNursesScore());
-            Console.WriteLine("Average other employees rating: " + Clinic.ClinicSurveyService.GetAverageOtherEmployeesScore());
-            Console.WriteLine("Average hygiene rating: " + Clinic.ClinicSurveyService.GetAverageHygieneScore());
+            Console.WriteLine("Average doctors rating: " + ClinicSurveyService.GetAverageDoctorsScore());
+            Console.WriteLine("Average nurses rating: " + ClinicSurveyService.GetAverageNursesScore());
+            Console.WriteLine("Average other employees rating: " + ClinicSurveyService.GetAverageOtherEmployeesScore());
+            Console.WriteLine("Average hygiene rating: " + ClinicSurveyService.GetAverageHygieneScore());
         }
         public static void Comments()
         {
-            foreach (var comment in Clinic.ClinicSurveyService.GetAllComments())
+            foreach (var comment in ClinicSurveyService.GetAllComments())
             {
                 Console.WriteLine(comment);
             }
         }
         public static void Histograms()
         {
-            List<int> doctors = Clinic.ClinicSurveyService.DoctorRatingHistogram();
+            List<int> doctors = ClinicSurveyService.DoctorRatingHistogram();
             Console.WriteLine("Doctors Histogram");
             for (int i = 0; i < 5; i++)
             {
                 Console.WriteLine((i + 1) + ": " + doctors[i]);
             }
-            List<int> nursses = Clinic.ClinicSurveyService.NurssesRatingHistogram();
+            List<int> nursses = ClinicSurveyService.NurssesRatingHistogram();
             Console.WriteLine("Nursses Histogram");
             for (int i = 0; i < 5; i++)
             {
                 Console.WriteLine((i + 1) + ": " + nursses[i]);
             }
-            List<int> others = Clinic.ClinicSurveyService.OthersRatingHistogram();
+            List<int> others = ClinicSurveyService.OthersRatingHistogram();
             Console.WriteLine("Other employees Histogram");
             for (int i = 0; i < 5; i++)
             {
                 Console.WriteLine((i + 1) + ": " + others[i]);
             }
-            List<int> hygiene = Clinic.ClinicSurveyService.HygieneRatingHistogram();
+            List<int> hygiene = ClinicSurveyService.HygieneRatingHistogram();
             Console.WriteLine("Other employees Histogram");
             for (int i = 0; i < 5; i++)
             {

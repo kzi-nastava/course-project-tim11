@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Rooms;
+using System.Collections.Generic;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Search
 {
     class EquipmentSearchService
     {

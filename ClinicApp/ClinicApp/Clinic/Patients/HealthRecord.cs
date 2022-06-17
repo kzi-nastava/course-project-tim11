@@ -1,8 +1,9 @@
-﻿using ClinicApp.Users;
+﻿using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Patients
 {
     public class HealthRecord
     {

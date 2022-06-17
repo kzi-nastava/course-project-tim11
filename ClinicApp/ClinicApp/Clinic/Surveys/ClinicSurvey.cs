@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Surveys
 {
     public class ClinicSurvey
     {

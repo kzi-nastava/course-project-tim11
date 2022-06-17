@@ -1,8 +1,9 @@
 ﻿using ClinicApp.Clinic;
+using ClinicApp.Clinic.Scheduling;
 using ClinicApp.Users;
 using System;
 
-namespace ClinicApp.Dialogs
+namespace ClinicApp.Menus.Doctors.Dialogs
 {
     public static class FreeDaysRequestDialog
     {

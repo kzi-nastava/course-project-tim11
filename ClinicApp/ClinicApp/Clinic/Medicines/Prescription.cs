@@ -1,7 +1,7 @@
 ﻿using ClinicApp.Users;
 using System;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Medicine
 {
     public class Prescription
     {

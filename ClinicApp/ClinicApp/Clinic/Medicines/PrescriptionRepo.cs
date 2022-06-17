@@ -1,7 +1,7 @@
 ﻿using ClinicApp.Users;
 using System.IO;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Medicine
 {
     public class PrescriptionRepo
     {

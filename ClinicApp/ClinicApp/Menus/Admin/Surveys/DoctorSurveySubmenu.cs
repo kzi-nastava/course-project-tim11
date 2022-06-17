@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.Menus.Admin
+namespace ClinicApp.Menus.Admin.Surveys
 {
     class DoctorSurveySubmenu
     {

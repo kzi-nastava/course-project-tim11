@@ -4,7 +4,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using ClinicApp.Clinic;
 using ClinicApp.HelperClasses;
-using ClinicApp.Dialogs;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Rooms;
+using ClinicApp.Clinic.Patients;
+using ClinicApp.Menus.Doctors.Dialogs;
+using ClinicApp.Clinic.Medicine;
+using ClinicApp.Clinic.Equipments;
 
 namespace ClinicApp
 {
@@ -181,7 +186,7 @@ namespace ClinicApp
         {
             foreach (int examId in AppointmentRepo.AllAppointments.Keys)
             {
-                Clinic.Appointment exam = AppointmentRepo.AllAppointments[examId];
+                Appointment exam = AppointmentRepo.AllAppointments[examId];
                 if (exam.Doctor.RoomId == roomId && dateRange.IsOverlaping(new DateRange(exam.DateTime, exam.DateTime.AddMinutes(15))))
                 {
                     return true;
