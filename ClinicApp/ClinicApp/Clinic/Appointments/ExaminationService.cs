@@ -30,7 +30,7 @@ namespace ClinicApp.Clinic.Appointmens
                 i++;
             }
         }
-        private void CreateExamination(Patient patient, Doctor doctor = null)
+        public static void CreateExamination(Patient patient, Doctor doctor = null)
         {
             DateTime dateTime = DateTime.Now;
             Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
@@ -97,7 +97,7 @@ namespace ClinicApp.Clinic.Appointmens
             //ActivityHistory.Add(DateTime.Now, "CREATE");
         }
 
-        private void DeleteExamination(Patient patient)
+        public static void DeleteExamination(Patient patient)
         {
             Console.WriteLine("Enter the ID of the examination you want to delete?");
             int id = CLI.CLIEnterNumber();
@@ -145,7 +145,7 @@ namespace ClinicApp.Clinic.Appointmens
         }
 
         //razbij na vise manjih funkcija!!!
-        private void EditExamination(Patient patient)
+        public static void EditExamination(Patient patient)
         {
             bool quit = false;
             Console.WriteLine("Enter the ID of the examination you want to edit:");
