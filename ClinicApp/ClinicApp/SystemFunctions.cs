@@ -66,6 +66,8 @@ namespace ClinicApp
             //Loads referrals.
             ReferralRepo.Load();
 
+            //Loads requests for free days.
+            FreeDaysRequestRepo.Load();
 
             //Loads the examinations.
             AppointmentRepo.LoadAppointments();
@@ -133,6 +135,9 @@ namespace ClinicApp
 
             //Uploads the referrals.
             ReferralRepo.PersistChanges();
+
+            //Uploads the free days request.
+            FreeDaysRequestRepo.PersistChanges();
 
             //Uploads the equipment requests.
             using (StreamWriter sw = File.CreateText(EquipmentRequestsFilePath))

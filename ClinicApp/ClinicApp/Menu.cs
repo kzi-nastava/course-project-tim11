@@ -126,9 +126,10 @@ namespace ClinicApp
             Console.WriteLine("4: View schedule");
             Console.WriteLine("5: Manage medicine");
             Console.WriteLine("6: Request free days");
+            Console.WriteLine("7: View your requests for free days");
             Console.WriteLine("0: Exit");
 
-            return 6;
+            return 7;
         }
 
         public static void DoctorMenuDo(User doctor, int option)
@@ -149,7 +150,10 @@ namespace ClinicApp
                     DoctorDialog.ReviewMedicineRequests();
                     break;
                 case 6:
-                    DoctorDialog.GatherInfoFreeDayRequest(ref doctorTemp);
+                    FreeDaysRequestDialog.GatherInfoFreeDayRequest(ref doctorTemp);
+                    break;
+                case 7:
+                    FreeDaysRequestDialog.ViewFreeDays(doctorTemp);
                     break;
                 default:
                     break;

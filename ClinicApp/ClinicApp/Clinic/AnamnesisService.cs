@@ -1,4 +1,5 @@
 ﻿using System;
+using ClinicApp.Dialogs;
 using ClinicApp.Users;
 
 namespace ClinicApp.Clinic
@@ -20,7 +21,7 @@ namespace ClinicApp.Clinic
             healthRecord = HealthRecordRepo.HealthRecords[patient.UserName];
 
             Console.WriteLine("Patient health record.");
-            HealthRecordService.ShowHealthRecord(healthRecord);
+            HealthRecordDialog.ShowHealthRecord(healthRecord);
             Console.WriteLine("");
             Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++");
             Console.WriteLine("1.Sort amnesis list by date.");

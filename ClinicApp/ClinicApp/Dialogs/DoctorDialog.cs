@@ -75,7 +75,7 @@ namespace ClinicApp.Dialogs
             HealthRecord healthRecord = HealthRecordService.Search(chosenAppointment.Patient);
             Console.WriteLine("Information about patient:");
             PatientService.ViewPatient(healthRecord.Patient);
-            HealthRecordService.ShowHealthRecord(healthRecord);
+            HealthRecordDialog.ShowHealthRecord(healthRecord);
 
         }
 
@@ -102,21 +102,21 @@ namespace ClinicApp.Dialogs
 
             Console.WriteLine($"{type} starting. Searching for medical record");
             HealthRecord healthRecord = HealthRecordService.Search(appointment.Patient);
-            HealthRecordService.ShowHealthRecord(healthRecord);
+            HealthRecordDialog.ShowHealthRecord(healthRecord);
             AnamnesisService.WriteAnamnesis(ref healthRecord, ref doctor);
 
             Console.WriteLine("\nDo you want to change medical record? (y/n)");
             string choice = Console.ReadLine().ToUpper();
             if (choice == "Y")
             {
-                HealthRecordService.ChangePatientRecord(ref healthRecord);
+                HealthRecordDialog.ChangePatientRecord(ref healthRecord);
             }
             Patient patient = healthRecord.Patient;
             Console.WriteLine("Create referral for patient? (y/n)");
             choice = Console.ReadLine().ToUpper();
             if (choice == "Y")
             {
-                ReferralService.CreateReferral(ref patient, ref doctor);
+                CreateReferral(ref patient, ref doctor);
             }
             do
             {
@@ -124,7 +124,7 @@ namespace ClinicApp.Dialogs
                 choice = Console.ReadLine().ToUpper();
                 if (choice.ToUpper() == "Y")
                 {
-                    PrescriptionService.WritePrescription(ref patient, doctor);
+                    WritePrescription(ref patient, doctor);
 
                 }
             } while (choice.ToUpper() == "Y");
@@ -170,38 +170,65 @@ namespace ClinicApp.Dialogs
             }
         }
 
-        public static void GatherInfoFreeDayRequest(ref Doctor doctor)
+        
+
+        public static void WritePrescription(ref Patient patient, Doctor doctor)
         {
-            Console.WriteLine("Is this request urgent(y/n)?");
-            bool urgent = OtherFunctions.EnterBool();
-            Console.WriteLine("Enter the start date for your free days (e.g. 22/10/1987): ");
-            DateTime dateFrom = CLI.CLIEnterNonPastDate();
-            if (DateTime.Today.AddDays(2) <= dateFrom && !urgent)
+            Medicine medicine = MedicineDialog.GetMedicine();
+            bool alergic = MedicineDialog.CheckAlergy(medicine, patient.UserName);
+            if (alergic) return;
+            int[] frequency = { 0, 0, 0 };
+            Console.WriteLine("Enter the number of pills to take in 1) the morning 2) at noon 3) the afternoon:");
+            for (int i = 0; i < 3; i++)
             {
-                Console.WriteLine("You have to request free days at least two days before your leave!");
-                return;
+                Console.Write((i + 1) + ") >> ");
+                frequency[i] = OtherFunctions.EnterNumber();
+                Console.WriteLine();
             }
-            Console.WriteLine("Enter the end date for your free days (e.g. 22/10/1987): ");
-            DateTime dateTo = CLI.CLIEnterNonPastDate();
-            if (dateTo < dateFrom)
+            Console.WriteLine("Should the patient take the medicine: \n(1) Before a meal\n(2) After a meal\n(3) During a meal\n(4) Doesn't matter\n\nChose by number");
+            int medicineMealInfo = CLI.CLIEnterNumberWithLimit(0, 5);
+            MedicineFoodIntake medicineFoodIntake = (MedicineFoodIntake)(medicineMealInfo - 1);
+            Prescription prescription = new Prescription(patient, doctor, DateTime.Now, medicine, frequency, medicineFoodIntake);
+            ShowPrescription(prescription);
+            Console.WriteLine("Prescription created\n");
+            PrescriptionRepo.Add(prescription, patient);
+            patient.Prescriptions.Add(prescription);
+
+        }
+
+        public static void ShowPrescription(Prescription prescription)
+        {
+            Console.WriteLine("\nPrescription details:");
+            Console.WriteLine($"Date : {prescription.Date.Date}; Medicine: {prescription.Medicine.Name}");
+            Console.WriteLine($"Patient full name: {prescription.Patient.Name} {prescription.Patient.LastName}");
+            Console.WriteLine($"Doctor full name: {prescription.Doctor.Name}  {prescription.Doctor.LastName}");
+            Console.WriteLine("Number of pills to take:");
+            Console.WriteLine($"Morning: {prescription.Frequency[0]}, Noon: {prescription.Frequency[1]}, Afternoon: {prescription.Frequency[2]}");
+            Console.WriteLine($"Take before/during/after food: {prescription.MedicineFoodIntake}");
+        }
+
+        public static void CreateReferral(ref Patient patient, ref Doctor doctorExamined)
+        {
+            Console.WriteLine("Create referral for (1) specific doctor or (2) specific field");
+            int i = CLI.CLIEnterNumberWithLimit(0, 3);
+            if (i == 1)
             {
-                Console.WriteLine("Invalid end date.");
-                return;
+                Doctor doctor = OtherFunctions.AskUsernameDoctor();
+                if (doctor == null) return;
+                Referral referral = new Referral(doctorExamined, patient, doctor, doctor.Field);
+                patient.Referrals.Add(referral);
+                ReferralRepo.Referrals.Add(referral);
             }
-            if (!DoctorService.IsDoctorFree(dateFrom, dateTo, doctor))
+            else
             {
-                Console.WriteLine("You are not free, you have scheduled appointments in that time period!");
-                return;
+                Fields field = OtherFunctions.AskField();
+                Referral referral = new Referral(doctorExamined, patient, null, field);
+                patient.Referrals.Add(referral);
+                ReferralRepo.Referrals.Add(referral);
+
             }
-            if ((dateTo - dateFrom).TotalDays > 5 && urgent)
-            {
-                Console.WriteLine("An urgent request can't be longer than 5 days.");
-                return;
-            }
-            Console.WriteLine("Enter the reason behind your request?");
-            string reason = Console.ReadLine();
-            FreeDaysRequestService.RequestFreeDay(ref doctor, dateFrom, dateTo, urgent, reason);
-            Console.WriteLine("Successfully created your request.");
+            Console.WriteLine("Referral created successfully!");
+
         }
 
     }

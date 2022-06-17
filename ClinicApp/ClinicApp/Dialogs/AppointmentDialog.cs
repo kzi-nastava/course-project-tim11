@@ -22,6 +22,10 @@ namespace ClinicApp.Dialogs
                 else duration = 15;
             }
             DateTime dateTime = AskDateTime(duration, ref doctor);
+            if (!DoctorService.IsDoctorAvailible(dateTime, doctor)) {
+                Console.WriteLine("You have free days at that time.");
+                return;
+            }
             Patient patient = OtherFunctions.AskUsernamePatient();
             if (patient == null) return;
             int id = Appointment.GetLastID();
@@ -39,7 +43,7 @@ namespace ClinicApp.Dialogs
             DateTime time;
             do
             {
-                time = CLI.CLIEnterTime();
+                time = OtherFunctions.EnterTime();
                 time = date.Date + time.TimeOfDay;
                 if (time < DateTime.Now)
                 {
@@ -100,6 +104,11 @@ namespace ClinicApp.Dialogs
             newDate += appointment.DateTime.TimeOfDay;
             if (DoctorService.CheckAppointment(newDate, appointment.Duration, ref doctor))
             {
+                if (!DoctorService.IsDoctorAvailible(newDate, doctor))
+                {
+                    Console.WriteLine("You have free days at that time.");
+                    return;
+                }
                 AppointmentService.ChangeAppointment(appointment, newDate);
             }
             else

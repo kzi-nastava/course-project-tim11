@@ -124,5 +124,19 @@ namespace ClinicApp.Users
             return true;
         }
 
+        public static bool IsDoctorAvailible(DateTime date, Doctor doctor)
+        {
+            foreach (FreeDaysRequest request in FreeDaysRequestRepo.FreeDaysRequests)
+            {
+                if (request.Doctor.UserName == doctor.UserName && request.State == FreeDaysState.Accepted)
+                {
+                    if(date.Date >= request.DateFrom && date.Date <= request.DateTo)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }

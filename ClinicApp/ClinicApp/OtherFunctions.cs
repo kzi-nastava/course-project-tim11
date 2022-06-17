@@ -23,7 +23,8 @@ namespace ClinicApp
             else return false;
         }
 
-        public static Fields AskField() {
+        public static Fields AskField()
+        {
 
             Console.WriteLine("\nChose specialization by number:\n");
             int i = 1;
@@ -37,7 +38,7 @@ namespace ClinicApp
             return specialization;
 
 
-        }      
+        }
 
         public static User FindUser(string text, Roles role = Roles.Nobody)
         {
@@ -131,7 +132,7 @@ namespace ClinicApp
 
         public static string TableHeader(bool withRole = false)
         {
-            if(withRole)
+            if (withRole)
                 return "| Username             | Name                 | Last Name            | Gender     | Date of Birth   | Role       |";
             else
                 return "| Username             | Name                 | Last Name            | Gender     | Date of Birth   |";
@@ -142,9 +143,9 @@ namespace ClinicApp
             Console.WriteLine(LineInTable(withRole));
             Console.WriteLine(TableHeader(withRole));
             Console.WriteLine(LineInTable(withRole));
-            foreach(KeyValuePair<string, User> pair in UserRepository.Users)
+            foreach (KeyValuePair<string, User> pair in UserRepository.Users)
             {
-                if(role == Roles.Nobody || pair.Value.Role == role)
+                if (role == Roles.Nobody || pair.Value.Role == role)
                 {
                     Console.WriteLine(pair.Value.TextInTable(withRole));
                     Console.WriteLine(LineInTable(withRole));
@@ -169,7 +170,7 @@ namespace ClinicApp
 
         public static bool CheckForRenovations(DateRange examinationTime, int roomId)
         {
-            foreach(var renovation in RoomRenovationRepository.RoomRenovationList)
+            foreach (var renovation in RoomRenovationRepository.RoomRenovationList)
             {
                 if (roomId == renovation.RoomId && renovation.Duration.IsOverlaping(examinationTime))
                 {
@@ -180,10 +181,10 @@ namespace ClinicApp
         }
         public static bool CheckForExaminations(DateRange dateRange, int roomId)
         {
-            foreach (int examId in AppointmentRepo.AllAppointments.Keys )
+            foreach (int examId in AppointmentRepo.AllAppointments.Keys)
             {
                 Clinic.Appointment exam = AppointmentRepo.AllAppointments[examId];
-                if(exam.Doctor.RoomId == roomId && dateRange.IsOverlaping(new DateRange(exam.DateTime, exam.DateTime.AddMinutes(15))))
+                if (exam.Doctor.RoomId == roomId && dateRange.IsOverlaping(new DateRange(exam.DateTime, exam.DateTime.AddMinutes(15))))
                 {
                     return true;
                 }
@@ -191,8 +192,9 @@ namespace ClinicApp
             return false;
         }
 
-        public static bool ValidateDateTime(DateTime date) {
-            if(date < DateTime.Now)
+        public static bool ValidateDateTime(DateTime date)
+        {
+            if (date < DateTime.Now)
             {
                 return false;
             }
@@ -321,6 +323,8 @@ namespace ClinicApp
             }
             return chosenIngrediants;
 
+
+        }
         public static int EnterNumber()
         {
             int x = -1;

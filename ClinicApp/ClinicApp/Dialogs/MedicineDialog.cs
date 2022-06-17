@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ClinicApp.Clinic;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Dialogs
 {
-    public class MedicineService
+    public static class MedicineDialog
     {
         public static Medicine GetMedicine()
         {
