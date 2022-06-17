@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     public class EquipmentSearch  //small helper class to ease searching equipment
     {

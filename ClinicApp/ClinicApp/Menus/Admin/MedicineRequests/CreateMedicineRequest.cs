@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 
 namespace ClinicApp.Menus.Admin
 {

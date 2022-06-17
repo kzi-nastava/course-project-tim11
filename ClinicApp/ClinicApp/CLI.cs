@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 
 namespace ClinicApp
 {

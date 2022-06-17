@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using ClinicApp.HelperClasses;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     class RoomRenovationRepository
     {

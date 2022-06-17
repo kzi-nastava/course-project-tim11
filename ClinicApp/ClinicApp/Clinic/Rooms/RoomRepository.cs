@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     class RoomRepository
     {

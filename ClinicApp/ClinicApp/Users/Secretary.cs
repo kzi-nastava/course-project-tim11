@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 using ClinicApp.Clinic;
 using ClinicApp.HelperClasses;
 

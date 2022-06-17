@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ClinicApp.HelperClasses;
-using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 
 namespace ClinicApp.Menus.Admin
 {

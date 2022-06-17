@@ -1,4 +1,4 @@
-﻿using ClinicApp.AdminFunctions;
+﻿using ClinicApp.Clinic;
 
 namespace ClinicApp.Menus.Admin
 {

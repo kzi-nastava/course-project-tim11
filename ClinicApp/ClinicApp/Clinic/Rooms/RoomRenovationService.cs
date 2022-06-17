@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClinicApp.HelperClasses;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     public static class RoomRenovationService
     {

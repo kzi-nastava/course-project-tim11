@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     class EquipmentRepository
     {

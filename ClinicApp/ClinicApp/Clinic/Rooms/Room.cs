@@ -1,4 +1,4 @@
-namespace ClinicApp.AdminFunctions { 
+namespace ClinicApp.Clinic { 
     public class Room
     {
         public int Id { get; set; }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 using ClinicApp.Clinic;
 using ClinicApp.HelperClasses;
 using ClinicApp.Dialogs;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     class MedicineRequestService
     {

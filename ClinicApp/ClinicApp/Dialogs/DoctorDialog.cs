@@ -1,4 +1,4 @@
-﻿using ClinicApp.AdminFunctions;
+﻿using ClinicApp.Clinic;
 using ClinicApp.Clinic;
 using ClinicApp.Users;
 using System;

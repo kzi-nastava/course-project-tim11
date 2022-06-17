@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     public static class EquipmentMovementService
     {

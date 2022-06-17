@@ -1,8 +1,8 @@
-using ClinicApp.AdminFunctions;
+using ClinicApp.Clinic;
 using System;
 using ClinicApp;
 
-namespace ClinicApp.AdminFunctions
+namespace ClinicApp.Clinic
 {
     public static class RoomService
     {
