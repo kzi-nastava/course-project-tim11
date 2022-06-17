@@ -24,6 +24,7 @@ namespace ClinicApp.Clinic.Scheduling
 
             FreeDaysRequest request = new FreeDaysRequest(id, doctor, DateTime.Today, dateFrom, dateTo, state, urgent, comment);
             FreeDaysRequestRepo.Add(request);
+
         }
         public static bool IsDoctorFree(DateTime startDate, DateTime endDate, Doctor doctor)
         {
@@ -41,7 +42,7 @@ namespace ClinicApp.Clinic.Scheduling
         {
             foreach (FreeDaysRequest request in FreeDaysRequestRepo.FreeDaysRequests)
             {
-                if (request.Doctor.UserName == doctor.UserName && request.State == FreeDaysState.Accepted)
+                if (request.Doctor.UserName == doctor.UserName)
                 {
                     if (date.Date >= request.DateFrom && date.Date <= request.DateTo)
                     {
