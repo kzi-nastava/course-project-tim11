@@ -7,7 +7,7 @@ using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Menus.Admin.RoomRenovations
 {
-    class RoomRenovations
+    public class RoomRenovations
     {
         public static void Menu()
         {

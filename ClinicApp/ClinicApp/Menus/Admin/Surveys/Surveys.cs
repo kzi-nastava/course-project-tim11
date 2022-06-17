@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClinicApp.Menus.Admin.Surveys
 {
-    class Surveys
+    public class Surveys
     {
         public static void Menu()
         {

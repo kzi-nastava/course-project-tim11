@@ -8,19 +8,19 @@
     ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
-    "C:\\Users\\Stefan\\.nuget\\packages\\": {}
+    "D:\\Users\\aleks\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Stefan\\Desktop\\PROJEKAT\\course-project-tim11\\ClinicApp\\ClinicApp\\ClinicApp.csproj",
+      "projectUniqueName": "D:\\Programiranje\\C#\\UVOD U SOFTVERSKO INZENJERSTVO\\ConsoleProject\\ClinicApp\\ClinicApp\\ClinicApp.csproj",
       "projectName": "ClinicApp",
-      "projectPath": "C:\\Users\\Stefan\\Desktop\\PROJEKAT\\course-project-tim11\\ClinicApp\\ClinicApp\\ClinicApp.csproj",
-      "packagesPath": "C:\\Users\\Stefan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Stefan\\Desktop\\PROJEKAT\\course-project-tim11\\ClinicApp\\ClinicApp\\obj\\",
+      "projectPath": "D:\\Programiranje\\C#\\UVOD U SOFTVERSKO INZENJERSTVO\\ConsoleProject\\ClinicApp\\ClinicApp\\ClinicApp.csproj",
+      "packagesPath": "D:\\Users\\aleks\\.nuget\\packages\\",
+      "outputPath": "D:\\Programiranje\\C#\\UVOD U SOFTVERSKO INZENJERSTVO\\ConsoleProject\\ClinicApp\\ClinicApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Stefan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "D:\\Users\\aleks\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

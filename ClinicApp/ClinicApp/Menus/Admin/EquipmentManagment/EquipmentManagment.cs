@@ -7,7 +7,7 @@ using ClinicApp.Clinic.Rooms;
 
 namespace ClinicApp.Menus.Admin.EquipmentManagment
 {
-    class EquipmentManagment
+    public class EquipmentManagment
     {
         public static void Menu()
         {

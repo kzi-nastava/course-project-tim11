@@ -1,4 +1,7 @@
 ﻿using System;
+using ClinicApp.Clinic.Appointmens;
+using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Patients;
 using ClinicApp.Users;
 
 namespace ClinicApp.Menus.Secretary
@@ -39,10 +42,10 @@ namespace ClinicApp.Menus.Secretary
                     PatientService.ManageExaminationRequests();
                     break;
                 case 6:
-                    Clinic.ExaminationService.CreateExaminationsFromReferrals();
+                    ExaminationService.CreateExaminationsFromReferrals();
                     break;
                 case 7:
-                    Clinic.ExaminationService.CreateEmergencyExamination();
+                    ExaminationService.CreateEmergencyExamination();
                     break;
                 case 8:
                     EquipmentService.OrderDynamiicEquipment();

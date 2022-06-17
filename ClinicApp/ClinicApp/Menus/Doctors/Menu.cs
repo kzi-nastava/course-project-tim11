@@ -1,4 +1,5 @@
 ﻿using System;
+using ClinicApp.Menus.Doctors.Dialogs;
 using ClinicApp.Users;
 
 namespace ClinicApp.Menus.Doctors
