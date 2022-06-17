@@ -27,5 +27,10 @@ namespace ClinicApp.Clinic
             HygieneRating = Int32.Parse(tokens[3]);
             CustomersComment = tokens[4];
         }
+
+        public string Compress()
+        {
+            return NurssesRating + "|" + DoctorsRating + "|" + OtherEmployeesRatings + "|" + HygieneRating + "|" + CustomersComment;
+        }
     }
 }

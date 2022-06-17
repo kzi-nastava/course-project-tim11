@@ -18,20 +18,29 @@ namespace ClinicApp.Clinic
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    //Medicine medicine = new Medicine(line);
-                    //Medicine.Add(medicine.Name, medicine);
+                    ClinicSurvey survey = new ClinicSurvey(line);
+                    AddClinicSurvey(survey);
                 }
             }
         }
 
-        public static void UploadSurveys()
+        public static void PersistChanges()
         {
-
+            string newLine;
+            using (StreamWriter sw = File.CreateText(FilePathSurveys))
+            {
+                foreach (ClinicSurvey survey in AllSurveys)
+                {
+                    newLine = survey.Compress();
+                    sw.WriteLine(newLine);
+                }
+            }
         }
 
         public static void AddClinicSurvey(ClinicSurvey survey)
         {
             AllSurveys.Add(survey);
+            PersistChanges();
         }
     }
 }

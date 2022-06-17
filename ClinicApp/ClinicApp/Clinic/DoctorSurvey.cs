@@ -9,12 +9,27 @@ namespace ClinicApp.Clinic
         int doctorRating { get; set; }
         bool recommendToFriends { get; set; }
         string customersComment { get; set; }
-        public DoctorSurvey(Doctor doctor, int rating,bool recommend , string comment)
+
+        public DoctorSurvey(Doctor doctor, int rating, bool recommend, string comment)
         {
-            ratedDoctor = doctor;
-            doctorRating = rating;
-            recommendToFriends = recommend;
-            customersComment = comment;
+            RatedDoctor = doctor;
+            DoctorRating = rating;
+            RecommendToFriends = recommend;
+            CustomersComment = comment;
+        }
+
+        public DoctorSurvey(string line)
+        {
+            string[] tokens = line.Split('|');
+            DoctorRating = Int32.Parse(tokens[1]);
+            RecommendToFriends = Convert.ToBoolean(tokens[2]);
+            CustomersComment = tokens[3];
+
+        }
+
+        public string Compress()
+        {
+            return RatedDoctor.UserName + "|" + DoctorRating + "|" + RecommendToFriends.ToString() + "|" + CustomersComment;
         }
     }
 }
