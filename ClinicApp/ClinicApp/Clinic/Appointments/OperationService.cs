@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Appointmens
 {
     public class OperationService
     {

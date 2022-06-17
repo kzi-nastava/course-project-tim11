@@ -1,9 +1,6 @@
 using ClinicApp.Clinic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using ClinicApp.HelperClasses;
 
 namespace ClinicApp.Users

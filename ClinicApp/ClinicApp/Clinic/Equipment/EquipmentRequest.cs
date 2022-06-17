@@ -1,7 +1,6 @@
 ﻿using System;
-using ClinicApp.Clinic;
 
-namespace ClinicApp
+namespace ClinicApp.Clinic
 {
     
     

@@ -1,9 +1,7 @@
 ﻿using ClinicApp.Clinic;
-using ClinicApp.Clinic;
 using ClinicApp.Users;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ClinicApp.Dialogs
 {

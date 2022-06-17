@@ -1,4 +1,4 @@
-danilo_babic|;;
+danilo_babic|;;;;;
 Prescription details:
 Date : 14.5.2022. 00:00:00; Medicine: Vicodin
 Number of pills to take:
@@ -9,14 +9,14 @@ Date : 20.5.2022. 00:00:00; Medicine: Albuterol
 Number of pills to take:
 Morning:50,Noon49,Afternoon:48
 Take before/during/after food:During;
-marko_markovic|You have an emergency examination.;Your examination has been delayed.;;;;;;;;;
-danilo_jevtic|;;
+marko_markovic|You have an emergency examination.;Your examination has been delayed.;;;;;;;;;;;;
+danilo_jevtic|;;;;;
 Prescription details:
 Date : 14.5.2022. 00:00:00; Medicine: Albuterol
 Number of pills to take:
 Morning:49,Noon49,Afternoon:48
 Take before/during/after food:During;
-danilo_danilovic|;;
+danilo_danilovic|;;;;;
 Prescription details:
 Date : 14.5.2022. 00:00:00; Medicine: Vicodin
 Number of pills to take:
@@ -32,4 +32,4 @@ Date : 20.5.2022. 00:00:00; Medicine: Vicodin
 Number of pills to take:
 Morning:50,Noon49,Afternoon:50
 Take before/during/after food:Before;
-danijela_rasevic|You have an emergency examination.;;;;;
+danijela_rasevic|You have an emergency examination.;;;;;;;;

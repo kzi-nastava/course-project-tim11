@@ -3,7 +3,7 @@ using System.Linq;
 using ClinicApp.Dialogs;
 using ClinicApp.Users;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Appointmens
 {
     public class SuggestAppointmentService
     {

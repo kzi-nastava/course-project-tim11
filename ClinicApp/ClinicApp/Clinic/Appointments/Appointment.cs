@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Appointmens
 {
     public abstract class Appointment
     {

@@ -22,7 +22,7 @@ namespace ClinicApp.Dialogs
                 else duration = 15;
             }
             DateTime dateTime = AskDateTime(duration, ref doctor);
-            if (!FreeDaysService.IsDoctorAvailible(dateTime, doctor)) {
+            if (!FreeDaysRequestService.IsDoctorAvailible(dateTime, doctor)) {
                 Console.WriteLine("You have free days at that time.");
                 return;
             }
@@ -104,7 +104,7 @@ namespace ClinicApp.Dialogs
             newDate += appointment.DateTime.TimeOfDay;
             if (AppointmentService.CheckAppointment(newDate, appointment.Duration, ref doctor))
             {
-                if (!FreeDaysService.IsDoctorAvailible(newDate, doctor))
+                if (!FreeDaysRequestService.IsDoctorAvailible(newDate, doctor))
                 {
                     Console.WriteLine("You have free days at that time.");
                     return;

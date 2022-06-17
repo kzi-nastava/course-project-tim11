@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace ClinicApp.Clinic
+namespace ClinicApp.Clinic.Appointmens
 {
     public class AppointmentService
     {
