@@ -83,9 +83,10 @@ namespace ClinicApp
             Console.WriteLine("7: Create an emergency examination");
             Console.WriteLine("8: Make an order of dynamic equipment");
             Console.WriteLine("9: Redistribute dynamic equipment");
+            Console.WriteLine("10: Manage free days requests");
             Console.WriteLine("0: Exit");
 
-            return 9;
+            return 10;
         }
 
         public static void SecretaryMenuDo(User secretary, int option)
@@ -115,6 +116,9 @@ namespace ClinicApp
                     break;
                 case 9:
                     EquipmentService.RedistributeDynamiicEquipment();
+                    break;
+                case 10:
+                    FreeDaysRequestService.ManageFreeDayRequests();
                     break;
             }
         }
