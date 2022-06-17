@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClinicApp.Clinic.Appointmens;
 
 namespace ClinicApp.Clinic.Search
 {
@@ -64,6 +65,37 @@ namespace ClinicApp.Clinic.Search
             List<Doctor> result = Search(search);
 
             //TODO sort i ili ispis
+            Console.WriteLine("Do you want to sort doctors list?(y/n)?");
+            string userInput = Console.ReadLine();
+            if (userInput.ToLower() == "y")
+            {
+                Console.WriteLine("1.Sort by name.");
+                Console.WriteLine("2.Sort by field of work.");
+                int choice = CLI.CLIEnterNumberWithLimit(1, 2);
+                if (choice == 1)
+                {
+                    SearchDoctorService.SortDoctorsByFirstName(result);
+                }
+                else
+                {
+                    SearchDoctorService.SortDoctorsByField(result);
+                }
+            }
+            foreach (Doctor doctor in result)
+            {
+                Console.WriteLine(doctor.Compress());
+            }
+            Console.WriteLine("Do you want to make appointment?(y/n)");
+            string input = Console.ReadLine();
+            if (input.ToLower() == "y")
+            {
+                Console.WriteLine("Please enter the doctors username you searched:");
+                string username = Console.ReadLine();
+                Doctor doctor = UserRepository.Doctors[username];
+                //pozovi kreiranje
+                //AppointmentService.
+                
+            }
         }
 
         public List<Doctor> Search(SearchDoctors search)
