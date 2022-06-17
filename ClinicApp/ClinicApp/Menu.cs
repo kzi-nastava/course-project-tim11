@@ -42,7 +42,7 @@ namespace ClinicApp
             Console.WriteLine("6: Manage Medicines");
             Console.WriteLine("0: Exit");
 
-            return 6;
+            return 7;
         }
 
         public static void AdminMenuDo(User admin, int option)
@@ -63,6 +63,9 @@ namespace ClinicApp
                     break;
                 case 6:
                     Menus.Admin.Medicines.Menu();
+                    break;
+                case 7:
+                    Menus.Admin.Surveys.Menu();
                     break;
             }
         }
