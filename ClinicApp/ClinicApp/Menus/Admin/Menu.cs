@@ -17,6 +17,7 @@ namespace ClinicApp.Menus.Admin
             Console.WriteLine("4: Manage Clinic Equipment");
             Console.WriteLine("5: Manage Room Renovations");
             Console.WriteLine("6: Manage Medicines");
+            Console.WriteLine("7: Review Surveys");
             Console.WriteLine("0: Exit");
 
             return 7;

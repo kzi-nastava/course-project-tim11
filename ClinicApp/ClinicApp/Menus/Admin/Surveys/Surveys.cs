@@ -18,9 +18,10 @@ namespace ClinicApp.Menus.Admin.Surveys
                 switch (choice)
                 {
                     case 1:
-
+                        ClinicSurveySubmenu.Menu();               
                         break;
                     case 2:
+                        DoctorSurveySubmenu.Menu();
                         break;
                     case 0:
                         return;
