@@ -63,7 +63,7 @@ namespace ClinicApp.AdminFunctions
         public static List<MedicineRequest> LoadMedicineRequests()
         {
             List<MedicineRequest> lista = new List<MedicineRequest>();
-            using (StreamReader reader = new StreamReader("../../../Admin/Data/medicineRequests.txt"))
+            using (StreamReader reader = new StreamReader("../../../Data/medicineRequests.txt"))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -80,7 +80,7 @@ namespace ClinicApp.AdminFunctions
             foreach (MedicineRequest medicineRequest in MedicineRequests)
             {
                 string newLine = Convert.ToString(medicineRequest.Id) + "|" + medicineRequest.Medicine.Compress() + "|" + medicineRequest.Comment;
-                using (StreamWriter sw = File.AppendText("../../../Admin/Data/medicineRequests.txt"))
+                using (StreamWriter sw = File.AppendText("../../../Data/medicineRequests.txt"))
                 {
                     sw.WriteLine(newLine);
                 }

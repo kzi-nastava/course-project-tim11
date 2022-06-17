@@ -81,12 +81,12 @@ namespace ClinicApp.Users
         //========================== MENU KLASA ZA PACIJENTA????? ==============================================
         public override int MenuWrite()
         {
-            return Menu.PatientMenuWrite(this);
+            return Menus.Patients.Menu.Write(this);
         }
 
         public override void MenuDo(int option)
         {
-            //Menu.PatientMenuDo(this, option);
+            Menus.Patients.Menu.Do(this, option);
         }
 //==================================================================================================
 

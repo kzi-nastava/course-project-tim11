@@ -8,7 +8,7 @@ namespace ClinicApp.AdminFunctions
 {
     class EquipmentRepository
     {
-        static string Path { get; set; } = "../../../Admin/Data/equipment.txt";
+        static string Path { get; set; } = "../../../Data/equipment.txt";
 
         static public List<Equipment> EquipmentList { get; set; } = new List<Equipment>();
 

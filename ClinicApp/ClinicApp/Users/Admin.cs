@@ -38,11 +38,11 @@ namespace ClinicApp.Users
         }
         public override int MenuWrite()
         {
-            return Menu.AdminMenuWrite(this);
+            return Menus.Admin.Menu.Write(this);
         }
         public override void MenuDo(int option)
         {
-            Menu.AdminMenuDo(this, option);
+            Menus.Admin.Menu.Do(this, option);
         }
     }
 }

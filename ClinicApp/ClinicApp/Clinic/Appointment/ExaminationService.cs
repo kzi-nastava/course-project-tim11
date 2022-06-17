@@ -70,7 +70,7 @@ namespace ClinicApp.Clinic
                 doctor = UserRepository.Doctors[userName];
                 //TODO : types of appointment -> duration
                 int duration = 15;
-                bool validateAppointment = DoctorService.CheckAppointment(dateTime, duration, ref doctor);
+                bool validateAppointment = AppointmentService.CheckAppointment(dateTime, duration, ref doctor);
                 if (validateAppointment == false)
                 {
                     Console.WriteLine("Your doctor is unavailable at that time.");
@@ -88,7 +88,7 @@ namespace ClinicApp.Clinic
             }
             Examination examination = new Examination(id, dateTime, doctor, patient, false, 0, 0);
             PatientService.InsertAppointmentPatient(ref patient, examination) ;
-            DoctorService.InsertAppointment(examination, ref doctor);
+            AppointmentService.InsertAppointment(examination, ref doctor);
             AppointmentRepo.AllAppointments.Add(id, examination);
             AppointmentRepo.CurrentAppointments.Add(id, examination);
             Console.WriteLine("\nNew examination successfully created\n");
@@ -188,7 +188,7 @@ namespace ClinicApp.Clinic
                 newDate += examination.DateTime.TimeOfDay;
                 //TODO : type of appointment -> duration
                 Doctor doctortmp = examination.Doctor;
-                bool validation = DoctorService.CheckAppointment(newDate, duration, ref doctortmp);
+                bool validation = AppointmentService.CheckAppointment(newDate, duration, ref doctortmp);
                 if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available");
@@ -225,7 +225,7 @@ namespace ClinicApp.Clinic
                 DateTime oldTime = examination.DateTime;
                 examination.DateTime.Date.Add(newTime.TimeOfDay);
                 Doctor doctorTmp = examination.Doctor;
-                bool validation = DoctorService.CheckAppointment(examination.DateTime, duration, ref doctorTmp);
+                bool validation = AppointmentService.CheckAppointment(examination.DateTime, duration, ref doctorTmp);
                 if (validation == false)
                 {
                     Console.WriteLine("Doctor is not available.");
@@ -272,7 +272,7 @@ namespace ClinicApp.Clinic
                     Console.WriteLine("Doctor with that user name does not eixst.");
                     return;
                 }
-                bool validate = DoctorService.CheckAppointment(examination.DateTime, duration, ref doctor);
+                bool validate = AppointmentService.CheckAppointment(examination.DateTime, duration, ref doctor);
                 if (validate == false)
                 {
                     Console.WriteLine("Doctor is not available");
@@ -362,7 +362,7 @@ namespace ClinicApp.Clinic
                             else
                             {
                                 hasTime = true;
-                                if (!DoctorService.CheckAppointment(dateTime, 15, ref doctor))
+                                if (!AppointmentService.CheckAppointment(dateTime, 15, ref doctor))
                                 {
                                     hasTime = false;
                                     Console.WriteLine("The doctor is not availible at that time. Try again?");
@@ -382,7 +382,7 @@ namespace ClinicApp.Clinic
                                 {
                                     //Creates the examination.
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor, patient, false, 0, 0);
-                                    DoctorService.InsertAppointment(examination, ref doctor);
+                                    AppointmentService.InsertAppointment(examination, ref doctor);
                                     PatientService.InsertAppointmentPatient(ref patient, examination);
                                     AppointmentRepo.AllAppointments.Add(id, examination);
                                     AppointmentRepo.CurrentAppointments.Add(id, examination);
@@ -458,7 +458,7 @@ namespace ClinicApp.Clinic
                                 if (doctor.Value.Field == fieldOfDoctor && !OtherFunctions.CheckForRenovations(dateRange, doctor.Value.RoomId) &&
                                     !OtherFunctions.CheckForExaminations(dateRange, doctor.Value.RoomId) &&
 
-                                    DoctorService.CheckAppointment(dateTime, 15, ref doctorTmp))
+                                    AppointmentService.CheckAppointment(dateTime, 15, ref doctorTmp))
                                 {
                                     hasFoundTime = true;
                                     //Finds the id.
@@ -472,7 +472,7 @@ namespace ClinicApp.Clinic
                                     }
                                     id++;
                                     Clinic.Examination examination = new Clinic.Examination(id, dateTime, doctor.Value, patient, false, 0, 0);
-                                    DoctorService.InsertAppointment(examination, ref doctorTmp);
+                                    AppointmentService.InsertAppointment(examination, ref doctorTmp);
                                     PatientService.InsertAppointmentPatient(ref patient, examination);
                                     AppointmentRepo.AllAppointments.Add(id, examination);
                                     AppointmentRepo.CurrentAppointments.Add(id, examination);
@@ -545,7 +545,7 @@ namespace ClinicApp.Clinic
                     //Creates the examination.
                     Clinic.Examination examination2 = new Clinic.Examination(id, examinationForDelaying.Key.DateTime, examinationForDelaying.Key.Doctor, patient, false, 0, 0);
                     Doctor doctorTmp2 = examinationForDelaying.Key.Doctor;
-                    DoctorService.InsertAppointment(examination2, ref doctorTmp2);
+                    AppointmentService.InsertAppointment(examination2, ref doctorTmp2);
                     PatientService.InsertAppointmentPatient(ref patient, examination2);
                     AppointmentRepo.AllAppointments.Add(id, examination2);
                     AppointmentRepo.CurrentAppointments.Add(id, examination2);
@@ -558,7 +558,7 @@ namespace ClinicApp.Clinic
                     examinationForDelaying.Key.Patient.Appointments.Remove(examinationForDelaying.Key);
                     examinationForDelaying.Key.DateTime = examinationForDelaying.Value;
                     examinationForDelaying.Key.Edited++;
-                    DoctorService.InsertAppointment(examination2, ref doctorTmp2);
+                    AppointmentService.InsertAppointment(examination2, ref doctorTmp2);
                     Patient patientTmp = examinationForDelaying.Key.Patient;
                     PatientService.InsertAppointmentPatient(ref patientTmp, examination2);
                     examinationForDelaying.Key.Doctor.MessageBox.AddMessage("Your examination has been delayed.");

@@ -60,7 +60,7 @@ namespace ClinicApp.Clinic
                 nextAvailable = nextAvailable.AddMinutes(1);
                 DateRange dateRange = new DateRange(nextAvailable, nextAvailable.AddMinutes(Duration));
                 if (PatientService.CheckAppointment(Patient, nextAvailable, Duration) &&
-                    DoctorService.CheckAppointment(nextAvailable, Duration, ref doctor) &&
+                    AppointmentService.CheckAppointment(nextAvailable, Duration, ref doctor) &&
                     !OtherFunctions.CheckForRenovations(dateRange, Doctor.RoomId) &&
                     !OtherFunctions.CheckForExaminations(dateRange, Doctor.RoomId))
                 {

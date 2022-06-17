@@ -26,7 +26,7 @@ namespace ClinicApp.Dialogs
                 Console.WriteLine("Invalid end date.");
                 return;
             }
-            if (!DoctorService.IsDoctorFree(dateFrom, dateTo, doctor))
+            if (!FreeDaysService.IsDoctorFree(dateFrom, dateTo, doctor))
             {
                 Console.WriteLine("You are not free, you have scheduled appointments in that time period!");
                 return;

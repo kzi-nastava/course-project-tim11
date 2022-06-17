@@ -19,12 +19,21 @@ namespace ClinicApp.Dialogs
                 i++;
             }
         }
-
+        public static void ShowAppointmentsByDate(DateTime date, Doctor doctor)
+        {
+            foreach (Appointment appointment in doctor.Appointments)
+            {
+                if (date.Date <= appointment.DateTime.Date && appointment.DateTime.Date <= date.Date.AddDays(3))
+                {
+                    appointment.View();
+                }
+            }
+        }
         public static Appointment GetAppointmentByID(Doctor doctor)
         {
             Console.WriteLine("Enter the ID of the appointment you wish to edit?");
             int id = OtherFunctions.EnterNumber();
-            Appointment appointment = DoctorService.FindAppointment(doctor, id);
+            Appointment appointment = AppointmentService.FindAppointment(doctor, id);
 
             if (appointment == null)
             {
@@ -40,7 +49,7 @@ namespace ClinicApp.Dialogs
             DateTime date = OtherFunctions.GetGoodDate();
             Console.WriteLine($"Appointments on date: {date.ToShortDateString()} and the next three days: \n");
 
-            DoctorService.ShowAppointmentsByDate(date, doctor);
+            ShowAppointmentsByDate(date, doctor);
 
             string choice = "Y";
             while (choice.ToUpper() == "Y")
@@ -129,7 +138,7 @@ namespace ClinicApp.Dialogs
                 }
             } while (choice.ToUpper() == "Y");
 
-            DoctorService.UpdateAfterPerforming(ref appointment, ref doctor);
+            AppointmentService.UpdateAfterPerforming(ref appointment, ref doctor);
             Console.WriteLine($"{type} ended.");
         }
 

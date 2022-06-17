@@ -41,7 +41,7 @@ namespace ClinicApp
         public static string PatientRequestsFilePath = "../../../Data/patient_requests.txt";
         
        
-        public static string EquipmentRequestsFilePath = "../../../Admin/Data/equipmentRequests.txt";
+        public static string EquipmentRequestsFilePath = "../../../Data/equipmentRequests.txt";
 
 
 

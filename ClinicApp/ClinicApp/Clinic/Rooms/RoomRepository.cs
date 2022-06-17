@@ -7,7 +7,7 @@ namespace ClinicApp.AdminFunctions
 {
     class RoomRepository
     {
-        static string Path { get; set; } = "../../../Admin/Data/rooms.txt";
+        static string Path { get; set; } = "../../../Data/rooms.txt";
         public static List<Room> Rooms { get; set; }
 
         static RoomRepository()

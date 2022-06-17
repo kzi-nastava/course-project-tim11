@@ -230,7 +230,7 @@ namespace ClinicApp.Users
                                 AppointmentRepo.CurrentAppointments.Add(editedExamination.ID, editedExamination);
                                 Patient patient = appointment.Patient;
                                 PatientService.InsertAppointmentPatient(ref patient, editedExamination);
-                                DoctorService.InsertAppointment(editedExamination, ref doctor);
+                                AppointmentService.InsertAppointment(editedExamination, ref doctor);
                             }
                         }
                     }
