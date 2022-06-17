@@ -27,7 +27,7 @@ namespace ClinicApp.Clinic
                 i++;
             }
         }
-        private void CreateExamination(Patient patient, Doctor doctor = null)
+        private void CreateExamination(ref Patient patient, Doctor doctor = null)
         {
             DateTime dateTime = DateTime.Now;
             Console.Write("\nEnter the date of your Examination (e.g. 22/10/1987)\n>> ");
@@ -49,7 +49,6 @@ namespace ClinicApp.Clinic
             dateTime = time;
             if (doctor == null)
             {
-                // NAPRAVI FUNKCIJU KADA JE DOKTOR NULL
                 Console.WriteLine("Enter the username of doctor. Do you want to view the list of doctors? (y/n)");
                 Console.Write(">>");
                 string choice = Console.ReadLine();

@@ -200,22 +200,22 @@ namespace ClinicApp
                     patient.MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    ExaminationService.CreateExamination();
+                    //ExaminationService.CreateExamination(patient);
                     break;
                 case 4:
-                    ExaminationService.EditExamination();
+                    //ExaminationService.EditExamination(patient);
                     break;
                 case 5:
-                    ExaminationService.DeleteExamination();
+                    //ExaminationService.DeleteExamination(patient);
                     break;
                 case 6:
-                    ExaminationService.ViewExaminations((Patient)patient);
+                    //ExaminationService.ViewExaminations((Patient)patient);
                     break;
                 case 7:
-                    ExaminationService.SuggestAppointment();
+                    //ExaminationService.SuggestAppointment();
                     break;
                 case 8:
-                    AnamnesisService.ViewAnamnesis();
+                    //AnamnesisService.ViewAnamnesis();
                     break;
                 case 9:
                     SearchDoctorService.SearchUI();
