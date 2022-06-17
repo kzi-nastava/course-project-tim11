@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using ClinicApp.Clinic;
+using ClinicApp.Clinic.Equipments;
+using ClinicApp.Clinic.Rooms;
 
 namespace ClinicApp
 {
