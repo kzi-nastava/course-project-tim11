@@ -5,10 +5,10 @@ namespace ClinicApp.Clinic
 {
     public class DoctorSurvey
     {
-        Doctor ratedDoctor { get; set; }
-        int doctorRating { get; set; }
-        bool recommendToFriends { get; set; }
-        string customersComment { get; set; }
+        public Doctor RatedDoctor { get; set; }
+        public int DoctorRating { get; set; }
+        public bool RecommendToFriends { get; set; }
+        public string CustomersComment { get; set; }
 
         public DoctorSurvey(Doctor doctor, int rating, bool recommend, string comment)
         {

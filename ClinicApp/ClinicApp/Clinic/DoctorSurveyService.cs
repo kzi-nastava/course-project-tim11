@@ -31,7 +31,7 @@ namespace ClinicApp.Clinic
         {
             Dictionary<Doctor, List<int>> ratings = new Dictionary<Doctor, List<int>>();
             Dictionary<Doctor, int> averages = new Dictionary<Doctor, int>();
-            foreach (var survey in DoctorSurveys)
+            foreach (var survey in DoctorSurveyRepo.DoctorSurveys)
             {
                 ratings[survey.RatedDoctor].Add(survey.DoctorRating);
             }
@@ -53,9 +53,9 @@ namespace ClinicApp.Clinic
         public static Dictionary<Doctor, List<string>> GetComments()
         {
             Dictionary<Doctor, List<string>> comments = new Dictionary<Doctor, List<string>>();
-            foreach (var survey in Clinic.DoctorSurveyRepo.doctorSurveys)
+            foreach (var survey in Clinic.DoctorSurveyRepo.DoctorSurveys)
             {
-                comments[survey.ratedDoctor].Add(survey.customersComment);
+                comments[survey.RatedDoctor].Add(survey.CustomersComment);
             }
             return comments;
         }
@@ -63,35 +63,35 @@ namespace ClinicApp.Clinic
         public static Dictionary<Doctor, List<int>> GetHstograms()
         {
             Dictionary<Doctor, List<int>> histogram = new Dictionary<Doctor, List<int>>();
-            foreach (var survey in Clinic.DoctorSurveyRepo.doctorSurveys)
+            foreach (var survey in Clinic.DoctorSurveyRepo.DoctorSurveys)
             {
-                if (!histogram.ContainsKey(survey.ratedDoctor))
+                if (!histogram.ContainsKey(survey.RatedDoctor))
                 {
-                    histogram[survey.ratedDoctor].Add(0);
-                    histogram[survey.ratedDoctor].Add(0);
-                    histogram[survey.ratedDoctor].Add(0);
-                    histogram[survey.ratedDoctor].Add(0);
-                    histogram[survey.ratedDoctor].Add(0);
+                    histogram[survey.RatedDoctor].Add(0);
+                    histogram[survey.RatedDoctor].Add(0);
+                    histogram[survey.RatedDoctor].Add(0);
+                    histogram[survey.RatedDoctor].Add(0);
+                    histogram[survey.RatedDoctor].Add(0);
                 }
             }
             foreach (var survey in Clinic.DoctorSurveyRepo.DoctorSurveys)
             {
-                switch (survey.doctorRating)
+                switch (survey.DoctorRating)
                 {
                     case 1:
-                        histogram[survey.ratedDoctor][0]++;
+                        histogram[survey.RatedDoctor][0]++;
                         break;
                     case 2:
-                        histogram[survey.ratedDoctor][1]++;
+                        histogram[survey.RatedDoctor][1]++;
                         break;
                     case 3:
-                        histogram[survey.ratedDoctor][2]++;
+                        histogram[survey.RatedDoctor][2]++;
                         break;
                     case 4:
-                        histogram[survey.ratedDoctor][3]++;
+                        histogram[survey.RatedDoctor][3]++;
                         break;
                     case 5:
-                        histogram[survey.ratedDoctor][4]++;
+                        histogram[survey.RatedDoctor][4]++;
                         break;
                 }
             }

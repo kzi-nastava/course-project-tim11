@@ -3,11 +3,11 @@ namespace ClinicApp.Clinic
 {
     public class ClinicSurvey
     {
-        int NurssesRating { get; set; }
-        int DoctorsRating { get; set; }
-        int OtherEmployeesRatings { get; set; }
-        int HygieneRating { get; set; }
-        string CustomersComment { get; set; }
+        public int NurssesRating { get; set; }
+        public int DoctorsRating { get; set; }
+        public int OtherEmployeesRatings { get; set; }
+        public int HygieneRating { get; set; }
+        public string CustomersComment { get; set; }
 
         public ClinicSurvey(int ratingNurse,int ratingDoctor, int ratingEmployees, int ratingHygiene, string comment)
         {
