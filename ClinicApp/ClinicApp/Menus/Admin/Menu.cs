@@ -30,19 +30,19 @@ namespace ClinicApp.Menus.Admin
                     admin.MessageBox.DisplayMessages();
                     break;
                 case 3:
-                    Menus.Admin.RoomManagment.Menu();
+                    Rooms.RoomManagment.Menu();
                     break;
                 case 4:
-                    Menus.Admin.EquipmentManagment.Menu();
+                    EquipmentManagment.EquipmentManagment.Menu();
                     break;
                 case 5:
-                    Menus.Admin.RoomRenovations.Menu();
+                    RoomRenovations.RoomRenovations.Menu();
                     break;
                 case 6:
-                    Menus.Admin.Medicines.Menu();
+                    MedicineRequest.Medicines.Menu();
                     break;
                 case 7:
-                    Menus.Admin.Surveys.Menu();
+                    Surveys.Surveys.Menu();
                     break;
             }
         }
