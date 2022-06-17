@@ -10,10 +10,10 @@ namespace ClinicApp.AdminFunctions
         
         public static void ListAllRooms()
         {
-            CLI.CLIWriteLine("ID | NAME | TYPE");
+            Console.WriteLine("ID | NAME | TYPE");
             foreach (Room room in RoomRepository.Rooms)
             {
-                CLI.CLIWriteLine(room.Id + " " + room.Name + " " + room.Type);
+                Console.WriteLine(room.Id + " " + room.Name + " " + room.Type);
             }
         }
         public static void AddNewRoom(string name, RoomType roomType)

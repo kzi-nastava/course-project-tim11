@@ -12,7 +12,7 @@ namespace ClinicApp.Clinic
 
         public static void CreateReferral(ref Patient patient, ref Doctor doctorExamined)
         {
-            CLI.CLIWriteLine("Create referral for (1) specific doctor or (2) specific field");
+            Console.WriteLine("Create referral for (1) specific doctor or (2) specific field");
             int i = CLI.CLIEnterNumberWithLimit(0, 3);
             if (i == 1)
             {
@@ -30,7 +30,7 @@ namespace ClinicApp.Clinic
                 ReferralRepo.Referrals.Add(referral);
 
             }
-            CLI.CLIWriteLine("Referral created successfully!");
+            Console.WriteLine("Referral created successfully!");
 
         }
     }

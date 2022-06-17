@@ -16,7 +16,7 @@ namespace ClinicApp.Clinic
             HealthRecord healthRecord;
             if (!HealthRecordRepo.HealthRecords.TryGetValue(patient.UserName, out healthRecord))
             {
-                CLI.CLIWriteLine("No health record found, creating a new record");
+                Console.WriteLine("No health record found, creating a new record");
                 healthRecord = new HealthRecord(patient);
                 HealthRecordRepo.Add(healthRecord);
             }
@@ -25,23 +25,23 @@ namespace ClinicApp.Clinic
 
         public static void ShowHealthRecord(HealthRecord healthRecord)
         {
-            CLI.CLIWriteLine($"Patient {healthRecord.Patient.Name} {healthRecord.Patient.LastName}'s health record\n");
-            CLI.CLIWriteLine($"Weight: {healthRecord.Weight}\nHeight: {healthRecord.Height}\n");
-            CLI.CLIWrite("Medical history: ");
+            Console.WriteLine($"Patient {healthRecord.Patient.Name} {healthRecord.Patient.LastName}'s health record\n");
+            Console.WriteLine($"Weight: {healthRecord.Weight}\nHeight: {healthRecord.Height}\n");
+            Console.Write("Medical history: ");
             foreach (string illness in healthRecord.MedicalHistory)
             {
-                CLI.CLIWrite(illness + ", ");
+                Console.Write(illness + ", ");
             }
-            CLI.CLIWrite("\nKnown alergies: ");
+            Console.Write("\nKnown alergies: ");
             foreach (string alergy in healthRecord.Alergies)
             {
-                CLI.CLIWrite(alergy + ", ");
+                Console.Write(alergy + ", ");
             }
             int i = 1;
-            CLI.CLIWriteLine("\nPrevious anamnesis: ");
+            Console.WriteLine("\nPrevious anamnesis: ");
             foreach (Anamnesis anamnesis in healthRecord.Anamneses)
             {
-                CLI.CLIWriteLine("\n\n" + i + ". Anamnesis");
+                Console.WriteLine("\n\n" + i + ". Anamnesis");
                 anamnesis.ShowAnamnesis();
                 i++;
             }
@@ -51,35 +51,35 @@ namespace ClinicApp.Clinic
 
         public static void ChangePatientRecord(ref HealthRecord healthRecord)
         {
-            CLI.CLIWrite("Change weight?(y/n): ");
+            Console.Write("Change weight?(y/n): ");
             string choice;
             choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                CLI.CLIWrite("New weight: ");
+                Console.Write("New weight: ");
                 double weight = CLI.CLIEnterDouble();
                 healthRecord.Weight = weight;
             }
-            CLI.CLIWrite("Change height? (y/n): ");
-            choice = CLI.CLIEnterString();
+            Console.Write("Change height? (y/n): ");
+            choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                CLI.CLIWrite("New height: ");
+                Console.Write("New height: ");
                 double height = CLI.CLIEnterDouble();
                 healthRecord.Height = height;
             }
-            CLI.CLIWrite("Add to medical history(y/n): ");
-            choice = CLI.CLIEnterString();
+            Console.Write("Add to medical history(y/n): ");
+            choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                string illness = CLI.CLIEnterString();
+                string illness = Console.ReadLine();
                 healthRecord.MedicalHistory.Add(illness);
             }
-            CLI.CLIWrite("Add to list of allergies(y/n): ");
-            choice = CLI.CLIEnterString();
+            Console.Write("Add to list of allergies(y/n): ");
+            choice = Console.ReadLine();
             if (choice.ToUpper() == "Y")
             {
-                string alergy = CLI.CLIEnterString();
+                string alergy = Console.ReadLine();
                 healthRecord.Alergies.Add(alergy);
             }
             if (!HealthRecordRepo.HealthRecords.TryAdd(healthRecord.Patient.UserName, healthRecord))

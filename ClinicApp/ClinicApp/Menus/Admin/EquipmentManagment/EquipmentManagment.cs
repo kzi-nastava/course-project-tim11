@@ -31,7 +31,7 @@ namespace ClinicApp.Menus.Admin
                     case 0:
                         return;
                     default:
-                        CLI.CLIWriteLine("Invalid option, try again");
+                        Console.WriteLine("Invalid option, try again");
                         break;
                 }
             }

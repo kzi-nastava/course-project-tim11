@@ -13,27 +13,27 @@ namespace ClinicApp.Users
         public void SearchUI()
         {
             SearchDoctors search = new SearchDoctors();
-            CLI.CLIWriteLine("Do you want to search doctors by their first name? y/n");
-            string answer = CLI.CLIEnterString();
+            Console.WriteLine("Do you want to search doctors by their first name? y/n");
+            string answer = Console.ReadLine();
             if(answer.ToLower() == "y")
             {
                 search.FilterByName = true;
-                CLI.CLIWriteLine("Please enter your doctors name.");
-                search.FirstName = CLI.CLIEnterString();
+                Console.WriteLine("Please enter your doctors name.");
+                search.FirstName = Console.ReadLine();
             }
-            CLI.CLIWriteLine("Do you want to search doctors by their last name? y/n");
+            Console.WriteLine("Do you want to search doctors by their last name? y/n");
             if (answer.ToLower() == "y")
             {
                 search.FilterByLastName = true;
-                CLI.CLIWriteLine("Please enter your doctors last name.");
-                search.LastName = CLI.CLIEnterString();
+                Console.WriteLine("Please enter your doctors last name.");
+                search.LastName = Console.ReadLine();
             }
-            CLI.CLIWriteLine("Do you want to search doctors by their field of work? y/n");
+            Console.WriteLine("Do you want to search doctors by their field of work? y/n");
             if (answer.ToLower() == "y")
             {
                 search.FilterByField = true;
-                CLI.CLIWriteLine("Please enter your doctors field of work.");
-                search.FieldOfWork = CLI.CLIEnterString();
+                Console.WriteLine("Please enter your doctors field of work.");
+                search.FieldOfWork = Console.ReadLine();
             }
             List<Doctor> result = Search(search);
 

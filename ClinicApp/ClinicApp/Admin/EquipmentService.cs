@@ -54,45 +54,45 @@ public static class EquipmentService
                 bandages = true;
         }
         if (gauzes == true && stiches == true && vaccines == true && bandages == true)
-            CLI.CLIWriteLine("\nWe don't lack any equipment at the moment.");
+            Console.WriteLine("\nWe don't lack any equipment at the moment.");
         else
         {
             int numberOfOptions, option = 1;
             while (option != 0)
             {
                 numberOfOptions = 0;
-                CLI.CLIWriteLine("\nWhich of the following equipment would you like to order?");
+                Console.WriteLine("\nWhich of the following equipment would you like to order?");
                 if (gauzes == false)
                 {
                     numberOfOptions++;
-                    CLI.CLIWriteLine(numberOfOptions + ": Gauzes");
+                    Console.WriteLine(numberOfOptions + ": Gauzes");
                 }
                 if (stiches == false)
                 {
                     numberOfOptions++;
-                    CLI.CLIWriteLine(numberOfOptions + ": Stiches");
+                    Console.WriteLine(numberOfOptions + ": Stiches");
                 }
                 if (vaccines == false)
                 {
                     numberOfOptions++;
-                    CLI.CLIWriteLine(numberOfOptions + ": Vaccines");
+                    Console.WriteLine(numberOfOptions + ": Vaccines");
                 }
                 if (bandages == false)
                 {
                     numberOfOptions++;
-                    CLI.CLIWriteLine(numberOfOptions + ": Bandages");
+                    Console.WriteLine(numberOfOptions + ": Bandages");
                 }
-                CLI.CLIWriteLine("0: Back to menu");
+                Console.WriteLine("0: Back to menu");
                 option = CLI.CLIEnterNumberWithLimit(0, numberOfOptions);
                 if (option != 0)
                 {
-                    CLI.CLIWriteLine("");
+                    Console.WriteLine("");
                     if (gauzes == false)
                     {
                         option--;
                         if (option == 0)
                         {
-                            CLI.CLIWriteLine("How many gauzes would you like to order?");
+                            Console.WriteLine("How many gauzes would you like to order?");
                             option = CLI.CLIEnterNumberWithLimit(1, 1000);
                             EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Gauzes, option, DateTime.Now.Date);
                             SystemFunctions.EquipmentRequests.Add(equipmentRequest);
@@ -103,7 +103,7 @@ public static class EquipmentService
                         option--;
                         if (option == 0)
                         {
-                            CLI.CLIWriteLine("How many stiches would you like to order?");
+                            Console.WriteLine("How many stiches would you like to order?");
                             option = CLI.CLIEnterNumberWithLimit(1, 1000);
                             EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Stiches, option, DateTime.Now.Date);
                             SystemFunctions.EquipmentRequests.Add(equipmentRequest);
@@ -114,7 +114,7 @@ public static class EquipmentService
                         option--;
                         if (option == 0)
                         {
-                            CLI.CLIWriteLine("How many vaccines would you like to order?");
+                            Console.WriteLine("How many vaccines would you like to order?");
                             option = CLI.CLIEnterNumberWithLimit(1, 1000);
                             EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Vaccines, option, DateTime.Now.Date);
                             SystemFunctions.EquipmentRequests.Add(equipmentRequest);
@@ -125,7 +125,7 @@ public static class EquipmentService
                         option--;
                         if (option == 0)
                         {
-                            CLI.CLIWriteLine("How many bandages would you like to order?");
+                            Console.WriteLine("How many bandages would you like to order?");
                             option = CLI.CLIEnterNumberWithLimit(1, 1000);
                             EquipmentRequest equipmentRequest = new EquipmentRequest(EquipmentType.Bandages, option, DateTime.Now.Date);
                             SystemFunctions.EquipmentRequests.Add(equipmentRequest);
@@ -156,48 +156,48 @@ public static class EquipmentService
             }
             if (gauzes < 5 || stiches < 5 || vaccines < 5 || bandages < 5)
             {
-                CLI.CLIWriteLine("\nRoom id: " + room.Id);
-                CLI.CLIWriteLine("Room name: " + room.Name);
+                Console.WriteLine("\nRoom id: " + room.Id);
+                Console.WriteLine("Room name: " + room.Name);
                 if (gauzes == 0)
-                    CLI.CLIWriteLine("-Gauzes: " + gauzes);
+                    Console.WriteLine("-Gauzes: " + gauzes);
                 else if (gauzes < 5)
-                    CLI.CLIWriteLine(" Gauzes: " + gauzes);
+                    Console.WriteLine(" Gauzes: " + gauzes);
                 if (stiches == 0)
-                    CLI.CLIWriteLine("-Stiches: " + stiches);
+                    Console.WriteLine("-Stiches: " + stiches);
                 else if (stiches < 5)
-                    CLI.CLIWriteLine(" Stiches: " + stiches);
+                    Console.WriteLine(" Stiches: " + stiches);
                 if (vaccines == 0)
-                    CLI.CLIWriteLine("-Vaccines: " + vaccines);
+                    Console.WriteLine("-Vaccines: " + vaccines);
                 else if (vaccines < 5)
-                    CLI.CLIWriteLine(" Vaccines: " + vaccines);
+                    Console.WriteLine(" Vaccines: " + vaccines);
                 if (bandages == 0)
-                    CLI.CLIWriteLine("-Bandages: " + bandages);
+                    Console.WriteLine("-Bandages: " + bandages);
                 else if (bandages < 5)
-                    CLI.CLIWriteLine(" Bandages: " + bandages);
+                    Console.WriteLine(" Bandages: " + bandages);
             }
         }
 
         int option = 1;
         while (option != 0)
         {
-            CLI.CLIWriteLine("\nDo you want to move equipment?");
-            CLI.CLIWriteLine("1: Yes");
-            CLI.CLIWriteLine("0: No");
+            Console.WriteLine("\nDo you want to move equipment?");
+            Console.WriteLine("1: Yes");
+            Console.WriteLine("0: No");
             option = CLI.CLIEnterNumberWithLimit(0, 1);
             if (option == 1)
             {
                 int idFrom, idTo, amount, totalEquipment = 0;
                 EquipmentType type;
                 Room roomFrom, roomTo;
-                CLI.CLIWriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
+                Console.WriteLine("\nEnter the id of the room from which you want to move dynamic equipment:");
                 idFrom = CLI.CLIEnterNumber();
                 idTo = CLI.CLIEnterNumber();
                 amount = CLI.CLIEnterNumber();
-                CLI.CLIWriteLine("\nWhich of the following equipment would you like to move?");
-                CLI.CLIWriteLine("1: Gauzes");
-                CLI.CLIWriteLine("2: Stiches");
-                CLI.CLIWriteLine("3: Vaccines");
-                CLI.CLIWriteLine("4: Bandages");
+                Console.WriteLine("\nWhich of the following equipment would you like to move?");
+                Console.WriteLine("1: Gauzes");
+                Console.WriteLine("2: Stiches");
+                Console.WriteLine("3: Vaccines");
+                Console.WriteLine("4: Bandages");
                 option = CLI.CLIEnterNumberWithLimit(1, 4);
                 switch (option)
                 {
@@ -255,26 +255,26 @@ public static class EquipmentService
     }
     public static void UpdateRoomEquipment(Doctor doctor)
     {
-        CLI.CLIWriteLine($"\nThe state of equipment in room {doctor.RoomId} before the appointment: ");
-        CLI.CLIWriteLine();
+        Console.WriteLine($"\nThe state of equipment in room {doctor.RoomId} before the appointment: ");
+        Console.WriteLine();
         List<Equipment> equipmentList = GetEquipmentFromRoom(doctor.RoomId);
         foreach (Equipment equipment in equipmentList)
         {
-            CLI.CLIWriteLine($"{equipment.Name} : {equipment.Amount}");
+            Console.WriteLine($"{equipment.Name} : {equipment.Amount}");
         }
-        CLI.CLIWriteLine($"Please enter the quantity of the equipment that was used during the appointment: ");
-        CLI.CLIWriteLine();
+        Console.WriteLine($"Please enter the quantity of the equipment that was used during the appointment: ");
+        Console.WriteLine();
         foreach (Equipment equipment in equipmentList)
         {
 
             var clinicEquipment = EquipmentRepository.Get(equipment.Id);
-            CLI.CLIWrite($"{equipment.Name} : ");
+            Console.Write($"{equipment.Name} : ");
             int quantity = CLI.CLIEnterNumberWithLimit(-1, clinicEquipment.Amount + 1);
             int newQuantity = clinicEquipment.Amount - quantity;
             EquipmentRepository.Update(equipment.Id, newQuantity);
-            CLI.CLIWriteLine();
+            Console.WriteLine();
         }
-        CLI.CLIWriteLine("Succesfully updated equipment.");
+        Console.WriteLine("Succesfully updated equipment.");
 
     }
 }

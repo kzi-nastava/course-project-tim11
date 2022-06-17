@@ -51,9 +51,9 @@ namespace ClinicApp.HelperClasses
 
         public void DisplayMessages()
         {
-            CLI.CLIWriteLine("\nThese are your current messages:\n");
+            Console.WriteLine("\nThese are your current messages:\n");
             foreach (string message in _messages)
-                CLI.CLIWriteLine("-" + message + "\n");
+                Console.WriteLine("-" + message + "\n");
             Empty();
         }
     }

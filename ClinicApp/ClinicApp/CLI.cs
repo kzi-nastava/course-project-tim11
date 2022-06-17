@@ -13,6 +13,8 @@ namespace ClinicApp
             Console.Write(text);
         }
 
+
+
         public static void CLIWriteLine(string text = "")
         {
             Console.WriteLine(text);

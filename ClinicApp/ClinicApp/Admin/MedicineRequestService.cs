@@ -38,41 +38,65 @@ namespace ClinicApp.AdminFunctions
             MedicineRequestRepository.Update(id, newRequest);
         }
 
-        public static void ReviewMedicineRequests()
+        
+        public static void ListMedicineRequests(string parameter = "rbd") //rbd = reviewed by doctor (default), sba = sent by admin, all = all requests 
         {
-            string choice;
-            CLI.CLIWriteLine("Medicine requests: ");
-            List<MedicineRequest> allRequests = MedicineRequestRepository.LoadMedicineRequests();
-            foreach (var request in allRequests)
+            if (parameter == "rbd")
             {
-                
-                if (request.Comment == "")
+                Console.WriteLine("These requests have been reviewed by a doctor and should be fixed up");
+                foreach (var request in MedicineRequestRepository.GetAll())
                 {
-                    CLI.CLIWriteLine("----------------------------------------------------------");
-                    CLI.CLIWriteLine("Request ID: " + request.Id +
-                        "\nMedicine name: " + request.Medicine.Name +
-                        "\nMedicine ingrediants: " + OtherFunctions.WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
-                    CLI.CLIWriteLine("----------------------------------------------------------");
-                    CLI.CLIWriteLine("Do you want to approve this medicine(y/n)");
-                    choice = CLI.CLIEnterString();
-                    if (choice.ToUpper() == "Y")
+                    if (request.Comment != "")
                     {
-                        Approve(request.Id);
-                    }
-                    else
-                    {
-                        CLI.CLIWriteLine("Do you want to reject this medicine(y/n)");
-                        choice = CLI.CLIEnterString();
-                        if (choice.ToUpper() == "Y")
-                        {
-                            CLI.CLIWriteLine("Why do you want to reject this medicine? Write a short comment.");
-                            string comment = CLI.CLIEnterString();
-                            Reject(request.Id, comment);
-                        }
-
+                        Console.WriteLine("----------------------------------------------------------");
+                        Console.WriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                        Console.WriteLine("----------------------------------------------------------");
                     }
                 }
             }
+            else if (parameter == "sba")
+            {
+                Console.WriteLine("These requests have been sent by an admin and should be reviewed");
+                foreach (var request in MedicineRequestRepository.GetAll())
+                {
+                    if (request.Comment == "")
+                    {
+                        Console.WriteLine("----------------------------------------------------------");
+                        Console.WriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) + "\n");
+                        Console.WriteLine("----------------------------------------------------------");
+                    }
+                }
+            }
+            else if (parameter == "all")
+            {
+                Console.WriteLine("All medicine requests");
+                foreach (var request in MedicineRequestRepository.GetAll())
+                {
+                    Console.WriteLine("----------------------------------------------------------");
+                    Console.WriteLine("Request ID: " + request.Id +
+                            "\nMedicine name: " + request.Medicine.Name +
+                            "\nMedicine ingrediants: " + WriteMedicineIngrediants(request.Medicine.Ingredients) +
+                            "\nDoctor's comment: " + request.Comment);
+                    Console.WriteLine("----------------------------------------------------------");
+
+                }
+            }
         }
+        public static string WriteMedicineIngrediants(List<string> ingrediants)
+        {
+            string output = "";
+            foreach (var ingr in ingrediants)
+            {
+                output += ingr + ", ";
+            }
+            return output;
+        }
+
+        
     }
 }
