@@ -236,6 +236,16 @@ namespace ClinicApp.Users
             CLI.CLIWriteLine($"{type} ended.");
         }
 
+        public static bool IsDoctorFree(DateTime startDate, DateTime endDate, Doctor doctor) {
+            foreach(Appointment appointment in doctor.Appointments)
+            {
+                if(appointment.DateTime <= endDate || appointment.DateTime >= startDate)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
     }
 }

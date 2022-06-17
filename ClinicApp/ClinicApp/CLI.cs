@@ -12,6 +12,27 @@ namespace ClinicApp
             Console.Write(text);
         }
 
+        public static bool EnterBool(string text = "")
+        {
+            string s;
+            while (true)
+            {
+                s = Console.ReadLine();
+                if (s.ToUpper() == "Y")
+                {
+                    return true;
+                }
+                else if (s.ToUpper() == "N") {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("You didn't enter true/false. Try again.");
+
+                }
+            }
+        }
+
         public static void CLIWriteLine(string text = "")
         {
             Console.WriteLine(text);

@@ -124,9 +124,10 @@ namespace ClinicApp
             CLI.CLIWriteLine("3: Manage examinations");
             CLI.CLIWriteLine("4: View schedule");
             CLI.CLIWriteLine("5: Manage medicine");
+            Console.WriteLine("6: Request free days");
             CLI.CLIWriteLine("0: Exit");
 
-            return 5;
+            return 6;
         }
 
         public static void DoctorMenuDo(User doctor, int option)
@@ -145,6 +146,8 @@ namespace ClinicApp
                     break;
                 case 5:
                     MedicineRequestService.ReviewMedicineRequests();
+                    break;
+                case 6:
                     break;
                 default:
                     break;
